@@ -1,0 +1,7 @@
+offline-reference/
+progress.md
+.DS_Store
+__pycache__/
+*.pyc
+*.npz
+model/checkpoints/

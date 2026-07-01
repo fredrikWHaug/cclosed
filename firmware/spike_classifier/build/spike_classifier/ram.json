@@ -1,0 +1,1711 @@
+{
+    "symbols": {
+        "name": "Root",
+        "size": 27593,
+        "identifier": "root",
+        "loc": [],
+        "children": [
+            {
+                "name": "(no paths)",
+                "size": 0,
+                "identifier": ":",
+                "loc": []
+            },
+            {
+                "name": "ZEPHYR_BASE",
+                "size": 4977,
+                "identifier": "/opt/nordic/ncs/v3.3.1/zephyr",
+                "loc": [],
+                "children": [
+                    {
+                        "name": "lib",
+                        "size": 40,
+                        "identifier": "lib",
+                        "loc": [],
+                        "children": [
+                            {
+                                "name": "os",
+                                "size": 4,
+                                "identifier": "lib/os",
+                                "loc": [],
+                                "children": [
+                                    {
+                                        "name": "printk.c",
+                                        "size": 4,
+                                        "identifier": "lib/os/printk.c",
+                                        "loc": [],
+                                        "children": [
+                                            {
+                                                "name": "_char_out",
+                                                "size": 4,
+                                                "identifier": "lib/os/printk.c/_char_out",
+                                                "loc": [
+                                                    "ram",
+                                                    "rom"
+                                                ],
+                                                "address": 536871152,
+                                                "section": "datas"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "libc",
+                                "size": 32,
+                                "identifier": "lib/libc",
+                                "loc": [],
+                                "children": [
+                                    {
+                                        "name": "picolibc",
+                                        "size": 20,
+                                        "identifier": "lib/libc/picolibc",
+                                        "loc": [],
+                                        "children": [
+                                            {
+                                                "name": "stdio.c",
+                                                "size": 20,
+                                                "identifier": "lib/libc/picolibc/stdio.c",
+                                                "loc": [],
+                                                "children": [
+                                                    {
+                                                        "name": "_stdout_hook",
+                                                        "size": 4,
+                                                        "identifier": "lib/libc/picolibc/stdio.c/_stdout_hook",
+                                                        "loc": [
+                                                            "ram"
+                                                        ],
+                                                        "address": 536893200,
+                                                        "section": "bss"
+                                                    },
+                                                    {
+                                                        "name": "__stdout",
+                                                        "size": 16,
+                                                        "identifier": "lib/libc/picolibc/stdio.c/__stdout",
+                                                        "loc": [
+                                                            "ram",
+                                                            "rom"
+                                                        ],
+                                                        "address": 536871156,
+                                                        "section": "datas"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "common",
+                                        "size": 12,
+                                        "identifier": "lib/libc/common",
+                                        "loc": [],
+                                        "children": [
+                                            {
+                                                "name": "source",
+                                                "size": 12,
+                                                "identifier": "lib/libc/common/source",
+                                                "loc": [],
+                                                "children": [
+                                                    {
+                                                        "name": "stdlib",
+                                                        "size": 12,
+                                                        "identifier": "lib/libc/common/source/stdlib",
+                                                        "loc": [],
+                                                        "children": [
+                                                            {
+                                                                "name": "malloc.c",
+                                                                "size": 12,
+                                                                "identifier": "lib/libc/common/source/stdlib/malloc.c",
+                                                                "loc": [],
+                                                                "children": [
+                                                                    {
+                                                                        "name": "z_malloc_heap",
+                                                                        "size": 12,
+                                                                        "identifier": "lib/libc/common/source/stdlib/malloc.c/z_malloc_heap",
+                                                                        "loc": [
+                                                                            "ram"
+                                                                        ],
+                                                                        "address": 536893204,
+                                                                        "section": "bss"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "utils",
+                                "size": 4,
+                                "identifier": "lib/utils",
+                                "loc": [],
+                                "children": [
+                                    {
+                                        "name": "last_section_id.c",
+                                        "size": 4,
+                                        "identifier": "lib/utils/last_section_id.c",
+                                        "loc": [],
+                                        "children": [
+                                            {
+                                                "name": "last_id",
+                                                "size": 4,
+                                                "identifier": "lib/utils/last_section_id.c/last_id",
+                                                "loc": [
+                                                    "ram",
+                                                    "rom"
+                                                ],
+                                                "address": 202260,
+                                                "section": ".last_section"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "arch",
+                        "size": 25,
+                        "identifier": "arch",
+                        "loc": [],
+                        "children": [
+                            {
+                                "name": "arm",
+                                "size": 25,
+                                "identifier": "arch/arm",
+                                "loc": [],
+                                "children": [
+                                    {
+                                        "name": "core",
+                                        "size": 25,
+                                        "identifier": "arch/arm/core",
+                                        "loc": [],
+                                        "children": [
+                                            {
+                                                "name": "mpu",
+                                                "size": 21,
+                                                "identifier": "arch/arm/core/mpu",
+                                                "loc": [],
+                                                "children": [
+                                                    {
+                                                        "name": "arm_mpu.c",
+                                                        "size": 1,
+                                                        "identifier": "arch/arm/core/mpu/arm_mpu.c",
+                                                        "loc": [],
+                                                        "children": [
+                                                            {
+                                                                "name": "static_regions_num",
+                                                                "size": 1,
+                                                                "identifier": "arch/arm/core/mpu/arm_mpu.c/static_regions_num",
+                                                                "loc": [
+                                                                    "ram"
+                                                                ],
+                                                                "address": 536895100,
+                                                                "section": "bss"
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "name": "arm_mpu_v8_internal.h",
+                                                        "size": 20,
+                                                        "identifier": "arch/arm/core/mpu/arm_mpu_v8_internal.h",
+                                                        "loc": [],
+                                                        "children": [
+                                                            {
+                                                                "name": "dyn_reg_info",
+                                                                "size": 20,
+                                                                "identifier": "arch/arm/core/mpu/arm_mpu_v8_internal.h/dyn_reg_info",
+                                                                "loc": [
+                                                                    "ram"
+                                                                ],
+                                                                "address": 536893180,
+                                                                "section": "bss"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "name": "tls.c",
+                                                "size": 4,
+                                                "identifier": "arch/arm/core/tls.c",
+                                                "loc": [],
+                                                "children": [
+                                                    {
+                                                        "name": "z_arm_tls_ptr",
+                                                        "size": 4,
+                                                        "identifier": "arch/arm/core/tls.c/z_arm_tls_ptr",
+                                                        "loc": [
+                                                            "ram"
+                                                        ],
+                                                        "address": 536893176,
+                                                        "section": "bss"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "drivers",
+                        "size": 270,
+                        "identifier": "drivers",
+                        "loc": [],
+                        "children": [
+                            {
+                                "name": "clock_control",
+                                "size": 146,
+                                "identifier": "drivers/clock_control",
+                                "loc": [],
+                                "children": [
+                                    {
+                                        "name": "clock_control_nrf.c",
+                                        "size": 146,
+                                        "identifier": "drivers/clock_control/clock_control_nrf.c",
+                                        "loc": [],
+                                        "children": [
+                                            {
+                                                "name": "data",
+                                                "size": 120,
+                                                "identifier": "drivers/clock_control/clock_control_nrf.c/data",
+                                                "loc": [
+                                                    "ram"
+                                                ],
+                                                "address": 536893236,
+                                                "section": "bss"
+                                            },
+                                            {
+                                                "name": "hfclk_users",
+                                                "size": 4,
+                                                "identifier": "drivers/clock_control/clock_control_nrf.c/hfclk_users",
+                                                "loc": [
+                                                    "ram"
+                                                ],
+                                                "address": 536893356,
+                                                "section": "bss"
+                                            },
+                                            {
+                                                "name": "on.2",
+                                                "size": 4,
+                                                "identifier": "drivers/clock_control/clock_control_nrf.c/on.2",
+                                                "loc": [
+                                                    "ram"
+                                                ],
+                                                "address": 536893232,
+                                                "section": "bss"
+                                            },
+                                            {
+                                                "name": "cli.1",
+                                                "size": 16,
+                                                "identifier": "drivers/clock_control/clock_control_nrf.c/cli.1",
+                                                "loc": [
+                                                    "ram"
+                                                ],
+                                                "address": 536893216,
+                                                "section": "bss"
+                                            },
+                                            {
+                                                "name": "__devstate_dts_ord_68",
+                                                "size": 2,
+                                                "identifier": "drivers/clock_control/clock_control_nrf.c/__devstate_dts_ord_68",
+                                                "loc": [
+                                                    "ram",
+                                                    "rom"
+                                                ],
+                                                "address": 536871612,
+                                                "section": "device_states"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "gpio",
+                                "size": 56,
+                                "identifier": "drivers/gpio",
+                                "loc": [],
+                                "children": [
+                                    {
+                                        "name": "gpio_nrfx.c",
+                                        "size": 56,
+                                        "identifier": "drivers/gpio/gpio_nrfx.c",
+                                        "loc": [],
+                                        "children": [
+                                            {
+                                                "name": "__devstate_dts_ord_14",
+                                                "size": 2,
+                                                "identifier": "drivers/gpio/gpio_nrfx.c/__devstate_dts_ord_14",
+                                                "loc": [
+                                                    "ram",
+                                                    "rom"
+                                                ],
+                                                "address": 536871614,
+                                                "section": "device_states"
+                                            },
+                                            {
+                                                "name": "gpio_nrfx_p3_data",
+                                                "size": 12,
+                                                "identifier": "drivers/gpio/gpio_nrfx.c/gpio_nrfx_p3_data",
+                                                "loc": [
+                                                    "ram"
+                                                ],
+                                                "address": 536893360,
+                                                "section": "bss"
+                                            },
+                                            {
+                                                "name": "__devstate_dts_ord_102",
+                                                "size": 2,
+                                                "identifier": "drivers/gpio/gpio_nrfx.c/__devstate_dts_ord_102",
+                                                "loc": [
+                                                    "ram",
+                                                    "rom"
+                                                ],
+                                                "address": 536871616,
+                                                "section": "device_states"
+                                            },
+                                            {
+                                                "name": "gpio_nrfx_p2_data",
+                                                "size": 12,
+                                                "identifier": "drivers/gpio/gpio_nrfx.c/gpio_nrfx_p2_data",
+                                                "loc": [
+                                                    "ram"
+                                                ],
+                                                "address": 536893372,
+                                                "section": "bss"
+                                            },
+                                            {
+                                                "name": "__devstate_dts_ord_12",
+                                                "size": 2,
+                                                "identifier": "drivers/gpio/gpio_nrfx.c/__devstate_dts_ord_12",
+                                                "loc": [
+                                                    "ram",
+                                                    "rom"
+                                                ],
+                                                "address": 536871618,
+                                                "section": "device_states"
+                                            },
+                                            {
+                                                "name": "gpio_nrfx_p1_data",
+                                                "size": 12,
+                                                "identifier": "drivers/gpio/gpio_nrfx.c/gpio_nrfx_p1_data",
+                                                "loc": [
+                                                    "ram"
+                                                ],
+                                                "address": 536893384,
+                                                "section": "bss"
+                                            },
+                                            {
+                                                "name": "__devstate_dts_ord_136",
+                                                "size": 2,
+                                                "identifier": "drivers/gpio/gpio_nrfx.c/__devstate_dts_ord_136",
+                                                "loc": [
+                                                    "ram",
+                                                    "rom"
+                                                ],
+                                                "address": 536871620,
+                                                "section": "device_states"
+                                            },
+                                            {
+                                                "name": "gpio_nrfx_p0_data",
+                                                "size": 12,
+                                                "identifier": "drivers/gpio/gpio_nrfx.c/gpio_nrfx_p0_data",
+                                                "loc": [
+                                                    "ram"
+                                                ],
+                                                "address": 536893396,
+                                                "section": "bss"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "serial",
+                                "size": 12,
+                                "identifier": "drivers/serial",
+                                "loc": [],
+                                "children": [
+                                    {
+                                        "name": "uart_nrfx_uarte.c",
+                                        "size": 12,
+                                        "identifier": "drivers/serial/uart_nrfx_uarte.c",
+                                        "loc": [],
+                                        "children": [
+                                            {
+                                                "name": "__devstate_dts_ord_119",
+                                                "size": 2,
+                                                "identifier": "drivers/serial/uart_nrfx_uarte.c/__devstate_dts_ord_119",
+                                                "loc": [
+                                                    "ram",
+                                                    "rom"
+                                                ],
+                                                "address": 536871622,
+                                                "section": "device_states"
+                                            },
+                                            {
+                                                "name": "uarte_20_data",
+                                                "size": 8,
+                                                "identifier": "drivers/serial/uart_nrfx_uarte.c/uarte_20_data",
+                                                "loc": [
+                                                    "ram"
+                                                ],
+                                                "address": 536893408,
+                                                "section": "bss"
+                                            },
+                                            {
+                                                "name": "uarte20_poll_out_byte",
+                                                "size": 1,
+                                                "identifier": "drivers/serial/uart_nrfx_uarte.c/uarte20_poll_out_byte",
+                                                "loc": [
+                                                    "ram"
+                                                ],
+                                                "address": 536895102,
+                                                "section": "bss"
+                                            },
+                                            {
+                                                "name": "uarte20_poll_in_byte",
+                                                "size": 1,
+                                                "identifier": "drivers/serial/uart_nrfx_uarte.c/uarte20_poll_in_byte",
+                                                "loc": [
+                                                    "ram"
+                                                ],
+                                                "address": 536895101,
+                                                "section": "bss"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "timer",
+                                "size": 56,
+                                "identifier": "drivers/timer",
+                                "loc": [],
+                                "children": [
+                                    {
+                                        "name": "nrf_grtc_timer.c",
+                                        "size": 56,
+                                        "identifier": "drivers/timer/nrf_grtc_timer.c",
+                                        "loc": [],
+                                        "children": [
+                                            {
+                                                "name": "last_count",
+                                                "size": 8,
+                                                "identifier": "drivers/timer/nrf_grtc_timer.c/last_count",
+                                                "loc": [
+                                                    "ram"
+                                                ],
+                                                "address": 536871800,
+                                                "section": "bss"
+                                            },
+                                            {
+                                                "name": "expired_cc",
+                                                "size": 8,
+                                                "identifier": "drivers/timer/nrf_grtc_timer.c/expired_cc",
+                                                "loc": [
+                                                    "ram"
+                                                ],
+                                                "address": 536871776,
+                                                "section": "bss"
+                                            },
+                                            {
+                                                "name": "last_elapsed",
+                                                "size": 8,
+                                                "identifier": "drivers/timer/nrf_grtc_timer.c/last_elapsed",
+                                                "loc": [
+                                                    "ram"
+                                                ],
+                                                "address": 536871792,
+                                                "section": "bss"
+                                            },
+                                            {
+                                                "name": "system_clock_channel_data",
+                                                "size": 12,
+                                                "identifier": "drivers/timer/nrf_grtc_timer.c/system_clock_channel_data",
+                                                "loc": [
+                                                    "ram",
+                                                    "rom"
+                                                ],
+                                                "address": 536871532,
+                                                "section": "datas"
+                                            },
+                                            {
+                                                "name": "grtc_start_value",
+                                                "size": 8,
+                                                "identifier": "drivers/timer/nrf_grtc_timer.c/grtc_start_value",
+                                                "loc": [
+                                                    "ram"
+                                                ],
+                                                "address": 536871768,
+                                                "section": "bss"
+                                            },
+                                            {
+                                                "name": "int_mask",
+                                                "size": 4,
+                                                "identifier": "drivers/timer/nrf_grtc_timer.c/int_mask",
+                                                "loc": [
+                                                    "ram"
+                                                ],
+                                                "address": 536893416,
+                                                "section": "bss"
+                                            },
+                                            {
+                                                "name": "cc_value",
+                                                "size": 8,
+                                                "identifier": "drivers/timer/nrf_grtc_timer.c/cc_value",
+                                                "loc": [
+                                                    "ram"
+                                                ],
+                                                "address": 536871784,
+                                                "section": "bss"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "kernel",
+                        "size": 4282,
+                        "identifier": "kernel",
+                        "loc": [],
+                        "children": [
+                            {
+                                "name": "init.c",
+                                "size": 3961,
+                                "identifier": "kernel/init.c",
+                                "loc": [],
+                                "children": [
+                                    {
+                                        "name": "z_idle_stacks",
+                                        "size": 320,
+                                        "identifier": "kernel/init.c/z_idle_stacks",
+                                        "loc": [
+                                            "ram"
+                                        ],
+                                        "address": 536897160,
+                                        "section": "noinit"
+                                    },
+                                    {
+                                        "name": "z_main_stack",
+                                        "size": 1024,
+                                        "identifier": "kernel/init.c/z_main_stack",
+                                        "loc": [
+                                            "ram"
+                                        ],
+                                        "address": 536897480,
+                                        "section": "noinit"
+                                    },
+                                    {
+                                        "name": "_kernel",
+                                        "size": 40,
+                                        "identifier": "kernel/init.c/_kernel",
+                                        "loc": [
+                                            "ram"
+                                        ],
+                                        "address": 536893452,
+                                        "section": "bss"
+                                    },
+                                    {
+                                        "name": "z_main_thread",
+                                        "size": 264,
+                                        "identifier": "kernel/init.c/z_main_thread",
+                                        "loc": [
+                                            "ram"
+                                        ],
+                                        "address": 536872072,
+                                        "section": "bss"
+                                    },
+                                    {
+                                        "name": "z_interrupt_stacks",
+                                        "size": 2048,
+                                        "identifier": "kernel/init.c/z_interrupt_stacks",
+                                        "loc": [
+                                            "ram"
+                                        ],
+                                        "address": 536895112,
+                                        "section": "noinit"
+                                    },
+                                    {
+                                        "name": "z_idle_threads",
+                                        "size": 264,
+                                        "identifier": "kernel/init.c/z_idle_threads",
+                                        "loc": [
+                                            "ram"
+                                        ],
+                                        "address": 536871808,
+                                        "section": "bss"
+                                    },
+                                    {
+                                        "name": "z_sys_post_kernel",
+                                        "size": 1,
+                                        "identifier": "kernel/init.c/z_sys_post_kernel",
+                                        "loc": [
+                                            "ram"
+                                        ],
+                                        "address": 536895103,
+                                        "section": "bss"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "timeslicing.c",
+                                "size": 37,
+                                "identifier": "kernel/timeslicing.c",
+                                "loc": [],
+                                "children": [
+                                    {
+                                        "name": "slice_ticks",
+                                        "size": 4,
+                                        "identifier": "kernel/timeslicing.c/slice_ticks",
+                                        "loc": [
+                                            "ram",
+                                            "rom"
+                                        ],
+                                        "address": 536871556,
+                                        "section": "datas"
+                                    },
+                                    {
+                                        "name": "slice_max_prio",
+                                        "size": 4,
+                                        "identifier": "kernel/timeslicing.c/slice_max_prio",
+                                        "loc": [
+                                            "ram"
+                                        ],
+                                        "address": 536893496,
+                                        "section": "bss"
+                                    },
+                                    {
+                                        "name": "slice_timeouts",
+                                        "size": 24,
+                                        "identifier": "kernel/timeslicing.c/slice_timeouts",
+                                        "loc": [
+                                            "ram"
+                                        ],
+                                        "address": 536872600,
+                                        "section": "bss"
+                                    },
+                                    {
+                                        "name": "slice_expired",
+                                        "size": 1,
+                                        "identifier": "kernel/timeslicing.c/slice_expired",
+                                        "loc": [
+                                            "ram"
+                                        ],
+                                        "address": 536895104,
+                                        "section": "bss"
+                                    },
+                                    {
+                                        "name": "pending_current",
+                                        "size": 4,
+                                        "identifier": "kernel/timeslicing.c/pending_current",
+                                        "loc": [
+                                            "ram"
+                                        ],
+                                        "address": 536893492,
+                                        "section": "bss"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "timeout.c",
+                                "size": 20,
+                                "identifier": "kernel/timeout.c",
+                                "loc": [],
+                                "children": [
+                                    {
+                                        "name": "timeout_list",
+                                        "size": 8,
+                                        "identifier": "kernel/timeout.c/timeout_list",
+                                        "loc": [
+                                            "ram",
+                                            "rom"
+                                        ],
+                                        "address": 536871560,
+                                        "section": "datas"
+                                    },
+                                    {
+                                        "name": "announce_remaining",
+                                        "size": 4,
+                                        "identifier": "kernel/timeout.c/announce_remaining",
+                                        "loc": [
+                                            "ram"
+                                        ],
+                                        "address": 536893500,
+                                        "section": "bss"
+                                    },
+                                    {
+                                        "name": "curr_tick",
+                                        "size": 8,
+                                        "identifier": "kernel/timeout.c/curr_tick",
+                                        "loc": [
+                                            "ram"
+                                        ],
+                                        "address": 536872624,
+                                        "section": "bss"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "sched.c",
+                                "size": 264,
+                                "identifier": "kernel/sched.c",
+                                "loc": [],
+                                "children": [
+                                    {
+                                        "name": "_thread_dummy",
+                                        "size": 264,
+                                        "identifier": "kernel/sched.c/_thread_dummy",
+                                        "loc": [
+                                            "ram"
+                                        ],
+                                        "address": 536872336,
+                                        "section": "bss"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "soc",
+                        "size": 360,
+                        "identifier": "soc",
+                        "loc": [],
+                        "children": [
+                            {
+                                "name": "nordic",
+                                "size": 360,
+                                "identifier": "soc/nordic",
+                                "loc": [],
+                                "children": [
+                                    {
+                                        "name": "common",
+                                        "size": 360,
+                                        "identifier": "soc/nordic/common",
+                                        "loc": [],
+                                        "children": [
+                                            {
+                                                "name": "gpiote_nrfx.c",
+                                                "size": 360,
+                                                "identifier": "soc/nordic/common/gpiote_nrfx.c",
+                                                "loc": [],
+                                                "children": [
+                                                    {
+                                                        "name": "g_nrfx_gpiote1343070208U",
+                                                        "size": 180,
+                                                        "identifier": "soc/nordic/common/gpiote_nrfx.c/g_nrfx_gpiote1343070208U",
+                                                        "loc": [
+                                                            "ram",
+                                                            "rom"
+                                                        ],
+                                                        "address": 536871352,
+                                                        "section": "datas"
+                                                    },
+                                                    {
+                                                        "name": "g_nrfx_gpiote1343275008U",
+                                                        "size": 180,
+                                                        "identifier": "soc/nordic/common/gpiote_nrfx.c/g_nrfx_gpiote1343275008U",
+                                                        "loc": [
+                                                            "ram",
+                                                            "rom"
+                                                        ],
+                                                        "address": 536871172,
+                                                        "section": "datas"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "/",
+                "size": 20480,
+                "identifier": "/",
+                "loc": [],
+                "children": [
+                    {
+                        "name": "Users",
+                        "size": 20480,
+                        "identifier": "/Users",
+                        "loc": [],
+                        "children": [
+                            {
+                                "name": "fredrikwhaug",
+                                "size": 20480,
+                                "identifier": "/Users/fredrikwhaug",
+                                "loc": [],
+                                "children": [
+                                    {
+                                        "name": "Desktop",
+                                        "size": 20480,
+                                        "identifier": "/Users/fredrikwhaug/Desktop",
+                                        "loc": [],
+                                        "children": [
+                                            {
+                                                "name": "cclosed",
+                                                "size": 20480,
+                                                "identifier": "/Users/fredrikwhaug/Desktop/cclosed",
+                                                "loc": [],
+                                                "children": [
+                                                    {
+                                                        "name": "firmware",
+                                                        "size": 20480,
+                                                        "identifier": "/Users/fredrikwhaug/Desktop/cclosed/firmware",
+                                                        "loc": [],
+                                                        "children": [
+                                                            {
+                                                                "name": "spike_classifier",
+                                                                "size": 20480,
+                                                                "identifier": "/Users/fredrikwhaug/Desktop/cclosed/firmware/spike_classifier",
+                                                                "loc": [],
+                                                                "children": [
+                                                                    {
+                                                                        "name": "src",
+                                                                        "size": 20480,
+                                                                        "identifier": "/Users/fredrikwhaug/Desktop/cclosed/firmware/spike_classifier/src",
+                                                                        "loc": [],
+                                                                        "children": [
+                                                                            {
+                                                                                "name": "main.c",
+                                                                                "size": 20480,
+                                                                                "identifier": "/Users/fredrikwhaug/Desktop/cclosed/firmware/spike_classifier/src/main.c",
+                                                                                "loc": [],
+                                                                                "children": [
+                                                                                    {
+                                                                                        "name": "buf_a",
+                                                                                        "size": 10240,
+                                                                                        "identifier": "/Users/fredrikwhaug/Desktop/cclosed/firmware/spike_classifier/src/main.c/buf_a",
+                                                                                        "loc": [
+                                                                                            "ram"
+                                                                                        ],
+                                                                                        "address": 536882936,
+                                                                                        "section": "bss"
+                                                                                    },
+                                                                                    {
+                                                                                        "name": "buf_b",
+                                                                                        "size": 10240,
+                                                                                        "identifier": "/Users/fredrikwhaug/Desktop/cclosed/firmware/spike_classifier/src/main.c/buf_b",
+                                                                                        "loc": [
+                                                                                            "ram"
+                                                                                        ],
+                                                                                        "address": 536872696,
+                                                                                        "section": "bss"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "WORKSPACE",
+                "size": 2132,
+                "identifier": "/opt/nordic/ncs/v3.3.1",
+                "loc": [],
+                "children": [
+                    {
+                        "name": "modules",
+                        "size": 1616,
+                        "identifier": "modules",
+                        "loc": [],
+                        "children": [
+                            {
+                                "name": "hal",
+                                "size": 188,
+                                "identifier": "modules/hal",
+                                "loc": [],
+                                "children": [
+                                    {
+                                        "name": "nordic",
+                                        "size": 188,
+                                        "identifier": "modules/hal/nordic",
+                                        "loc": [],
+                                        "children": [
+                                            {
+                                                "name": "nrfx",
+                                                "size": 188,
+                                                "identifier": "modules/hal/nordic/nrfx",
+                                                "loc": [],
+                                                "children": [
+                                                    {
+                                                        "name": "drivers",
+                                                        "size": 184,
+                                                        "identifier": "modules/hal/nordic/nrfx/drivers",
+                                                        "loc": [],
+                                                        "children": [
+                                                            {
+                                                                "name": "src",
+                                                                "size": 184,
+                                                                "identifier": "modules/hal/nordic/nrfx/drivers/src",
+                                                                "loc": [],
+                                                                "children": [
+                                                                    {
+                                                                        "name": "nrfx_clock.c",
+                                                                        "size": 8,
+                                                                        "identifier": "modules/hal/nordic/nrfx/drivers/src/nrfx_clock.c",
+                                                                        "loc": [],
+                                                                        "children": [
+                                                                            {
+                                                                                "name": "m_clock_cb",
+                                                                                "size": 8,
+                                                                                "identifier": "modules/hal/nordic/nrfx/drivers/src/nrfx_clock.c/m_clock_cb",
+                                                                                "loc": [
+                                                                                    "ram"
+                                                                                ],
+                                                                                "address": 536893420,
+                                                                                "section": "bss"
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "name": "nrfx_clock_lfclk.c",
+                                                                        "size": 8,
+                                                                        "identifier": "modules/hal/nordic/nrfx/drivers/src/nrfx_clock_lfclk.c",
+                                                                        "loc": [],
+                                                                        "children": [
+                                                                            {
+                                                                                "name": "m_clock_cb",
+                                                                                "size": 8,
+                                                                                "identifier": "modules/hal/nordic/nrfx/drivers/src/nrfx_clock_lfclk.c/m_clock_cb",
+                                                                                "loc": [
+                                                                                    "ram"
+                                                                                ],
+                                                                                "address": 536893428,
+                                                                                "section": "bss"
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "name": "nrfx_clock_xo.c",
+                                                                        "size": 8,
+                                                                        "identifier": "modules/hal/nordic/nrfx/drivers/src/nrfx_clock_xo.c",
+                                                                        "loc": [],
+                                                                        "children": [
+                                                                            {
+                                                                                "name": "m_clock_cb",
+                                                                                "size": 8,
+                                                                                "identifier": "modules/hal/nordic/nrfx/drivers/src/nrfx_clock_xo.c/m_clock_cb",
+                                                                                "loc": [
+                                                                                    "ram"
+                                                                                ],
+                                                                                "address": 536893436,
+                                                                                "section": "bss"
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "name": "nrfx_clock_xo24m.c",
+                                                                        "size": 8,
+                                                                        "identifier": "modules/hal/nordic/nrfx/drivers/src/nrfx_clock_xo24m.c",
+                                                                        "loc": [],
+                                                                        "children": [
+                                                                            {
+                                                                                "name": "m_clock_cb",
+                                                                                "size": 8,
+                                                                                "identifier": "modules/hal/nordic/nrfx/drivers/src/nrfx_clock_xo24m.c/m_clock_cb",
+                                                                                "loc": [
+                                                                                    "ram"
+                                                                                ],
+                                                                                "address": 536893444,
+                                                                                "section": "bss"
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "name": "nrfx_gpiote.c",
+                                                                        "size": 8,
+                                                                        "identifier": "modules/hal/nordic/nrfx/drivers/src/nrfx_gpiote.c",
+                                                                        "loc": [],
+                                                                        "children": [
+                                                                            {
+                                                                                "name": "available_channels_mask",
+                                                                                "size": 8,
+                                                                                "identifier": "modules/hal/nordic/nrfx/drivers/src/nrfx_gpiote.c/available_channels_mask",
+                                                                                "loc": [
+                                                                                    "ram",
+                                                                                    "rom"
+                                                                                ],
+                                                                                "address": 536871548,
+                                                                                "section": "datas"
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "name": "nrfx_grtc.c",
+                                                                        "size": 144,
+                                                                        "identifier": "modules/hal/nordic/nrfx/drivers/src/nrfx_grtc.c",
+                                                                        "loc": [],
+                                                                        "children": [
+                                                                            {
+                                                                                "name": "m_cb",
+                                                                                "size": 144,
+                                                                                "identifier": "modules/hal/nordic/nrfx/drivers/src/nrfx_grtc.c/m_cb",
+                                                                                "loc": [
+                                                                                    "ram",
+                                                                                    "rom"
+                                                                                ],
+                                                                                "address": 536871008,
+                                                                                "section": "datas"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "name": "bsp",
+                                                        "size": 4,
+                                                        "identifier": "modules/hal/nordic/nrfx/bsp",
+                                                        "loc": [],
+                                                        "children": [
+                                                            {
+                                                                "name": "stable",
+                                                                "size": 4,
+                                                                "identifier": "modules/hal/nordic/nrfx/bsp/stable",
+                                                                "loc": [],
+                                                                "children": [
+                                                                    {
+                                                                        "name": "mdk",
+                                                                        "size": 4,
+                                                                        "identifier": "modules/hal/nordic/nrfx/bsp/stable/mdk",
+                                                                        "loc": [],
+                                                                        "children": [
+                                                                            {
+                                                                                "name": "system_nrf54l.c",
+                                                                                "size": 4,
+                                                                                "identifier": "modules/hal/nordic/nrfx/bsp/stable/mdk/system_nrf54l.c",
+                                                                                "loc": [],
+                                                                                "children": [
+                                                                                    {
+                                                                                        "name": "SystemCoreClock",
+                                                                                        "size": 4,
+                                                                                        "identifier": "modules/hal/nordic/nrfx/bsp/stable/mdk/system_nrf54l.c/SystemCoreClock",
+                                                                                        "loc": [
+                                                                                            "ram",
+                                                                                            "rom"
+                                                                                        ],
+                                                                                        "address": 536871544,
+                                                                                        "section": "datas"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "crypto",
+                                "size": 1428,
+                                "identifier": "modules/crypto",
+                                "loc": [],
+                                "children": [
+                                    {
+                                        "name": "oberon-psa-crypto",
+                                        "size": 1428,
+                                        "identifier": "modules/crypto/oberon-psa-crypto",
+                                        "loc": [],
+                                        "children": [
+                                            {
+                                                "name": "library",
+                                                "size": 1428,
+                                                "identifier": "modules/crypto/oberon-psa-crypto/library",
+                                                "loc": [],
+                                                "children": [
+                                                    {
+                                                        "name": "psa_crypto.c",
+                                                        "size": 8,
+                                                        "identifier": "modules/crypto/oberon-psa-crypto/library/psa_crypto.c",
+                                                        "loc": [],
+                                                        "children": [
+                                                            {
+                                                                "name": "global_data",
+                                                                "size": 8,
+                                                                "identifier": "modules/crypto/oberon-psa-crypto/library/psa_crypto.c/global_data",
+                                                                "loc": [
+                                                                    "ram"
+                                                                ],
+                                                                "address": 536893504,
+                                                                "section": "bss"
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "name": "psa_crypto_slot_management.c",
+                                                        "size": 1412,
+                                                        "identifier": "modules/crypto/oberon-psa-crypto/library/psa_crypto_slot_management.c",
+                                                        "loc": [],
+                                                        "children": [
+                                                            {
+                                                                "name": "global_data",
+                                                                "size": 1412,
+                                                                "identifier": "modules/crypto/oberon-psa-crypto/library/psa_crypto_slot_management.c/global_data",
+                                                                "loc": [
+                                                                    "ram"
+                                                                ],
+                                                                "address": 536893512,
+                                                                "section": "bss"
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "name": "platform.c",
+                                                        "size": 4,
+                                                        "identifier": "modules/crypto/oberon-psa-crypto/library/platform.c",
+                                                        "loc": [],
+                                                        "children": [
+                                                            {
+                                                                "name": "mbedtls_free_func",
+                                                                "size": 4,
+                                                                "identifier": "modules/crypto/oberon-psa-crypto/library/platform.c/mbedtls_free_func",
+                                                                "loc": [
+                                                                    "ram",
+                                                                    "rom"
+                                                                ],
+                                                                "address": 536871568,
+                                                                "section": "datas"
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "name": "platform_util.c",
+                                                        "size": 4,
+                                                        "identifier": "modules/crypto/oberon-psa-crypto/library/platform_util.c",
+                                                        "loc": [],
+                                                        "children": [
+                                                            {
+                                                                "name": "memset_func",
+                                                                "size": 4,
+                                                                "identifier": "modules/crypto/oberon-psa-crypto/library/platform_util.c/memset_func",
+                                                                "loc": [
+                                                                    "ram",
+                                                                    "rom"
+                                                                ],
+                                                                "address": 536871572,
+                                                                "section": "datas"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "nrf",
+                        "size": 516,
+                        "identifier": "nrf",
+                        "loc": [],
+                        "children": [
+                            {
+                                "name": "subsys",
+                                "size": 516,
+                                "identifier": "nrf/subsys",
+                                "loc": [],
+                                "children": [
+                                    {
+                                        "name": "nrf_security",
+                                        "size": 516,
+                                        "identifier": "nrf/subsys/nrf_security",
+                                        "loc": [],
+                                        "children": [
+                                            {
+                                                "name": "src",
+                                                "size": 516,
+                                                "identifier": "nrf/subsys/nrf_security/src",
+                                                "loc": [],
+                                                "children": [
+                                                    {
+                                                        "name": "drivers",
+                                                        "size": 468,
+                                                        "identifier": "nrf/subsys/nrf_security/src/drivers",
+                                                        "loc": [],
+                                                        "children": [
+                                                            {
+                                                                "name": "cracen",
+                                                                "size": 468,
+                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen",
+                                                                "loc": [],
+                                                                "children": [
+                                                                    {
+                                                                        "name": "common",
+                                                                        "size": 32,
+                                                                        "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/common",
+                                                                        "loc": [],
+                                                                        "children": [
+                                                                            {
+                                                                                "name": "src",
+                                                                                "size": 32,
+                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/common/src",
+                                                                                "loc": [],
+                                                                                "children": [
+                                                                                    {
+                                                                                        "name": "cracen",
+                                                                                        "size": 32,
+                                                                                        "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/common/src/cracen",
+                                                                                        "loc": [],
+                                                                                        "children": [
+                                                                                            {
+                                                                                                "name": "hardware",
+                                                                                                "size": 32,
+                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/common/src/cracen/hardware",
+                                                                                                "loc": [],
+                                                                                                "children": [
+                                                                                                    {
+                                                                                                        "name": "hardware.c",
+                                                                                                        "size": 32,
+                                                                                                        "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/common/src/cracen/hardware/hardware.c",
+                                                                                                        "loc": [],
+                                                                                                        "children": [
+                                                                                                            {
+                                                                                                                "name": "users",
+                                                                                                                "size": 4,
+                                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/common/src/cracen/hardware/hardware.c/users",
+                                                                                                                "loc": [
+                                                                                                                    "ram"
+                                                                                                                ],
+                                                                                                                "address": 536894924,
+                                                                                                                "section": "bss"
+                                                                                                            },
+                                                                                                            {
+                                                                                                                "name": "cracen_initialized.0",
+                                                                                                                "size": 4,
+                                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/common/src/cracen/hardware/hardware.c/cracen_initialized.0",
+                                                                                                                "loc": [
+                                                                                                                    "ram",
+                                                                                                                    "rom"
+                                                                                                                ],
+                                                                                                                "address": 536871576,
+                                                                                                                "section": "datas"
+                                                                                                            },
+                                                                                                            {
+                                                                                                                "name": "k_cracen_mutex",
+                                                                                                                "size": 20,
+                                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/common/src/cracen/hardware/hardware.c/k_cracen_mutex",
+                                                                                                                "loc": [
+                                                                                                                    "ram",
+                                                                                                                    "rom"
+                                                                                                                ],
+                                                                                                                "address": 536871624,
+                                                                                                                "section": "k_mutex_area"
+                                                                                                            },
+                                                                                                            {
+                                                                                                                "name": "cracen_mutex",
+                                                                                                                "size": 4,
+                                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/common/src/cracen/hardware/hardware.c/cracen_mutex",
+                                                                                                                "loc": [
+                                                                                                                    "ram",
+                                                                                                                    "rom"
+                                                                                                                ],
+                                                                                                                "address": 536871580,
+                                                                                                                "section": "datas"
+                                                                                                            }
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "name": "cracenpsa",
+                                                                        "size": 184,
+                                                                        "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/cracenpsa",
+                                                                        "loc": [],
+                                                                        "children": [
+                                                                            {
+                                                                                "name": "src",
+                                                                                "size": 184,
+                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/cracenpsa/src",
+                                                                                "loc": [],
+                                                                                "children": [
+                                                                                    {
+                                                                                        "name": "cracen_psa_ctr_drbg.c",
+                                                                                        "size": 88,
+                                                                                        "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/cracenpsa/src/cracen_psa_ctr_drbg.c",
+                                                                                        "loc": [],
+                                                                                        "children": [
+                                                                                            {
+                                                                                                "name": "prng",
+                                                                                                "size": 64,
+                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/cracenpsa/src/cracen_psa_ctr_drbg.c/prng",
+                                                                                                "loc": [
+                                                                                                    "ram"
+                                                                                                ],
+                                                                                                "address": 536872632,
+                                                                                                "section": "bss"
+                                                                                            },
+                                                                                            {
+                                                                                                "name": "cracen_prng_trng_mutex",
+                                                                                                "size": 4,
+                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/cracenpsa/src/cracen_psa_ctr_drbg.c/cracen_prng_trng_mutex",
+                                                                                                "loc": [
+                                                                                                    "ram",
+                                                                                                    "rom"
+                                                                                                ],
+                                                                                                "address": 536871584,
+                                                                                                "section": "datas"
+                                                                                            },
+                                                                                            {
+                                                                                                "name": "k_cracen_prng_trng_mutex",
+                                                                                                "size": 20,
+                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/cracenpsa/src/cracen_psa_ctr_drbg.c/k_cracen_prng_trng_mutex",
+                                                                                                "loc": [
+                                                                                                    "ram",
+                                                                                                    "rom"
+                                                                                                ],
+                                                                                                "address": 536871684,
+                                                                                                "section": "k_mutex_area"
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    {
+                                                                                        "name": "cracen_psa_kmu.c",
+                                                                                        "size": 96,
+                                                                                        "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/cracenpsa/src/cracen_psa_kmu.c",
+                                                                                        "loc": [],
+                                                                                        "children": [
+                                                                                            {
+                                                                                                "name": "kmu_push_area",
+                                                                                                "size": 96,
+                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/cracenpsa/src/cracen_psa_kmu.c/kmu_push_area",
+                                                                                                "loc": [
+                                                                                                    "ram"
+                                                                                                ],
+                                                                                                "address": 536870912,
+                                                                                                "section": "NRF_KMU_RESERVED_PUSH_SECTION"
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "name": "sxsymcrypt",
+                                                                        "size": 120,
+                                                                        "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/sxsymcrypt",
+                                                                        "loc": [],
+                                                                        "children": [
+                                                                            {
+                                                                                "name": "src",
+                                                                                "size": 120,
+                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/sxsymcrypt/src",
+                                                                                "loc": [],
+                                                                                "children": [
+                                                                                    {
+                                                                                        "name": "blkcipher.c",
+                                                                                        "size": 64,
+                                                                                        "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/sxsymcrypt/src/blkcipher.c",
+                                                                                        "loc": [],
+                                                                                        "children": [
+                                                                                            {
+                                                                                                "name": "in_descs.1",
+                                                                                                "size": 48,
+                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/sxsymcrypt/src/blkcipher.c/in_descs.1",
+                                                                                                "loc": [
+                                                                                                    "ram"
+                                                                                                ],
+                                                                                                "address": 536894944,
+                                                                                                "section": "bss"
+                                                                                            },
+                                                                                            {
+                                                                                                "name": "out_desc.0",
+                                                                                                "size": 16,
+                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/sxsymcrypt/src/blkcipher.c/out_desc.0",
+                                                                                                "loc": [
+                                                                                                    "ram"
+                                                                                                ],
+                                                                                                "address": 536894928,
+                                                                                                "section": "bss"
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    {
+                                                                                        "name": "platform",
+                                                                                        "size": 56,
+                                                                                        "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/sxsymcrypt/src/platform",
+                                                                                        "loc": [],
+                                                                                        "children": [
+                                                                                            {
+                                                                                                "name": "baremetal",
+                                                                                                "size": 56,
+                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/sxsymcrypt/src/platform/baremetal",
+                                                                                                "loc": [],
+                                                                                                "children": [
+                                                                                                    {
+                                                                                                        "name": "interrupts.c",
+                                                                                                        "size": 32,
+                                                                                                        "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/sxsymcrypt/src/platform/baremetal/interrupts.c",
+                                                                                                        "loc": [],
+                                                                                                        "children": [
+                                                                                                            {
+                                                                                                                "name": "k_cracen_irq_event_for_cryptomaster",
+                                                                                                                "size": 12,
+                                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/sxsymcrypt/src/platform/baremetal/interrupts.c/k_cracen_irq_event_for_cryptomaster",
+                                                                                                                "loc": [
+                                                                                                                    "ram",
+                                                                                                                    "rom"
+                                                                                                                ],
+                                                                                                                "address": 536871744,
+                                                                                                                "section": "k_event_area"
+                                                                                                            },
+                                                                                                            {
+                                                                                                                "name": "cracen_irq_event_for_pke",
+                                                                                                                "size": 4,
+                                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/sxsymcrypt/src/platform/baremetal/interrupts.c/cracen_irq_event_for_pke",
+                                                                                                                "loc": [
+                                                                                                                    "ram",
+                                                                                                                    "rom"
+                                                                                                                ],
+                                                                                                                "address": 536871592,
+                                                                                                                "section": "datas"
+                                                                                                            },
+                                                                                                            {
+                                                                                                                "name": "k_cracen_irq_event_for_pke",
+                                                                                                                "size": 12,
+                                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/sxsymcrypt/src/platform/baremetal/interrupts.c/k_cracen_irq_event_for_pke",
+                                                                                                                "loc": [
+                                                                                                                    "ram",
+                                                                                                                    "rom"
+                                                                                                                ],
+                                                                                                                "address": 536871756,
+                                                                                                                "section": "k_event_area"
+                                                                                                            },
+                                                                                                            {
+                                                                                                                "name": "cracen_irq_event_for_cryptomaster",
+                                                                                                                "size": 4,
+                                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/sxsymcrypt/src/platform/baremetal/interrupts.c/cracen_irq_event_for_cryptomaster",
+                                                                                                                "loc": [
+                                                                                                                    "ram",
+                                                                                                                    "rom"
+                                                                                                                ],
+                                                                                                                "address": 536871596,
+                                                                                                                "section": "datas"
+                                                                                                            }
+                                                                                                        ]
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "cmdma_hw.c",
+                                                                                                        "size": 24,
+                                                                                                        "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/sxsymcrypt/src/platform/baremetal/cmdma_hw.c",
+                                                                                                        "loc": [],
+                                                                                                        "children": [
+                                                                                                            {
+                                                                                                                "name": "k_cracen_mutex_symmetric",
+                                                                                                                "size": 20,
+                                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/sxsymcrypt/src/platform/baremetal/cmdma_hw.c/k_cracen_mutex_symmetric",
+                                                                                                                "loc": [
+                                                                                                                    "ram",
+                                                                                                                    "rom"
+                                                                                                                ],
+                                                                                                                "address": 536871664,
+                                                                                                                "section": "k_mutex_area"
+                                                                                                            },
+                                                                                                            {
+                                                                                                                "name": "cracen_mutex_symmetric",
+                                                                                                                "size": 4,
+                                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/sxsymcrypt/src/platform/baremetal/cmdma_hw.c/cracen_mutex_symmetric",
+                                                                                                                "loc": [
+                                                                                                                    "ram",
+                                                                                                                    "rom"
+                                                                                                                ],
+                                                                                                                "address": 536871588,
+                                                                                                                "section": "datas"
+                                                                                                            }
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "name": "silexpk",
+                                                                        "size": 132,
+                                                                        "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/silexpk",
+                                                                        "loc": [],
+                                                                        "children": [
+                                                                            {
+                                                                                "name": "target",
+                                                                                "size": 132,
+                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/silexpk/target",
+                                                                                "loc": [],
+                                                                                "children": [
+                                                                                    {
+                                                                                        "name": "baremetal_ba414e_with_ik",
+                                                                                        "size": 132,
+                                                                                        "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/silexpk/target/baremetal_ba414e_with_ik",
+                                                                                        "loc": [],
+                                                                                        "children": [
+                                                                                            {
+                                                                                                "name": "pk_baremetal.c",
+                                                                                                "size": 132,
+                                                                                                "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/silexpk/target/baremetal_ba414e_with_ik/pk_baremetal.c",
+                                                                                                "loc": [],
+                                                                                                "children": [
+                                                                                                    {
+                                                                                                        "name": "silex_pk_engine",
+                                                                                                        "size": 108,
+                                                                                                        "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/silexpk/target/baremetal_ba414e_with_ik/pk_baremetal.c/silex_pk_engine",
+                                                                                                        "loc": [
+                                                                                                            "ram"
+                                                                                                        ],
+                                                                                                        "address": 536894992,
+                                                                                                        "section": "bss"
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "cracen_mutex_asymmetric",
+                                                                                                        "size": 4,
+                                                                                                        "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/silexpk/target/baremetal_ba414e_with_ik/pk_baremetal.c/cracen_mutex_asymmetric",
+                                                                                                        "loc": [
+                                                                                                            "ram",
+                                                                                                            "rom"
+                                                                                                        ],
+                                                                                                        "address": 536871600,
+                                                                                                        "section": "datas"
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "name": "k_cracen_mutex_asymmetric",
+                                                                                                        "size": 20,
+                                                                                                        "identifier": "nrf/subsys/nrf_security/src/drivers/cracen/silexpk/target/baremetal_ba414e_with_ik/pk_baremetal.c/k_cracen_mutex_asymmetric",
+                                                                                                        "loc": [
+                                                                                                            "ram",
+                                                                                                            "rom"
+                                                                                                        ],
+                                                                                                        "address": 536871644,
+                                                                                                        "section": "k_mutex_area"
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "name": "threading",
+                                                        "size": 48,
+                                                        "identifier": "nrf/subsys/nrf_security/src/threading",
+                                                        "loc": [],
+                                                        "children": [
+                                                            {
+                                                                "name": "threading_alt.c",
+                                                                "size": 48,
+                                                                "identifier": "nrf/subsys/nrf_security/src/threading/threading_alt.c",
+                                                                "loc": [],
+                                                                "children": [
+                                                                    {
+                                                                        "name": "mbedtls_threading_psa_rngdata_mutex",
+                                                                        "size": 20,
+                                                                        "identifier": "nrf/subsys/nrf_security/src/threading/threading_alt.c/mbedtls_threading_psa_rngdata_mutex",
+                                                                        "loc": [
+                                                                            "ram",
+                                                                            "rom"
+                                                                        ],
+                                                                        "address": 536871724,
+                                                                        "section": "k_mutex_area"
+                                                                    },
+                                                                    {
+                                                                        "name": "mbedtls_threading_psa_globaldata_mutex",
+                                                                        "size": 20,
+                                                                        "identifier": "nrf/subsys/nrf_security/src/threading/threading_alt.c/mbedtls_threading_psa_globaldata_mutex",
+                                                                        "loc": [
+                                                                            "ram",
+                                                                            "rom"
+                                                                        ],
+                                                                        "address": 536871704,
+                                                                        "section": "k_mutex_area"
+                                                                    },
+                                                                    {
+                                                                        "name": "mbedtls_mutex_unlock",
+                                                                        "size": 4,
+                                                                        "identifier": "nrf/subsys/nrf_security/src/threading/threading_alt.c/mbedtls_mutex_unlock",
+                                                                        "loc": [
+                                                                            "ram",
+                                                                            "rom"
+                                                                        ],
+                                                                        "address": 536871604,
+                                                                        "section": "datas"
+                                                                    },
+                                                                    {
+                                                                        "name": "mbedtls_mutex_lock",
+                                                                        "size": 4,
+                                                                        "identifier": "nrf/subsys/nrf_security/src/threading/threading_alt.c/mbedtls_mutex_lock",
+                                                                        "loc": [
+                                                                            "ram",
+                                                                            "rom"
+                                                                        ],
+                                                                        "address": 536871608,
+                                                                        "section": "datas"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "(hidden)",
+                "size": 4,
+                "identifier": "(hidden)",
+                "loc": []
+            }
+        ]
+    },
+    "total_size": 27593
+}

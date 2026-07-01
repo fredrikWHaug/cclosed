@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spike_classifier/build/_sysbuild/sysbuild/images/CMakeFiles/spike_classifier"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spike_classifier/build/_sysbuild/sysbuild/images/CMakeFiles/spike_classifier.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spike_classifier/build/_sysbuild/sysbuild/images/CMakeFiles/spike_classifier-complete.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spike_classifier/build/_sysbuild/sysbuild/images/spike_classifier-prefix/src/spike_classifier-stamp/spike_classifier-build.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spike_classifier/build/_sysbuild/sysbuild/images/spike_classifier-prefix/src/spike_classifier-stamp/spike_classifier-configure.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spike_classifier/build/_sysbuild/sysbuild/images/spike_classifier-prefix/src/spike_classifier-stamp/spike_classifier-download.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spike_classifier/build/_sysbuild/sysbuild/images/spike_classifier-prefix/src/spike_classifier-stamp/spike_classifier-install.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spike_classifier/build/_sysbuild/sysbuild/images/spike_classifier-prefix/src/spike_classifier-stamp/spike_classifier-mkdir.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spike_classifier/build/_sysbuild/sysbuild/images/spike_classifier-prefix/src/spike_classifier-stamp/spike_classifier-patch.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spike_classifier/build/_sysbuild/sysbuild/images/spike_classifier-prefix/src/spike_classifier-stamp/spike_classifier-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"spike_classifier"
+		],
+		"name" : "spike_classifier"
+	}
+}
