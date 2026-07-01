@@ -1,0 +1,6 @@
+/* Override spi22 to be SPI slave instead of master */
+&spi22 {
+	compatible = "nordic,nrf-spis";
+	status = "okay";
+	def-char = <0xAA>;  /* default byte sent when master reads */
+};
