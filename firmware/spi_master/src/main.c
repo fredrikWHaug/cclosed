@@ -1,5 +1,6 @@
 /*
- * SPI Master — sends a counter byte every second.
+ * SPI Master — sends a counter byte every second and prints what comes back.
+ * Uses spi22 with Nordic's proven pin assignments.
  */
 
 #include <zephyr/kernel.h>
@@ -11,12 +12,12 @@
 static const struct device *spi_dev = DEVICE_DT_GET(SPI_NODE);
 
 static struct spi_config spi_cfg = {
-	.frequency = 1000000, /* 1 MHz */
+	.frequency = 1000000,
 	.operation = SPI_WORD_SET(8) | SPI_TRANSFER_MSB | SPI_OP_MODE_MASTER,
 	.slave = 0,
 	.cs = {
 		.gpio = GPIO_DT_SPEC_GET(SPI_NODE, cs_gpios),
-		.delay = 100, /* 100 us delay after CS assert before clocking */
+		.delay = 0,
 	},
 };
 
@@ -29,10 +30,8 @@ int main(void)
 		return 0;
 	}
 	printk("SPI device ready\n");
-	printk("Waiting 3s for slave...\n");
-	k_msleep(3000);
 
-	uint8_t tx_byte = 0xAB;
+	uint8_t tx_byte = 0;
 
 	while (1) {
 		uint8_t rx_byte = 0xFF;

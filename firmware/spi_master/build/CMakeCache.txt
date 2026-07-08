@@ -207,8 +207,6 @@ _Python3_EXECUTABLE:INTERNAL=/opt/nordic/ncs/toolchains/0c0f19d91c/opt/python@3.
 //Python3 Properties
 _Python3_INTERPRETER_PROPERTIES:INTERNAL=Python;3;12;4;64;<none>;cpython-312-darwin;abi3;/opt/nordic/ncs/toolchains/0c0f19d91c/opt/python@3.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12;/opt/nordic/ncs/toolchains/0c0f19d91c/lib/python3.12;/opt/nordic/ncs/toolchains/0c0f19d91c/lib/python3.12/site-packages;/opt/nordic/ncs/toolchains/0c0f19d91c/lib/python3.12/site-packages
 _Python3_INTERPRETER_SIGNATURE:INTERNAL=a36f39f063d014ea95f9a23dc489f97e
-//Interpreter reason failure
-_Python3_Interpreter_REASON_FAILURE:INTERNAL=
 //NumPy reason failure
 _Python3_NumPy_REASON_FAILURE:INTERNAL=
 //nRF Connect SDK partition managere controlled hex file

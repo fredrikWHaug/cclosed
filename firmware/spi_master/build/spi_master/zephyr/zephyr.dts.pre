@@ -3831,8 +3831,34 @@ nordic_expansion_pwm: &pwm21 {
 # 0 "<command-line>" 2
 # 1 "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/boards/nrf54lm20dk_nrf54lm20b_cpuapp.overlay" 1
 
+
+&pinctrl {
+ spi22_default_alt: spi22_default_alt {
+  group1 {
+   psels = <((((((1) * 32U) + (23)) & 0x1FFU) << 0U) | ((4U & 0xFFU) << 24U))>,
+    <((((((1) * 32U) + (30)) & 0x1FFU) << 0U) | ((6U & 0xFFU) << 24U))>,
+    <((((((1) * 32U) + (13)) & 0x1FFU) << 0U) | ((5U & 0xFFU) << 24U))>;
+  };
+ };
+
+ spi22_sleep_alt: spi22_sleep_alt {
+  group1 {
+   psels = <((((((1) * 32U) + (23)) & 0x1FFU) << 0U) | ((4U & 0xFFU) << 24U))>,
+    <((((((1) * 32U) + (30)) & 0x1FFU) << 0U) | ((6U & 0xFFU) << 24U))>,
+    <((((((1) * 32U) + (13)) & 0x1FFU) << 0U) | ((5U & 0xFFU) << 24U))>;
+   low-power-enable;
+  };
+ };
+};
+
 &spi22 {
  status = "okay";
+ pinctrl-0 = <&spi22_default_alt>;
+ pinctrl-1 = <&spi22_sleep_alt>;
+ pinctrl-names = "default", "sleep";
+ overrun-character = <0x00>;
+ cs-gpios = <&gpio1 3 (1 << 0)>;
+ zephyr,pm-device-runtime-auto;
 };
 # 0 "<command-line>" 2
 # 1 "/opt/nordic/ncs/v3.3.1/zephyr/misc/empty_file.c"

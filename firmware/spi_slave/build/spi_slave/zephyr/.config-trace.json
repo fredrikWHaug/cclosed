@@ -1143,7 +1143,7 @@
     "CONFIG_LOG",
     "y",
     "bool",
-    "y",
+    "n",
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
@@ -1194,17 +1194,6 @@
     ]
   ],
   [
-    "CONFIG_LOG_DOMAIN_NAME",
-    "y",
-    "string",
-    "",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      116
-    ]
-  ],
-  [
     "CONFIG_ASSERT",
     "y",
     "bool",
@@ -1212,7 +1201,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      117
+      116
     ]
   ],
   [
@@ -1223,18 +1212,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      118
-    ]
-  ],
-  [
-    "CONFIG_LOG_PROCESS_THREAD_STACK_SIZE",
-    "y",
-    "int",
-    "768",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      119
+      117
     ]
   ],
   [
@@ -1245,7 +1223,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      120
+      118
     ]
   ],
   [
@@ -1256,7 +1234,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      121
+      119
     ]
   ],
   [
@@ -1267,7 +1245,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      122
+      120
     ]
   ],
   [
@@ -1278,7 +1256,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      123
+      121
     ]
   ],
   [
@@ -1289,7 +1267,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      124
+      122
     ]
   ],
   [
@@ -1300,7 +1278,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      125
+      123
     ]
   ],
   [
@@ -1311,7 +1289,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      126
+      124
     ]
   ],
   [
@@ -1322,7 +1300,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      127
+      125
     ]
   ],
   [
@@ -1333,7 +1311,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      128
+      126
     ]
   ],
   [
@@ -1344,7 +1322,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      129
+      127
     ]
   ],
   [
@@ -1377,7 +1355,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      132
+      130
     ]
   ],
   [
@@ -1399,7 +1377,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      134
+      132
     ]
   ],
   [
@@ -1410,7 +1388,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      135
+      133
     ]
   ],
   [
@@ -1421,7 +1399,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      136
+      134
     ]
   ],
   [
@@ -1432,7 +1410,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      137
+      135
     ]
   ],
   [
@@ -1443,7 +1421,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      138
+      136
     ]
   ],
   [
@@ -1454,7 +1432,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      139
+      137
     ]
   ],
   [
@@ -1465,7 +1443,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      140
+      138
     ]
   ],
   [
@@ -1476,7 +1454,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      145
+      143
     ]
   ],
   [
@@ -1487,18 +1465,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      154
-    ]
-  ],
-  [
-    "CONFIG_LOG_BUFFER_SIZE",
-    "y",
-    "int",
-    "1024",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      155
+      152
     ]
   ],
   [
@@ -1509,7 +1476,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      156
+      153
     ]
   ],
   [
@@ -1520,7 +1487,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      157
+      154
     ]
   ],
   [
@@ -1531,7 +1498,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      158
+      155
     ]
   ],
   [
@@ -1542,7 +1509,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      159
+      156
     ]
   ],
   [
@@ -1553,7 +1520,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      160
+      157
     ]
   ],
   [
@@ -1564,7 +1531,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      161
+      158
     ]
   ],
   [
@@ -1575,7 +1542,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      162
+      159
     ]
   ],
   [
@@ -1586,7 +1553,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      163
+      160
     ]
   ],
   [
@@ -1597,7 +1564,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      164
+      161
     ]
   ],
   [
@@ -1608,7 +1575,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      165
+      162
     ]
   ],
   [
@@ -1619,7 +1586,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      170
+      167
     ]
   ],
   [
@@ -1652,7 +1619,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      173
+      170
     ]
   ],
   [
@@ -1663,7 +1630,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      178
+      175
     ]
   ],
   [
@@ -1674,7 +1641,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      188
+      185
     ]
   ],
   [
@@ -1696,7 +1663,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      190
+      187
     ]
   ],
   [
@@ -1707,7 +1674,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      191
+      188
     ]
   ],
   [
@@ -1718,7 +1685,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      192
+      189
     ]
   ],
   [
@@ -1729,7 +1696,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      197
+      194
     ]
   ],
   [
@@ -1740,7 +1707,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      198
+      195
     ]
   ],
   [
@@ -1762,7 +1729,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      200
+      197
     ]
   ],
   [
@@ -1773,7 +1740,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      201
+      198
     ]
   ],
   [
@@ -1784,7 +1751,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      202
+      199
     ]
   ],
   [
@@ -1828,7 +1795,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      208
+      205
     ]
   ],
   [
@@ -1839,7 +1806,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      209
+      206
     ]
   ],
   [
@@ -1850,7 +1817,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      210
+      207
     ]
   ],
   [
@@ -1861,7 +1828,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      211
+      208
     ]
   ],
   [
@@ -1872,7 +1839,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      212
+      209
     ]
   ],
   [
@@ -1883,7 +1850,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      213
+      210
     ]
   ],
   [
@@ -1894,7 +1861,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      216
+      213
     ]
   ],
   [
@@ -1905,7 +1872,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      221
+      218
     ]
   ],
   [
@@ -1916,7 +1883,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      226
+      223
     ]
   ],
   [
@@ -1927,7 +1894,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      233
+      230
     ]
   ],
   [
@@ -1938,7 +1905,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      234
+      231
     ]
   ],
   [
@@ -1949,7 +1916,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      237
+      234
     ]
   ],
   [
@@ -1960,7 +1927,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      242
+      239
     ]
   ],
   [
@@ -1971,7 +1938,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      243
+      240
     ]
   ],
   [
@@ -1993,7 +1960,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      245
+      242
     ]
   ],
   [
@@ -2004,7 +1971,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      261
+      258
     ]
   ],
   [
@@ -2015,7 +1982,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      262
+      259
     ]
   ],
   [
@@ -2026,7 +1993,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      263
+      260
     ]
   ],
   [
@@ -2037,7 +2004,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      264
+      261
     ]
   ],
   [
@@ -2048,7 +2015,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      265
+      262
     ]
   ],
   [
@@ -2059,7 +2026,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      266
+      263
     ]
   ],
   [
@@ -2070,7 +2037,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      273
+      270
     ]
   ],
   [
@@ -2081,7 +2048,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      274
+      271
     ]
   ],
   [
@@ -2092,7 +2059,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      275
+      272
     ]
   ],
   [
@@ -2103,66 +2070,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      276
-    ]
-  ],
-  [
-    "CONFIG_WIFI_PROV_CORE_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_WIFI_PROV_CORE_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_WIFI_PROV_CORE_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_WIFI_PROV_CORE_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_WIFI_PROV_CORE_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_WIFI_PROV_CORE_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_WIFI_PROV_CORE_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
+      273
     ]
   ],
   [
@@ -2173,7 +2081,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      286
+      276
     ]
   ],
   [
@@ -2184,7 +2092,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      292
+      282
     ]
   ],
   [
@@ -2195,7 +2103,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      293
+      283
     ]
   ],
   [
@@ -2206,7 +2114,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      294
+      284
     ]
   ],
   [
@@ -2217,7 +2125,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      295
+      285
     ]
   ],
   [
@@ -2228,7 +2136,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      296
+      286
     ]
   ],
   [
@@ -2239,7 +2147,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      297
+      287
     ]
   ],
   [
@@ -2250,7 +2158,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      298
+      288
     ]
   ],
   [
@@ -2261,7 +2169,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      299
+      289
     ]
   ],
   [
@@ -2272,7 +2180,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      300
+      290
     ]
   ],
   [
@@ -2283,7 +2191,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      301
+      291
     ]
   ],
   [
@@ -2294,7 +2202,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      302
+      292
     ]
   ],
   [
@@ -2305,7 +2213,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      303
+      293
     ]
   ],
   [
@@ -2316,7 +2224,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      304
+      294
     ]
   ],
   [
@@ -2327,7 +2235,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      305
+      295
     ]
   ],
   [
@@ -2338,7 +2246,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      308
+      298
     ]
   ],
   [
@@ -2349,7 +2257,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      309
+      299
     ]
   ],
   [
@@ -2360,7 +2268,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      310
+      300
     ]
   ],
   [
@@ -2371,7 +2279,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      315
+      305
     ]
   ],
   [
@@ -2382,7 +2290,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      316
+      306
     ]
   ],
   [
@@ -2393,7 +2301,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      317
+      307
     ]
   ],
   [
@@ -2404,7 +2312,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      323
+      313
     ]
   ],
   [
@@ -2415,66 +2323,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      324
-    ]
-  ],
-  [
-    "CONFIG_MPSL_FEM_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_MPSL_FEM_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_MPSL_FEM_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_MPSL_FEM_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_MPSL_FEM_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_MPSL_FEM_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_MPSL_FEM_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
+      314
     ]
   ],
   [
@@ -2496,7 +2345,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      333
+      316
     ]
   ],
   [
@@ -2507,7 +2356,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      334
+      317
     ]
   ],
   [
@@ -2529,7 +2378,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      336
+      319
     ]
   ],
   [
@@ -2544,65 +2393,6 @@
     ]
   ],
   [
-    "CONFIG_MPSL_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_MPSL_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_MPSL_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_MPSL_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_MPSL_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_MPSL_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_MPSL_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
-    ]
-  ],
-  [
     "CONFIG_PARTITION_MANAGER_ENABLED",
     "y",
     "bool",
@@ -2610,7 +2400,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      350
+      326
     ]
   ],
   [
@@ -2632,7 +2422,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      352
+      328
     ]
   ],
   [
@@ -2643,7 +2433,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      353
+      329
     ]
   ],
   [
@@ -2654,7 +2444,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      363
+      339
     ]
   ],
   [
@@ -2687,7 +2477,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      366
+      342
     ]
   ],
   [
@@ -2720,7 +2510,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      401
+      377
     ]
   ],
   [
@@ -2731,7 +2521,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      402
+      378
     ]
   ],
   [
@@ -2742,7 +2532,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      407
+      383
     ]
   ],
   [
@@ -2753,7 +2543,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      408
+      384
     ]
   ],
   [
@@ -2764,7 +2554,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      417
+      393
     ]
   ],
   [
@@ -2775,7 +2565,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      418
+      394
     ]
   ],
   [
@@ -2786,7 +2576,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      419
+      395
     ]
   ],
   [
@@ -2797,7 +2587,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      420
+      396
     ]
   ],
   [
@@ -2808,7 +2598,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      421
+      397
     ]
   ],
   [
@@ -2819,7 +2609,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      422
+      398
     ]
   ],
   [
@@ -2830,7 +2620,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      423
+      399
     ]
   ],
   [
@@ -2841,7 +2631,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      424
+      400
     ]
   ],
   [
@@ -2852,7 +2642,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      425
+      401
     ]
   ],
   [
@@ -2863,7 +2653,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      426
+      402
     ]
   ],
   [
@@ -2874,7 +2664,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      427
+      403
     ]
   ],
   [
@@ -2885,7 +2675,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      428
+      404
     ]
   ],
   [
@@ -2896,7 +2686,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      429
+      405
     ]
   ],
   [
@@ -2907,7 +2697,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      430
+      406
     ]
   ],
   [
@@ -2918,7 +2708,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      431
+      407
     ]
   ],
   [
@@ -2929,7 +2719,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      432
+      408
     ]
   ],
   [
@@ -2940,7 +2730,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      433
+      409
     ]
   ],
   [
@@ -2951,7 +2741,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      434
+      410
     ]
   ],
   [
@@ -2962,7 +2752,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      435
+      411
     ]
   ],
   [
@@ -2973,7 +2763,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      436
+      412
     ]
   ],
   [
@@ -2984,7 +2774,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      437
+      413
     ]
   ],
   [
@@ -2995,7 +2785,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      438
+      414
     ]
   ],
   [
@@ -3006,7 +2796,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      439
+      415
     ]
   ],
   [
@@ -3017,7 +2807,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      440
+      416
     ]
   ],
   [
@@ -3028,7 +2818,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      441
+      417
     ]
   ],
   [
@@ -3039,7 +2829,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      442
+      418
     ]
   ],
   [
@@ -3050,7 +2840,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      443
+      419
     ]
   ],
   [
@@ -3061,7 +2851,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      444
+      420
     ]
   ],
   [
@@ -3072,7 +2862,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      445
+      421
     ]
   ],
   [
@@ -3083,7 +2873,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      446
+      422
     ]
   ],
   [
@@ -3094,7 +2884,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      447
+      423
     ]
   ],
   [
@@ -3105,7 +2895,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      448
+      424
     ]
   ],
   [
@@ -3116,7 +2906,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      449
+      425
     ]
   ],
   [
@@ -3127,7 +2917,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      450
+      426
     ]
   ],
   [
@@ -3138,7 +2928,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      451
+      427
     ]
   ],
   [
@@ -3149,7 +2939,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      452
+      428
     ]
   ],
   [
@@ -3160,7 +2950,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      453
+      429
     ]
   ],
   [
@@ -3171,7 +2961,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      454
+      430
     ]
   ],
   [
@@ -3182,7 +2972,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      455
+      431
     ]
   ],
   [
@@ -3193,7 +2983,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      456
+      432
     ]
   ],
   [
@@ -3204,7 +2994,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      457
+      433
     ]
   ],
   [
@@ -3215,7 +3005,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      458
+      434
     ]
   ],
   [
@@ -3226,7 +3016,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      463
+      439
     ]
   ],
   [
@@ -3237,7 +3027,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      464
+      440
     ]
   ],
   [
@@ -3248,7 +3038,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      465
+      441
     ]
   ],
   [
@@ -3259,7 +3049,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      466
+      442
     ]
   ],
   [
@@ -3270,7 +3060,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      467
+      443
     ]
   ],
   [
@@ -3281,7 +3071,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      468
+      444
     ]
   ],
   [
@@ -3292,7 +3082,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      469
+      445
     ]
   ],
   [
@@ -3303,7 +3093,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      470
+      446
     ]
   ],
   [
@@ -3314,7 +3104,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      471
+      447
     ]
   ],
   [
@@ -3325,7 +3115,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      476
+      452
     ]
   ],
   [
@@ -3336,7 +3126,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      481
+      457
     ]
   ],
   [
@@ -3347,7 +3137,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      482
+      458
     ]
   ],
   [
@@ -3358,7 +3148,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      483
+      459
     ]
   ],
   [
@@ -3369,7 +3159,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      484
+      460
     ]
   ],
   [
@@ -3380,7 +3170,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      485
+      461
     ]
   ],
   [
@@ -3391,7 +3181,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      486
+      462
     ]
   ],
   [
@@ -3402,7 +3192,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      487
+      463
     ]
   ],
   [
@@ -3413,7 +3203,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      488
+      464
     ]
   ],
   [
@@ -3424,7 +3214,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      489
+      465
     ]
   ],
   [
@@ -3435,7 +3225,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      490
+      466
     ]
   ],
   [
@@ -3446,7 +3236,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      491
+      467
     ]
   ],
   [
@@ -3457,7 +3247,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      492
+      468
     ]
   ],
   [
@@ -3468,7 +3258,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      493
+      469
     ]
   ],
   [
@@ -3479,7 +3269,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      494
+      470
     ]
   ],
   [
@@ -3490,7 +3280,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      495
+      471
     ]
   ],
   [
@@ -3501,7 +3291,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      496
+      472
     ]
   ],
   [
@@ -3512,7 +3302,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      497
+      473
     ]
   ],
   [
@@ -3523,7 +3313,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      498
+      474
     ]
   ],
   [
@@ -3534,7 +3324,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      499
+      475
     ]
   ],
   [
@@ -3545,7 +3335,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      500
+      476
     ]
   ],
   [
@@ -3556,7 +3346,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      501
+      477
     ]
   ],
   [
@@ -3567,7 +3357,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      502
+      478
     ]
   ],
   [
@@ -3578,7 +3368,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      503
+      479
     ]
   ],
   [
@@ -3589,7 +3379,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      504
+      480
     ]
   ],
   [
@@ -3600,7 +3390,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      505
+      481
     ]
   ],
   [
@@ -3611,7 +3401,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      506
+      482
     ]
   ],
   [
@@ -3622,7 +3412,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      507
+      483
     ]
   ],
   [
@@ -3633,7 +3423,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      508
+      484
     ]
   ],
   [
@@ -3644,7 +3434,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      509
+      485
     ]
   ],
   [
@@ -3655,7 +3445,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      510
+      486
     ]
   ],
   [
@@ -3666,7 +3456,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      511
+      487
     ]
   ],
   [
@@ -3677,7 +3467,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      512
+      488
     ]
   ],
   [
@@ -3688,7 +3478,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      513
+      489
     ]
   ],
   [
@@ -3699,7 +3489,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      514
+      490
     ]
   ],
   [
@@ -3710,7 +3500,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      515
+      491
     ]
   ],
   [
@@ -3721,7 +3511,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      516
+      492
     ]
   ],
   [
@@ -3732,7 +3522,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      517
+      493
     ]
   ],
   [
@@ -3743,7 +3533,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      518
+      494
     ]
   ],
   [
@@ -3754,7 +3544,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      519
+      495
     ]
   ],
   [
@@ -3765,7 +3555,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      520
+      496
     ]
   ],
   [
@@ -3776,7 +3566,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      521
+      497
     ]
   ],
   [
@@ -3787,7 +3577,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      522
+      498
     ]
   ],
   [
@@ -3853,7 +3643,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      528
+      504
     ]
   ],
   [
@@ -3864,7 +3654,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      529
+      505
     ]
   ],
   [
@@ -3913,7 +3703,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      538
+      514
     ]
   ],
   [
@@ -3924,7 +3714,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      539
+      515
     ]
   ],
   [
@@ -3935,7 +3725,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      554
+      530
     ]
   ],
   [
@@ -3946,7 +3736,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      555
+      531
     ]
   ],
   [
@@ -3957,7 +3747,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      556
+      532
     ]
   ],
   [
@@ -3968,7 +3758,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      557
+      533
     ]
   ],
   [
@@ -3979,7 +3769,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      558
+      534
     ]
   ],
   [
@@ -3990,7 +3780,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      559
+      535
     ]
   ],
   [
@@ -4001,7 +3791,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      560
+      536
     ]
   ],
   [
@@ -4012,7 +3802,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      561
+      537
     ]
   ],
   [
@@ -4023,7 +3813,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      562
+      538
     ]
   ],
   [
@@ -4034,7 +3824,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      563
+      539
     ]
   ],
   [
@@ -4086,7 +3876,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      578
+      554
     ]
   ],
   [
@@ -4097,7 +3887,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      579
+      555
     ]
   ],
   [
@@ -4108,7 +3898,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      580
+      556
     ]
   ],
   [
@@ -4119,7 +3909,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      581
+      557
     ]
   ],
   [
@@ -4130,7 +3920,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      582
+      558
     ]
   ],
   [
@@ -4141,7 +3931,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      583
+      559
     ]
   ],
   [
@@ -4152,7 +3942,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      584
+      560
     ]
   ],
   [
@@ -4244,65 +4034,6 @@
     ]
   ],
   [
-    "CONFIG_CRACEN_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CRACEN_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CRACEN_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CRACEN_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CRACEN_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CRACEN_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_CRACEN_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
-    ]
-  ],
-  [
     "CONFIG_CRACEN_LIB_KMU",
     "y",
     "bool",
@@ -4310,7 +4041,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      602
+      571
     ]
   ],
   [
@@ -4321,7 +4052,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      603
+      572
     ]
   ],
   [
@@ -4332,7 +4063,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      604
+      573
     ]
   ],
   [
@@ -4343,7 +4074,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      605
+      574
     ]
   ],
   [
@@ -4354,7 +4085,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      606
+      575
     ]
   ],
   [
@@ -4365,7 +4096,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      607
+      576
     ]
   ],
   [
@@ -4376,7 +4107,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      608
+      577
     ]
   ],
   [
@@ -4387,7 +4118,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      609
+      578
     ]
   ],
   [
@@ -4398,7 +4129,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      610
+      579
     ]
   ],
   [
@@ -4420,7 +4151,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      612
+      581
     ]
   ],
   [
@@ -4475,7 +4206,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      621
+      590
     ]
   ],
   [
@@ -4486,7 +4217,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      622
+      591
     ]
   ],
   [
@@ -4497,7 +4228,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      623
+      592
     ]
   ],
   [
@@ -4552,7 +4283,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      630
+      599
     ]
   ],
   [
@@ -4662,7 +4393,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      640
+      609
     ]
   ],
   [
@@ -4684,7 +4415,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      646
+      615
     ]
   ],
   [
@@ -4695,7 +4426,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      647
+      616
     ]
   ],
   [
@@ -4706,7 +4437,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      648
+      617
     ]
   ],
   [
@@ -4717,7 +4448,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      649
+      618
     ]
   ],
   [
@@ -4728,7 +4459,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      656
+      625
     ]
   ],
   [
@@ -4739,7 +4470,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      667
+      636
     ]
   ],
   [
@@ -4750,7 +4481,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      670
+      639
     ]
   ],
   [
@@ -4761,29 +4492,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      671
-    ]
-  ],
-  [
-    "CONFIG_LOG_FORWARDER_RPC",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      676
-    ]
-  ],
-  [
-    "CONFIG_LOG_BACKEND_RPC",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      677
+      640
     ]
   ],
   [
@@ -4794,7 +4503,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      678
+      645
     ]
   ],
   [
@@ -4805,7 +4514,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      681
+      648
     ]
   ],
   [
@@ -4816,7 +4525,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      686
+      653
     ]
   ],
   [
@@ -4827,7 +4536,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      687
+      654
     ]
   ],
   [
@@ -4838,7 +4547,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      688
+      655
     ]
   ],
   [
@@ -4849,7 +4558,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      689
+      656
     ]
   ],
   [
@@ -4860,7 +4569,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      690
+      657
     ]
   ],
   [
@@ -4871,7 +4580,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      691
+      658
     ]
   ],
   [
@@ -4882,7 +4591,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      692
+      659
     ]
   ],
   [
@@ -4893,66 +4602,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      696
-    ]
-  ],
-  [
-    "CONFIG_WFA_QT_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_WFA_QT_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_WFA_QT_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_WFA_QT_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_WFA_QT_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_WFA_QT_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_WFA_QT_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
+      663
     ]
   ],
   [
@@ -4963,7 +4613,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      704
+      664
     ]
   ],
   [
@@ -4974,7 +4624,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      705
+      665
     ]
   ],
   [
@@ -4985,7 +4635,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      706
+      666
     ]
   ],
   [
@@ -4996,7 +4646,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      707
+      667
     ]
   ],
   [
@@ -5007,7 +4657,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      708
+      668
     ]
   ],
   [
@@ -5018,7 +4668,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      713
+      673
     ]
   ],
   [
@@ -5029,7 +4679,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      720
+      680
     ]
   ],
   [
@@ -5040,7 +4690,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      721
+      681
     ]
   ],
   [
@@ -5051,7 +4701,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      722
+      682
     ]
   ],
   [
@@ -5073,7 +4723,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      724
+      684
     ]
   ],
   [
@@ -5084,7 +4734,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      725
+      685
     ]
   ],
   [
@@ -5095,7 +4745,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      726
+      686
     ]
   ],
   [
@@ -5106,7 +4756,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      727
+      687
     ]
   ],
   [
@@ -5117,7 +4767,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      728
+      688
     ]
   ],
   [
@@ -5128,7 +4778,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      729
+      689
     ]
   ],
   [
@@ -5139,7 +4789,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      730
+      690
     ]
   ],
   [
@@ -5150,7 +4800,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      731
+      691
     ]
   ],
   [
@@ -5161,7 +4811,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      732
+      692
     ]
   ],
   [
@@ -5172,7 +4822,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      733
+      693
     ]
   ],
   [
@@ -5183,7 +4833,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      734
+      694
     ]
   ],
   [
@@ -5205,7 +4855,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      736
+      696
     ]
   ],
   [
@@ -5227,7 +4877,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      738
+      698
     ]
   ],
   [
@@ -5238,7 +4888,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      739
+      699
     ]
   ],
   [
@@ -5249,7 +4899,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      740
+      700
     ]
   ],
   [
@@ -5260,7 +4910,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      741
+      701
     ]
   ],
   [
@@ -5271,7 +4921,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      742
+      702
     ]
   ],
   [
@@ -5282,7 +4932,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      743
+      703
     ]
   ],
   [
@@ -5293,7 +4943,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      744
+      704
     ]
   ],
   [
@@ -5304,7 +4954,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      745
+      705
     ]
   ],
   [
@@ -5315,7 +4965,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      746
+      706
     ]
   ],
   [
@@ -5326,7 +4976,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      747
+      707
     ]
   ],
   [
@@ -5337,7 +4987,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      748
+      708
     ]
   ],
   [
@@ -5370,7 +5020,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      751
+      711
     ]
   ],
   [
@@ -5381,7 +5031,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      752
+      712
     ]
   ],
   [
@@ -5392,7 +5042,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      753
+      713
     ]
   ],
   [
@@ -5403,7 +5053,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      759
+      719
     ]
   ],
   [
@@ -5414,7 +5064,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      764
+      724
     ]
   ],
   [
@@ -5436,7 +5086,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      768
+      728
     ]
   ],
   [
@@ -5447,7 +5097,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      769
+      729
     ]
   ],
   [
@@ -5458,7 +5108,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      770
+      730
     ]
   ],
   [
@@ -5469,7 +5119,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      771
+      731
     ]
   ],
   [
@@ -5480,7 +5130,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      782
+      742
     ]
   ],
   [
@@ -5491,7 +5141,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      787
+      747
     ]
   ],
   [
@@ -5502,7 +5152,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      788
+      748
     ]
   ],
   [
@@ -5546,7 +5196,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      805
+      765
     ]
   ],
   [
@@ -5589,7 +5239,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      816
+      776
     ]
   ],
   [
@@ -5600,7 +5250,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      817
+      777
     ]
   ],
   [
@@ -5611,7 +5261,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      818
+      778
     ]
   ],
   [
@@ -5622,7 +5272,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      819
+      779
     ]
   ],
   [
@@ -5633,7 +5283,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      820
+      780
     ]
   ],
   [
@@ -5644,7 +5294,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      821
+      781
     ]
   ],
   [
@@ -5655,7 +5305,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      822
+      782
     ]
   ],
   [
@@ -5666,7 +5316,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      823
+      783
     ]
   ],
   [
@@ -5677,7 +5327,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      824
+      784
     ]
   ],
   [
@@ -5688,7 +5338,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      825
+      785
     ]
   ],
   [
@@ -5699,7 +5349,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      826
+      786
     ]
   ],
   [
@@ -5710,7 +5360,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      827
+      787
     ]
   ],
   [
@@ -5721,7 +5371,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      828
+      788
     ]
   ],
   [
@@ -5732,7 +5382,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      829
+      789
     ]
   ],
   [
@@ -5743,7 +5393,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      830
+      790
     ]
   ],
   [
@@ -5754,7 +5404,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      831
+      791
     ]
   ],
   [
@@ -5765,7 +5415,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      832
+      792
     ]
   ],
   [
@@ -5776,7 +5426,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      833
+      793
     ]
   ],
   [
@@ -5787,7 +5437,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      834
+      794
     ]
   ],
   [
@@ -5798,7 +5448,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      835
+      795
     ]
   ],
   [
@@ -5809,7 +5459,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      836
+      796
     ]
   ],
   [
@@ -5820,7 +5470,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      837
+      797
     ]
   ],
   [
@@ -5831,7 +5481,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      838
+      798
     ]
   ],
   [
@@ -5842,7 +5492,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      839
+      799
     ]
   ],
   [
@@ -5853,7 +5503,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      840
+      800
     ]
   ],
   [
@@ -5864,7 +5514,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      841
+      801
     ]
   ],
   [
@@ -5875,7 +5525,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      842
+      802
     ]
   ],
   [
@@ -5886,7 +5536,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      843
+      803
     ]
   ],
   [
@@ -5897,7 +5547,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      844
+      804
     ]
   ],
   [
@@ -5908,7 +5558,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      845
+      805
     ]
   ],
   [
@@ -5919,7 +5569,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      846
+      806
     ]
   ],
   [
@@ -5930,7 +5580,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      847
+      807
     ]
   ],
   [
@@ -5941,7 +5591,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      848
+      808
     ]
   ],
   [
@@ -5952,7 +5602,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      849
+      809
     ]
   ],
   [
@@ -5963,7 +5613,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      850
+      810
     ]
   ],
   [
@@ -5974,7 +5624,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      851
+      811
     ]
   ],
   [
@@ -5985,7 +5635,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      852
+      812
     ]
   ],
   [
@@ -5996,7 +5646,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      853
+      813
     ]
   ],
   [
@@ -6007,7 +5657,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      854
+      814
     ]
   ],
   [
@@ -6018,7 +5668,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      855
+      815
     ]
   ],
   [
@@ -6029,7 +5679,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      856
+      816
     ]
   ],
   [
@@ -6040,7 +5690,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      857
+      817
     ]
   ],
   [
@@ -6051,7 +5701,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      858
+      818
     ]
   ],
   [
@@ -6062,7 +5712,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      859
+      819
     ]
   ],
   [
@@ -6073,7 +5723,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      860
+      820
     ]
   ],
   [
@@ -6084,7 +5734,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      861
+      821
     ]
   ],
   [
@@ -6095,7 +5745,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      862
+      822
     ]
   ],
   [
@@ -6106,7 +5756,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      863
+      823
     ]
   ],
   [
@@ -6117,7 +5767,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      864
+      824
     ]
   ],
   [
@@ -6128,7 +5778,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      865
+      825
     ]
   ],
   [
@@ -6139,7 +5789,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      866
+      826
     ]
   ],
   [
@@ -6209,7 +5859,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      888
+      848
     ]
   ],
   [
@@ -6231,7 +5881,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      895
+      855
     ]
   ],
   [
@@ -6253,7 +5903,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      902
+      862
     ]
   ],
   [
@@ -6275,7 +5925,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      909
+      869
     ]
   ],
   [
@@ -6297,7 +5947,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      916
+      876
     ]
   ],
   [
@@ -6319,7 +5969,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      923
+      883
     ]
   ],
   [
@@ -6341,7 +5991,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      930
+      890
     ]
   ],
   [
@@ -6385,7 +6035,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      944
+      904
     ]
   ],
   [
@@ -6428,7 +6078,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      958
+      918
     ]
   ],
   [
@@ -6450,7 +6100,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      965
+      925
     ]
   ],
   [
@@ -6482,7 +6132,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      973
+      933
     ]
   ],
   [
@@ -6533,7 +6183,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      992
+      952
     ]
   ],
   [
@@ -6544,61 +6194,6 @@
     "select",
     [
       "SOC_SERIES_NRF54L && SOC_FAMILY_NORDIC_NRF"
-    ]
-  ],
-  [
-    "CONFIG_NRFX_CLOCK_LOG",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1004
-    ]
-  ],
-  [
-    "CONFIG_NRFX_GPIOTE_LOG",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1005
-    ]
-  ],
-  [
-    "CONFIG_NRFX_GRTC_LOG",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1006
-    ]
-  ],
-  [
-    "CONFIG_NRFX_SPIM_LOG",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1007
-    ]
-  ],
-  [
-    "CONFIG_NRFX_SPIS_LOG",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1008
     ]
   ],
   [
@@ -6619,7 +6214,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1012
+      961
     ]
   ],
   [
@@ -6640,7 +6235,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1014
+      963
     ]
   ],
   [
@@ -6651,7 +6246,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1015
+      964
     ]
   ],
   [
@@ -6672,7 +6267,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1017
+      966
     ]
   ],
   [
@@ -6683,7 +6278,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1018
+      967
     ]
   ],
   [
@@ -6694,7 +6289,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1019
+      968
     ]
   ],
   [
@@ -6705,7 +6300,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1020
+      969
     ]
   ],
   [
@@ -6716,7 +6311,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1021
+      970
     ]
   ],
   [
@@ -6737,7 +6332,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1023
+      972
     ]
   ],
   [
@@ -6758,7 +6353,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1025
+      974
     ]
   ],
   [
@@ -6769,7 +6364,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1026
+      975
     ]
   ],
   [
@@ -6780,7 +6375,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1027
+      976
     ]
   ],
   [
@@ -6791,7 +6386,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1028
+      977
     ]
   ],
   [
@@ -6802,7 +6397,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1029
+      978
     ]
   ],
   [
@@ -6813,7 +6408,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1030
+      979
     ]
   ],
   [
@@ -6824,7 +6419,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1031
+      980
     ]
   ],
   [
@@ -6835,7 +6430,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1032
+      981
     ]
   ],
   [
@@ -6846,7 +6441,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1033
+      982
     ]
   ],
   [
@@ -6867,7 +6462,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1035
+      984
     ]
   ],
   [
@@ -6878,7 +6473,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1036
+      985
     ]
   ],
   [
@@ -6889,7 +6484,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1037
+      986
     ]
   ],
   [
@@ -6920,7 +6515,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1040
+      989
     ]
   ],
   [
@@ -6931,7 +6526,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1041
+      990
     ]
   ],
   [
@@ -6942,7 +6537,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1042
+      991
     ]
   ],
   [
@@ -6953,7 +6548,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1043
+      992
     ]
   ],
   [
@@ -6964,7 +6559,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1044
+      993
     ]
   ],
   [
@@ -6975,7 +6570,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1045
+      994
     ]
   ],
   [
@@ -6986,7 +6581,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1046
+      995
     ]
   ],
   [
@@ -6997,7 +6592,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1047
+      996
     ]
   ],
   [
@@ -7008,7 +6603,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1048
+      997
     ]
   ],
   [
@@ -7019,7 +6614,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1053
+      1002
     ]
   ],
   [
@@ -7030,7 +6625,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1054
+      1003
     ]
   ],
   [
@@ -7041,7 +6636,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1055
+      1004
     ]
   ],
   [
@@ -7052,7 +6647,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1056
+      1005
     ]
   ],
   [
@@ -7063,7 +6658,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1057
+      1006
     ]
   ],
   [
@@ -7074,7 +6669,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1058
+      1007
     ]
   ],
   [
@@ -7085,7 +6680,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1059
+      1008
     ]
   ],
   [
@@ -7096,7 +6691,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1060
+      1009
     ]
   ],
   [
@@ -7107,7 +6702,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1061
+      1010
     ]
   ],
   [
@@ -7118,7 +6713,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1062
+      1011
     ]
   ],
   [
@@ -7162,7 +6757,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1083
+      1032
     ]
   ],
   [
@@ -7217,7 +6812,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1101
+      1050
     ]
   ],
   [
@@ -7250,7 +6845,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1114
+      1063
     ]
   ],
   [
@@ -7294,7 +6889,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1129
+      1078
     ]
   ],
   [
@@ -7316,7 +6911,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1136
+      1085
     ]
   ],
   [
@@ -7338,7 +6933,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1148
+      1097
     ]
   ],
   [
@@ -7360,7 +6955,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1155
+      1104
     ]
   ],
   [
@@ -7403,7 +6998,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1164
+      1113
     ]
   ],
   [
@@ -7447,7 +7042,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1179
+      1128
     ]
   ],
   [
@@ -7469,7 +7064,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1196
+      1145
     ]
   ],
   [
@@ -7480,7 +7075,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1197
+      1146
     ]
   ],
   [
@@ -7491,7 +7086,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1198
+      1147
     ]
   ],
   [
@@ -7502,7 +7097,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1203
+      1152
     ]
   ],
   [
@@ -7513,7 +7108,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1204
+      1153
     ]
   ],
   [
@@ -7524,7 +7119,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1207
+      1156
     ]
   ],
   [
@@ -7543,7 +7138,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1209
+      1158
     ]
   ],
   [
@@ -7554,7 +7149,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1210
+      1159
     ]
   ],
   [
@@ -7587,7 +7182,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1221
+      1170
     ]
   ],
   [
@@ -7609,7 +7204,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1225
+      1174
     ]
   ],
   [
@@ -7620,7 +7215,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1226
+      1175
     ]
   ],
   [
@@ -7631,7 +7226,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1227
+      1176
     ]
   ],
   [
@@ -7642,7 +7237,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1228
+      1177
     ]
   ],
   [
@@ -7653,7 +7248,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1229
+      1178
     ]
   ],
   [
@@ -7664,7 +7259,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1230
+      1179
     ]
   ],
   [
@@ -7675,7 +7270,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1231
+      1180
     ]
   ],
   [
@@ -7686,7 +7281,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1232
+      1181
     ]
   ],
   [
@@ -7697,7 +7292,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1233
+      1182
     ]
   ],
   [
@@ -7708,7 +7303,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1262
+      1211
     ]
   ],
   [
@@ -7752,7 +7347,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1268
+      1217
     ]
   ],
   [
@@ -7869,7 +7464,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1288
+      1237
     ]
   ],
   [
@@ -7880,7 +7475,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1289
+      1238
     ]
   ],
   [
@@ -8150,7 +7745,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1314
+      1263
     ]
   ],
   [
@@ -8161,7 +7756,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1315
+      1264
     ]
   ],
   [
@@ -8172,7 +7767,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1316
+      1265
     ]
   ],
   [
@@ -8183,7 +7778,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1317
+      1266
     ]
   ],
   [
@@ -8194,7 +7789,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1318
+      1267
     ]
   ],
   [
@@ -8215,7 +7810,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1320
+      1269
     ]
   ],
   [
@@ -8226,7 +7821,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1321
+      1270
     ]
   ],
   [
@@ -8237,7 +7832,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1322
+      1271
     ]
   ],
   [
@@ -8307,7 +7902,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1330
+      1279
     ]
   ],
   [
@@ -8328,66 +7923,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1332
-    ]
-  ],
-  [
-    "CONFIG_SOC_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_SOC_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_SOC_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_SOC_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_SOC_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_SOC_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_SOC_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
+      1281
     ]
   ],
   [
@@ -8409,7 +7945,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1343
+      1285
     ]
   ],
   [
@@ -8451,7 +7987,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1347
+      1289
     ]
   ],
   [
@@ -8472,7 +8008,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1353
+      1295
     ]
   ],
   [
@@ -8504,7 +8040,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1356
+      1298
     ]
   ],
   [
@@ -8515,7 +8051,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1357
+      1299
     ]
   ],
   [
@@ -8526,7 +8062,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1358
+      1300
     ]
   ],
   [
@@ -8537,7 +8073,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1359
+      1301
     ]
   ],
   [
@@ -8548,7 +8084,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1360
+      1302
     ]
   ],
   [
@@ -8559,7 +8095,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1361
+      1303
     ]
   ],
   [
@@ -8581,7 +8117,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1363
+      1305
     ]
   ],
   [
@@ -8739,7 +8275,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1383
+      1325
     ]
   ],
   [
@@ -8750,7 +8286,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1384
+      1326
     ]
   ],
   [
@@ -8761,7 +8297,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1385
+      1327
     ]
   ],
   [
@@ -8772,7 +8308,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1386
+      1328
     ]
   ],
   [
@@ -8807,7 +8343,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1392
+      1334
     ]
   ],
   [
@@ -8818,7 +8354,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1393
+      1335
     ]
   ],
   [
@@ -8829,7 +8365,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1394
+      1336
     ]
   ],
   [
@@ -8840,7 +8376,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1395
+      1337
     ]
   ],
   [
@@ -8851,7 +8387,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1396
+      1338
     ]
   ],
   [
@@ -8862,7 +8398,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1397
+      1339
     ]
   ],
   [
@@ -8913,7 +8449,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1408
+      1350
     ]
   ],
   [
@@ -8935,66 +8471,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1410
-    ]
-  ],
-  [
-    "CONFIG_ARCH_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_ARCH_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_ARCH_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_ARCH_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_ARCH_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_ARCH_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_ARCH_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
+      1352
     ]
   ],
   [
@@ -9016,7 +8493,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1419
+      1354
     ]
   ],
   [
@@ -9027,7 +8504,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1420
+      1355
     ]
   ],
   [
@@ -9048,7 +8525,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1422
+      1357
     ]
   ],
   [
@@ -9059,7 +8536,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1423
+      1358
     ]
   ],
   [
@@ -9070,7 +8547,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1428
+      1363
     ]
   ],
   [
@@ -9081,7 +8558,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1429
+      1364
     ]
   ],
   [
@@ -9108,7 +8585,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1432
+      1367
     ]
   ],
   [
@@ -9119,7 +8596,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1433
+      1368
     ]
   ],
   [
@@ -9130,7 +8607,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1434
+      1369
     ]
   ],
   [
@@ -9354,65 +8831,6 @@
     ]
   ],
   [
-    "CONFIG_MPU_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_MPU_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_MPU_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_MPU_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_MPU_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_MPU_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_MPU_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
-    ]
-  ],
-  [
     "CONFIG_MPU_REQUIRES_NON_OVERLAPPING_REGIONS",
     "n",
     "bool",
@@ -9430,7 +8848,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1468
+      1396
     ]
   ],
   [
@@ -9451,7 +8869,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1484
+      1412
     ]
   ],
   [
@@ -9462,7 +8880,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1485
+      1413
     ]
   ],
   [
@@ -9503,65 +8921,6 @@
     ]
   ],
   [
-    "CONFIG_KERNEL_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_KERNEL_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_KERNEL_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_KERNEL_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_KERNEL_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_KERNEL_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_KERNEL_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
-    ]
-  ],
-  [
     "CONFIG_NUM_COOP_PRIORITIES",
     "y",
     "int",
@@ -9569,7 +8928,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1503
+      1424
     ]
   ],
   [
@@ -9580,7 +8939,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1504
+      1425
     ]
   ],
   [
@@ -9613,7 +8972,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1507
+      1428
     ]
   ],
   [
@@ -9624,7 +8983,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1508
+      1429
     ]
   ],
   [
@@ -9646,7 +9005,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1510
+      1431
     ]
   ],
   [
@@ -9657,7 +9016,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1511
+      1432
     ]
   ],
   [
@@ -9668,7 +9027,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1512
+      1433
     ]
   ],
   [
@@ -9703,7 +9062,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1516
+      1437
     ]
   ],
   [
@@ -9740,7 +9099,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1524
+      1445
     ]
   ],
   [
@@ -9751,7 +9110,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1525
+      1446
     ]
   ],
   [
@@ -9762,7 +9121,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1531
+      1452
     ]
   ],
   [
@@ -9773,7 +9132,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1532
+      1453
     ]
   ],
   [
@@ -9804,7 +9163,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1535
+      1456
     ]
   ],
   [
@@ -9815,7 +9174,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1536
+      1457
     ]
   ],
   [
@@ -9826,7 +9185,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1537
+      1458
     ]
   ],
   [
@@ -9837,7 +9196,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1540
+      1461
     ]
   ],
   [
@@ -9848,7 +9207,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1541
+      1462
     ]
   ],
   [
@@ -9859,7 +9218,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1546
+      1467
     ]
   ],
   [
@@ -9870,7 +9229,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1547
+      1468
     ]
   ],
   [
@@ -9901,7 +9260,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1565
+      1486
     ]
   ],
   [
@@ -9912,7 +9271,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1566
+      1487
     ]
   ],
   [
@@ -9923,7 +9282,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1567
+      1488
     ]
   ],
   [
@@ -9934,18 +9293,17 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1568
+      1489
     ]
   ],
   [
     "CONFIG_POLL",
     "y",
     "bool",
-    "n",
-    "assign",
+    "y",
+    "select",
     [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1574
+      "SPI_ASYNC && MULTITHREADING && SPI"
     ]
   ],
   [
@@ -9956,7 +9314,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1575
+      1496
     ]
   ],
   [
@@ -9967,7 +9325,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1576
+      1497
     ]
   ],
   [
@@ -9978,7 +9336,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1577
+      1498
     ]
   ],
   [
@@ -9999,7 +9357,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1579
+      1500
     ]
   ],
   [
@@ -10017,9 +9375,10 @@
     "y",
     "bool",
     "y",
-    "select",
+    "assign",
     [
-      "MPSC_PBUF"
+      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
+      1504
     ]
   ],
   [
@@ -10030,7 +9389,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1584
+      1505
     ]
   ],
   [
@@ -10062,7 +9421,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1601
+      1522
     ]
   ],
   [
@@ -10104,7 +9463,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1607
+      1528
     ]
   ],
   [
@@ -10115,7 +9474,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1608
+      1529
     ]
   ],
   [
@@ -10126,7 +9485,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1614
+      1535
     ]
   ],
   [
@@ -10137,7 +9496,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1615
+      1536
     ]
   ],
   [
@@ -10148,7 +9507,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1616
+      1537
     ]
   ],
   [
@@ -10159,7 +9518,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1622
+      1543
     ]
   ],
   [
@@ -10170,7 +9529,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1623
+      1544
     ]
   ],
   [
@@ -10181,7 +9540,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1624
+      1545
     ]
   ],
   [
@@ -10192,7 +9551,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1625
+      1546
     ]
   ],
   [
@@ -10203,7 +9562,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1626
+      1547
     ]
   ],
   [
@@ -10214,7 +9573,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1642
+      1563
     ]
   ],
   [
@@ -10225,7 +9584,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1643
+      1564
     ]
   ],
   [
@@ -10236,7 +9595,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1644
+      1565
     ]
   ],
   [
@@ -10247,7 +9606,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1645
+      1566
     ]
   ],
   [
@@ -10258,7 +9617,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1646
+      1567
     ]
   ],
   [
@@ -10269,7 +9628,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1647
+      1568
     ]
   ],
   [
@@ -10280,7 +9639,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1653
+      1574
     ]
   ],
   [
@@ -10291,7 +9650,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1654
+      1575
     ]
   ],
   [
@@ -10302,7 +9661,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1655
+      1576
     ]
   ],
   [
@@ -10313,7 +9672,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1656
+      1577
     ]
   ],
   [
@@ -10327,65 +9686,6 @@
     ]
   ],
   [
-    "CONFIG_CACHE_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CACHE_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CACHE_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CACHE_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CACHE_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CACHE_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_CACHE_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
-    ]
-  ],
-  [
     "CONFIG_CAN",
     "y",
     "bool",
@@ -10393,7 +9693,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1669
+      1583
     ]
   ],
   [
@@ -10404,66 +9704,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1670
-    ]
-  ],
-  [
-    "CONFIG_CLOCK_CONTROL_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CLOCK_CONTROL_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CLOCK_CONTROL_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CLOCK_CONTROL_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CLOCK_CONTROL_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CLOCK_CONTROL_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_CLOCK_CONTROL_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
+      1584
     ]
   ],
   [
@@ -10474,7 +9715,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1678
+      1585
     ]
   ],
   [
@@ -10485,7 +9726,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1679
+      1586
     ]
   ],
   [
@@ -10496,7 +9737,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1680
+      1587
     ]
   ],
   [
@@ -10531,7 +9772,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1684
+      1591
     ]
   ],
   [
@@ -10617,7 +9858,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1694
+      1601
     ]
   ],
   [
@@ -10628,7 +9869,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1695
+      1602
     ]
   ],
   [
@@ -10649,7 +9890,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1697
+      1604
     ]
   ],
   [
@@ -10660,7 +9901,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1698
+      1605
     ]
   ],
   [
@@ -10671,7 +9912,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1699
+      1606
     ]
   ],
   [
@@ -10682,7 +9923,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1700
+      1607
     ]
   ],
   [
@@ -10693,7 +9934,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1701
+      1608
     ]
   ],
   [
@@ -10704,7 +9945,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1702
+      1609
     ]
   ],
   [
@@ -10715,7 +9956,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1703
+      1610
     ]
   ],
   [
@@ -10726,7 +9967,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1704
+      1611
     ]
   ],
   [
@@ -10737,66 +9978,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1705
-    ]
-  ],
-  [
-    "CONFIG_UART_CONSOLE_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_UART_CONSOLE_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_UART_CONSOLE_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_UART_CONSOLE_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_UART_CONSOLE_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_UART_CONSOLE_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_UART_CONSOLE_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
+      1612
     ]
   ],
   [
@@ -10807,7 +9989,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1713
+      1613
     ]
   ],
   [
@@ -10818,7 +10000,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1714
+      1614
     ]
   ],
   [
@@ -10829,7 +10011,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1715
+      1615
     ]
   ],
   [
@@ -10840,7 +10022,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1716
+      1616
     ]
   ],
   [
@@ -10851,7 +10033,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1717
+      1617
     ]
   ],
   [
@@ -10862,7 +10044,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1718
+      1618
     ]
   ],
   [
@@ -10873,7 +10055,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1719
+      1619
     ]
   ],
   [
@@ -10884,7 +10066,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1720
+      1620
     ]
   ],
   [
@@ -10895,7 +10077,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1721
+      1621
     ]
   ],
   [
@@ -10906,7 +10088,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1722
+      1622
     ]
   ],
   [
@@ -10917,7 +10099,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1723
+      1623
     ]
   ],
   [
@@ -10928,7 +10110,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1724
+      1624
     ]
   ],
   [
@@ -10939,7 +10121,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1725
+      1625
     ]
   ],
   [
@@ -10950,7 +10132,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1726
+      1626
     ]
   ],
   [
@@ -10961,7 +10143,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1727
+      1627
     ]
   ],
   [
@@ -10972,7 +10154,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1732
+      1632
     ]
   ],
   [
@@ -10983,7 +10165,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1735
+      1635
     ]
   ],
   [
@@ -10994,7 +10176,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1736
+      1636
     ]
   ],
   [
@@ -11005,66 +10187,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1737
-    ]
-  ],
-  [
-    "CONFIG_GPIO_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_GPIO_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_GPIO_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_GPIO_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_GPIO_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_GPIO_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_GPIO_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
+      1637
     ]
   ],
   [
@@ -11075,7 +10198,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1745
+      1638
     ]
   ],
   [
@@ -11086,7 +10209,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1746
+      1639
     ]
   ],
   [
@@ -11097,7 +10220,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1747
+      1640
     ]
   ],
   [
@@ -11108,7 +10231,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1748
+      1641
     ]
   ],
   [
@@ -11119,7 +10242,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1749
+      1642
     ]
   ],
   [
@@ -11141,7 +10264,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1751
+      1644
     ]
   ],
   [
@@ -11152,7 +10275,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1752
+      1645
     ]
   ],
   [
@@ -11163,7 +10286,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1753
+      1646
     ]
   ],
   [
@@ -11174,7 +10297,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1754
+      1647
     ]
   ],
   [
@@ -11185,7 +10308,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1755
+      1648
     ]
   ],
   [
@@ -11196,66 +10319,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1760
-    ]
-  ],
-  [
-    "CONFIG_INTC_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_INTC_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_INTC_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_INTC_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_INTC_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_INTC_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_INTC_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
+      1653
     ]
   ],
   [
@@ -11266,7 +10330,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1770
+      1656
     ]
   ],
   [
@@ -11277,7 +10341,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1771
+      1657
     ]
   ],
   [
@@ -11288,7 +10352,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1772
+      1658
     ]
   ],
   [
@@ -11299,7 +10363,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1773
+      1659
     ]
   ],
   [
@@ -11310,7 +10374,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1774
+      1660
     ]
   ],
   [
@@ -11321,7 +10385,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1775
+      1661
     ]
   ],
   [
@@ -11332,7 +10396,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1776
+      1662
     ]
   ],
   [
@@ -11343,7 +10407,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1787
+      1673
     ]
   ],
   [
@@ -11354,7 +10418,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1790
+      1676
     ]
   ],
   [
@@ -11365,7 +10429,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1791
+      1677
     ]
   ],
   [
@@ -11376,7 +10440,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1792
+      1678
     ]
   ],
   [
@@ -11387,7 +10451,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1793
+      1679
     ]
   ],
   [
@@ -11398,7 +10462,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1794
+      1680
     ]
   ],
   [
@@ -11409,7 +10473,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1795
+      1681
     ]
   ],
   [
@@ -11420,7 +10484,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1796
+      1682
     ]
   ],
   [
@@ -11432,65 +10496,6 @@
     [
       "UART_NRFX && (DT_HAS_NORDIC_NRF_UART_ENABLED || DT_HAS_NORDIC_NRF_UARTE_ENABLED) && SERIAL",
       "SPI_NRFX && SOC_FAMILY_NORDIC_NRF && SPI"
-    ]
-  ],
-  [
-    "CONFIG_PINCTRL_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_PINCTRL_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_PINCTRL_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_PINCTRL_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_PINCTRL_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_PINCTRL_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_PINCTRL_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
     ]
   ],
   [
@@ -11511,7 +10516,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1806
+      1685
     ]
   ],
   [
@@ -11522,7 +10527,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1807
+      1686
     ]
   ],
   [
@@ -11533,7 +10538,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1808
+      1687
     ]
   ],
   [
@@ -11544,7 +10549,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1809
+      1688
     ]
   ],
   [
@@ -11555,7 +10560,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1810
+      1689
     ]
   ],
   [
@@ -11566,7 +10571,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1811
+      1690
     ]
   ],
   [
@@ -11577,7 +10582,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1812
+      1691
     ]
   ],
   [
@@ -11588,7 +10593,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1813
+      1692
     ]
   ],
   [
@@ -11599,7 +10604,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1814
+      1693
     ]
   ],
   [
@@ -11610,7 +10615,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1815
+      1694
     ]
   ],
   [
@@ -11621,7 +10626,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1816
+      1695
     ]
   ],
   [
@@ -11632,7 +10637,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1817
+      1696
     ]
   ],
   [
@@ -11643,7 +10648,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1818
+      1697
     ]
   ],
   [
@@ -11654,7 +10659,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1819
+      1698
     ]
   ],
   [
@@ -11695,66 +10700,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1827
-    ]
-  ],
-  [
-    "CONFIG_UART_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_UART_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_UART_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_UART_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_UART_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_UART_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_UART_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
+      1706
     ]
   ],
   [
@@ -11765,7 +10711,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1835
+      1707
     ]
   ],
   [
@@ -11776,7 +10722,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1836
+      1708
     ]
   ],
   [
@@ -11787,7 +10733,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1837
+      1709
     ]
   ],
   [
@@ -11798,7 +10744,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1838
+      1710
     ]
   ],
   [
@@ -11809,7 +10755,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1839
+      1711
     ]
   ],
   [
@@ -11820,7 +10766,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1840
+      1712
     ]
   ],
   [
@@ -11831,7 +10777,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1845
+      1717
     ]
   ],
   [
@@ -11842,7 +10788,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1846
+      1718
     ]
   ],
   [
@@ -11864,7 +10810,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1848
+      1720
     ]
   ],
   [
@@ -11875,7 +10821,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1849
+      1721
     ]
   ],
   [
@@ -11886,7 +10832,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1850
+      1722
     ]
   ],
   [
@@ -11897,7 +10843,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1851
+      1723
     ]
   ],
   [
@@ -11908,7 +10854,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1852
+      1724
     ]
   ],
   [
@@ -11919,18 +10865,18 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1853
+      1725
     ]
   ],
   [
     "CONFIG_SPI_ASYNC",
     "y",
     "bool",
-    "n",
+    "y",
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1854
+      1726
     ]
   ],
   [
@@ -11941,7 +10887,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1855
+      1727
     ]
   ],
   [
@@ -11962,7 +10908,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1857
+      1729
     ]
   ],
   [
@@ -11973,7 +10919,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1858
+      1730
     ]
   ],
   [
@@ -11984,66 +10930,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1859
-    ]
-  ],
-  [
-    "CONFIG_SPI_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_SPI_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_SPI_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_SPI_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_SPI_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_SPI_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_SPI_LOG_LEVEL",
-    "n",
-    "int",
-    "4",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      35
+      1731
     ]
   ],
   [
@@ -12054,7 +10941,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1867
+      1732
     ]
   ],
   [
@@ -12087,7 +10974,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1870
+      1735
     ]
   ],
   [
@@ -12098,7 +10985,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1871
+      1736
     ]
   ],
   [
@@ -12109,7 +10996,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1872
+      1737
     ]
   ],
   [
@@ -12130,7 +11017,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1878
+      1743
     ]
   ],
   [
@@ -12141,7 +11028,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1879
+      1744
     ]
   ],
   [
@@ -12152,7 +11039,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1880
+      1745
     ]
   ],
   [
@@ -12183,7 +11070,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1883
+      1748
     ]
   ],
   [
@@ -12194,7 +11081,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1884
+      1749
     ]
   ],
   [
@@ -12226,7 +11113,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1887
+      1752
     ]
   ],
   [
@@ -12237,7 +11124,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1888
+      1753
     ]
   ],
   [
@@ -12296,7 +11183,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1897
+      1762
     ]
   ],
   [
@@ -12307,7 +11194,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1898
+      1763
     ]
   ],
   [
@@ -12318,7 +11205,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1899
+      1764
     ]
   ],
   [
@@ -12329,7 +11216,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1900
+      1765
     ]
   ],
   [
@@ -12340,7 +11227,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1901
+      1766
     ]
   ],
   [
@@ -12351,7 +11238,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1908
+      1773
     ]
   ],
   [
@@ -12362,7 +11249,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1909
+      1774
     ]
   ],
   [
@@ -12373,7 +11260,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1910
+      1775
     ]
   ],
   [
@@ -12384,7 +11271,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1911
+      1776
     ]
   ],
   [
@@ -12395,7 +11282,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1912
+      1777
     ]
   ],
   [
@@ -12406,7 +11293,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1913
+      1778
     ]
   ],
   [
@@ -12417,7 +11304,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1914
+      1779
     ]
   ],
   [
@@ -12428,7 +11315,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1915
+      1780
     ]
   ],
   [
@@ -12439,7 +11326,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1918
+      1783
     ]
   ],
   [
@@ -12450,7 +11337,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1919
+      1784
     ]
   ],
   [
@@ -12461,7 +11348,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1920
+      1785
     ]
   ],
   [
@@ -12568,7 +11455,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1935
+      1800
     ]
   ],
   [
@@ -12579,7 +11466,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1936
+      1801
     ]
   ],
   [
@@ -12600,7 +11487,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1938
+      1803
     ]
   ],
   [
@@ -12611,7 +11498,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1939
+      1804
     ]
   ],
   [
@@ -12622,7 +11509,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1940
+      1805
     ]
   ],
   [
@@ -12633,7 +11520,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1941
+      1806
     ]
   ],
   [
@@ -12676,7 +11563,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1946
+      1811
     ]
   ],
   [
@@ -12698,7 +11585,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1953
+      1818
     ]
   ],
   [
@@ -12709,7 +11596,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1963
+      1828
     ]
   ],
   [
@@ -12720,7 +11607,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1969
+      1834
     ]
   ],
   [
@@ -12731,7 +11618,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1975
+      1840
     ]
   ],
   [
@@ -12742,7 +11629,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1976
+      1841
     ]
   ],
   [
@@ -12753,7 +11640,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1977
+      1842
     ]
   ],
   [
@@ -12764,7 +11651,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1978
+      1843
     ]
   ],
   [
@@ -12775,7 +11662,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1979
+      1844
     ]
   ],
   [
@@ -12786,7 +11673,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1980
+      1845
     ]
   ],
   [
@@ -12821,7 +11708,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1984
+      1849
     ]
   ],
   [
@@ -12832,7 +11719,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1985
+      1850
     ]
   ],
   [
@@ -12843,7 +11730,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1991
+      1856
     ]
   ],
   [
@@ -12854,7 +11741,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      1997
+      1862
     ]
   ],
   [
@@ -12865,7 +11752,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2000
+      1865
     ]
   ],
   [
@@ -12876,7 +11763,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2005
+      1870
     ]
   ],
   [
@@ -12887,17 +11774,18 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2006
+      1871
     ]
   ],
   [
     "CONFIG_MPSC_PBUF",
     "y",
     "bool",
-    "y",
-    "select",
+    "n",
+    "assign",
     [
-      "LOG_MODE_DEFERRED && <choice LOG_MODE>"
+      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
+      1872
     ]
   ],
   [
@@ -12908,18 +11796,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2008
-    ]
-  ],
-  [
-    "CONFIG_MPSC_CLEAR_ALLOCATED",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2009
+      1873
     ]
   ],
   [
@@ -12940,7 +11817,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2011
+      1875
     ]
   ],
   [
@@ -12983,7 +11860,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2016
+      1880
     ]
   ],
   [
@@ -12994,7 +11871,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2017
+      1881
     ]
   ],
   [
@@ -13005,66 +11882,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2018
-    ]
-  ],
-  [
-    "CONFIG_CBPRINTF_PACKAGE_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CBPRINTF_PACKAGE_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CBPRINTF_PACKAGE_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CBPRINTF_PACKAGE_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CBPRINTF_PACKAGE_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CBPRINTF_PACKAGE_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_CBPRINTF_PACKAGE_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
+      1882
     ]
   ],
   [
@@ -13075,7 +11893,18 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2026
+      1883
+    ]
+  ],
+  [
+    "CONFIG_CBPRINTF_STATIC_PACKAGE_CHECK_ALIGNMENT",
+    "y",
+    "bool",
+    "n",
+    "assign",
+    [
+      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
+      1884
     ]
   ],
   [
@@ -13097,7 +11926,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2028
+      1886
     ]
   ],
   [
@@ -13108,66 +11937,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2029
-    ]
-  ],
-  [
-    "CONFIG_CPU_LOAD_LOG_LEVEL_OFF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CPU_LOAD_LOG_LEVEL_ERR",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CPU_LOAD_LOG_LEVEL_WRN",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CPU_LOAD_LOG_LEVEL_INF",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CPU_LOAD_LOG_LEVEL_DBG",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_CPU_LOAD_LOG_LEVEL_DEFAULT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_CPU_LOAD_LOG_LEVEL",
-    "n",
-    "int",
-    "3",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_config",
-      36
+      1887
     ]
   ],
   [
@@ -13178,7 +11948,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2042
+      1893
     ]
   ],
   [
@@ -13189,7 +11959,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2043
+      1894
     ]
   ],
   [
@@ -13278,7 +12048,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2060
+      1911
     ]
   ],
   [
@@ -13289,7 +12059,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2061
+      1912
     ]
   ],
   [
@@ -13308,7 +12078,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2067
+      1918
     ]
   ],
   [
@@ -13329,7 +12099,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2069
+      1920
     ]
   ],
   [
@@ -13350,7 +12120,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2071
+      1922
     ]
   ],
   [
@@ -13371,7 +12141,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2073
+      1924
     ]
   ],
   [
@@ -13382,7 +12152,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2074
+      1925
     ]
   ],
   [
@@ -13403,7 +12173,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2076
+      1927
     ]
   ],
   [
@@ -13414,7 +12184,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2077
+      1928
     ]
   ],
   [
@@ -13425,7 +12195,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2083
+      1934
     ]
   ],
   [
@@ -13436,7 +12206,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2086
+      1937
     ]
   ],
   [
@@ -13447,7 +12217,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2092
+      1943
     ]
   ],
   [
@@ -13458,7 +12228,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2093
+      1944
     ]
   ],
   [
@@ -13469,7 +12239,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2100
+      1951
     ]
   ],
   [
@@ -13480,7 +12250,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2101
+      1952
     ]
   ],
   [
@@ -13491,7 +12261,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2102
+      1953
     ]
   ],
   [
@@ -13502,7 +12272,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2103
+      1954
     ]
   ],
   [
@@ -13513,7 +12283,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2108
+      1959
     ]
   ],
   [
@@ -13524,7 +12294,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2114
+      1965
     ]
   ],
   [
@@ -13535,7 +12305,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2115
+      1966
     ]
   ],
   [
@@ -13546,7 +12316,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2116
+      1967
     ]
   ],
   [
@@ -13557,7 +12327,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2117
+      1968
     ]
   ],
   [
@@ -13588,7 +12358,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2120
+      1971
     ]
   ],
   [
@@ -13599,7 +12369,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2121
+      1972
     ]
   ],
   [
@@ -13610,7 +12380,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2122
+      1973
     ]
   ],
   [
@@ -13621,7 +12391,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2123
+      1974
     ]
   ],
   [
@@ -13632,7 +12402,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2124
+      1975
     ]
   ],
   [
@@ -13643,7 +12413,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2125
+      1976
     ]
   ],
   [
@@ -13654,7 +12424,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2126
+      1977
     ]
   ],
   [
@@ -13665,7 +12435,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2127
+      1978
     ]
   ],
   [
@@ -13676,7 +12446,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2128
+      1979
     ]
   ],
   [
@@ -13687,7 +12457,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2129
+      1980
     ]
   ],
   [
@@ -13698,7 +12468,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2132
+      1983
     ]
   ],
   [
@@ -13709,7 +12479,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2133
+      1984
     ]
   ],
   [
@@ -13720,18 +12490,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2134
-    ]
-  ],
-  [
-    "CONFIG_CPU_LOAD_LOG_PERIODICALLY",
-    "y",
-    "int",
-    "0",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2135
+      1985
     ]
   ],
   [
@@ -13742,7 +12501,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2136
+      1986
     ]
   ],
   [
@@ -13753,7 +12512,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2137
+      1987
     ]
   ],
   [
@@ -13764,7 +12523,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2138
+      1988
     ]
   ],
   [
@@ -13775,7 +12534,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2139
+      1989
     ]
   ],
   [
@@ -13786,7 +12545,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2144
+      1994
     ]
   ],
   [
@@ -13797,7 +12556,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2145
+      1995
     ]
   ],
   [
@@ -13808,7 +12567,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2148
+      1998
     ]
   ],
   [
@@ -13819,7 +12578,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2149
+      1999
     ]
   ],
   [
@@ -13830,7 +12589,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2154
+      2004
     ]
   ],
   [
@@ -13841,7 +12600,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2155
+      2005
     ]
   ],
   [
@@ -13852,7 +12611,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2156
+      2006
     ]
   ],
   [
@@ -13863,7 +12622,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2159
+      2009
     ]
   ],
   [
@@ -13874,7 +12633,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2160
+      2010
     ]
   ],
   [
@@ -13885,720 +12644,18 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2161
-    ]
-  ],
-  [
-    "CONFIG_LOG_CORE_INIT_PRIORITY",
-    "y",
-    "int",
-    "0",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2166
-    ]
-  ],
-  [
-    "CONFIG_LOG_MODE_DEFERRED",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_LOG_MODE_IMMEDIATE",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_LOG_MODE_MINIMAL",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_LOG_FRONTEND",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2170
-    ]
-  ],
-  [
-    "CONFIG_LOG_FRONTEND_OPT_API",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2171
-    ]
-  ],
-  [
-    "CONFIG_LOG_CUSTOM_HEADER",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2172
-    ]
-  ],
-  [
-    "CONFIG_LOG_MULTIDOMAIN",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2173
-    ]
-  ],
-  [
-    "CONFIG_LOG_FLUSH_SLEEP_US",
-    "y",
-    "int",
-    "10000",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2174
-    ]
-  ],
-  [
-    "CONFIG_LOG_RUNTIME_FILTERING",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2179
-    ]
-  ],
-  [
-    "CONFIG_LOG_DEFAULT_LEVEL",
-    "y",
-    "int",
-    "3",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2180
-    ]
-  ],
-  [
-    "CONFIG_LOG_OVERRIDE_LEVEL",
-    "y",
-    "int",
-    "0",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2181
-    ]
-  ],
-  [
-    "CONFIG_LOG_MAX_LEVEL",
-    "y",
-    "int",
-    "4",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2182
-    ]
-  ],
-  [
-    "CONFIG_LOG_PRINTK",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2188
-    ]
-  ],
-  [
-    "CONFIG_LOG_MODE_OVERFLOW",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2189
-    ]
-  ],
-  [
-    "CONFIG_LOG_BLOCK_IN_THREAD",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2190
-    ]
-  ],
-  [
-    "CONFIG_LOG_PROCESS_TRIGGER_THRESHOLD",
-    "y",
-    "int",
-    "10",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2191
-    ]
-  ],
-  [
-    "CONFIG_LOG_PROCESS_THREAD",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2192
-    ]
-  ],
-  [
-    "CONFIG_LOG_PROCESS_THREAD_STARTUP_DELAY_MS",
-    "y",
-    "int",
-    "0",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2193
-    ]
-  ],
-  [
-    "CONFIG_LOG_PROCESS_THREAD_SLEEP_MS",
-    "y",
-    "int",
-    "1000",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2194
-    ]
-  ],
-  [
-    "CONFIG_LOG_PROCESS_THREAD_CUSTOM_PRIORITY",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2195
-    ]
-  ],
-  [
-    "CONFIG_LOG_TRACE_SHORT_TIMESTAMP",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2196
-    ]
-  ],
-  [
-    "CONFIG_LOG_TIMESTAMP_64BIT",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2197
-    ]
-  ],
-  [
-    "CONFIG_LOG_TIMESTAMP_USE_REALTIME",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2198
-    ]
-  ],
-  [
-    "CONFIG_LOG_SPEED",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2199
-    ]
-  ],
-  [
-    "CONFIG_LOG_FUNC_NAME_PREFIX_ERR",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2209
-    ]
-  ],
-  [
-    "CONFIG_LOG_FUNC_NAME_PREFIX_WRN",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2210
-    ]
-  ],
-  [
-    "CONFIG_LOG_FUNC_NAME_PREFIX_INF",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2211
-    ]
-  ],
-  [
-    "CONFIG_LOG_FUNC_NAME_PREFIX_DBG",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2212
-    ]
-  ],
-  [
-    "CONFIG_LOG_MIPI_SYST_ENABLE",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2215
-    ]
-  ],
-  [
-    "CONFIG_LOG_DOMAIN_NAME_PREFIX",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2216
-    ]
-  ],
-  [
-    "CONFIG_LOG_THREAD_ID_PREFIX",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2217
-    ]
-  ],
-  [
-    "CONFIG_LOG_CUSTOM_FORMAT_SUPPORT",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2218
-    ]
-  ],
-  [
-    "CONFIG_LOG_BACKEND_SHOW_TIMESTAMP",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2219
-    ]
-  ],
-  [
-    "CONFIG_LOG_BACKEND_SHOW_LEVEL",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2220
-    ]
-  ],
-  [
-    "CONFIG_LOG_BACKEND_SHOW_COLOR",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2221
-    ]
-  ],
-  [
-    "CONFIG_LOG_INFO_COLOR_GREEN",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2222
-    ]
-  ],
-  [
-    "CONFIG_LOG_DBG_COLOR_BLUE",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2223
-    ]
-  ],
-  [
-    "CONFIG_LOG_TAG_MAX_LEN",
-    "y",
-    "int",
-    "0",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2224
-    ]
-  ],
-  [
-    "CONFIG_LOG_BACKEND_SUPPORTS_FORMAT_TIMESTAMP",
-    "n",
-    "bool",
-    "y",
-    "select",
-    [
-      "LOG_BACKEND_UART && UART_CONSOLE && !LOG_FRONTEND_ONLY && !LOG_MODE_MINIMAL && LOG"
-    ]
-  ],
-  [
-    "CONFIG_LOG_BACKEND_FORMAT_TIMESTAMP",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2226
-    ]
-  ],
-  [
-    "CONFIG_LOG_OUTPUT_FORMAT_TIME_TIMESTAMP",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_LOG_OUTPUT_FORMAT_DATE_TIMESTAMP",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_LOG_OUTPUT_FORMAT_ISO8601_TIMESTAMP",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_LOG_OUTPUT_FORMAT_LINUX_TIMESTAMP",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_LOG_OUTPUT_FORMAT_CUSTOM_TIMESTAMP",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_LOG_BACKEND_CRLF_NONE",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2232
-    ]
-  ],
-  [
-    "CONFIG_LOG_BACKEND_CRLF_LFONLY",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2233
-    ]
-  ],
-  [
-    "CONFIG_LOG_BACKEND_SKIP_SOURCE",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2234
-    ]
-  ],
-  [
-    "CONFIG_LOG_BACKEND_SWO",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2240
-    ]
-  ],
-  [
-    "CONFIG_LOG_BACKEND_UART",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2241
-    ]
-  ],
-  [
-    "CONFIG_LOG_BACKEND_UART_BUFFER_SIZE",
-    "y",
-    "int",
-    "1",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2242
-    ]
-  ],
-  [
-    "CONFIG_LOG_BACKEND_UART_AUTOSTART",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2243
-    ]
-  ],
-  [
-    "CONFIG_LOG_BACKEND_UART_OUTPUT_TEXT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    null
-  ],
-  [
-    "CONFIG_LOG_BACKEND_UART_OUTPUT_DICTIONARY",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_LOG_BACKEND_UART_OUTPUT_CUSTOM",
-    "y",
-    "bool",
-    null,
-    "unset",
-    null
-  ],
-  [
-    "CONFIG_LOG_BACKEND_UART_OUTPUT_DEFAULT",
-    "n",
-    "int",
-    "0",
-    "default",
-    [
-      "/opt/nordic/ncs/v3.3.1/zephyr/subsys/logging/Kconfig.template.log_format_config",
-      42
-    ]
-  ],
-  [
-    "CONFIG_LOG_BACKEND_IPC_SERVICE",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2248
-    ]
-  ],
-  [
-    "CONFIG_LOG_USE_VLA",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2254
-    ]
-  ],
-  [
-    "CONFIG_LOG_SIMPLE_MSG_OPTIMIZE",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2255
-    ]
-  ],
-  [
-    "CONFIG_LOG_ALWAYS_RUNTIME",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2256
-    ]
-  ],
-  [
-    "CONFIG_LOG_FMT_SECTION",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2257
-    ]
-  ],
-  [
-    "CONFIG_LOG_FMT_STRING_VALIDATE",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2258
-    ]
-  ],
-  [
-    "CONFIG_LOG_MEM_UTILIZATION",
-    "y",
-    "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2259
-    ]
-  ],
-  [
-    "CONFIG_LOG_FAILURE_REPORT_PERIOD",
-    "y",
-    "int",
-    "1000",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2260
-    ]
-  ],
-  [
-    "CONFIG_LOG_RATELIMIT",
-    "y",
-    "bool",
-    "y",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2263
-    ]
-  ],
-  [
-    "CONFIG_LOG_RATELIMIT_INTERVAL_MS",
-    "y",
-    "int",
-    "5000",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2264
+      2011
     ]
   ],
   [
     "CONFIG_LOG_OUTPUT",
     "y",
     "bool",
-    "y",
-    "select",
+    "n",
+    "assign",
     [
-      "LOG_BACKEND_UART_OUTPUT_TEXT && <choice LOG_BACKEND_UART_OUTPUT>"
+      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
+      2016
     ]
   ],
   [
@@ -14609,7 +12666,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2268
+      2019
     ]
   ],
   [
@@ -14620,7 +12677,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2269
+      2020
     ]
   ],
   [
@@ -14631,7 +12688,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2278
+      2029
     ]
   ],
   [
@@ -14642,7 +12699,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2281
+      2032
     ]
   ],
   [
@@ -14653,7 +12710,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2284
+      2035
     ]
   ],
   [
@@ -14664,7 +12721,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2285
+      2036
     ]
   ],
   [
@@ -14675,7 +12732,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2290
+      2041
     ]
   ],
   [
@@ -14686,7 +12743,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2293
+      2044
     ]
   ],
   [
@@ -14697,7 +12754,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2298
+      2049
     ]
   ],
   [
@@ -14708,7 +12765,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2304
+      2055
     ]
   ],
   [
@@ -14719,7 +12776,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2312
+      2063
     ]
   ],
   [
@@ -14730,7 +12787,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2317
+      2068
     ]
   ],
   [
@@ -14741,7 +12798,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2318
+      2069
     ]
   ],
   [
@@ -14763,7 +12820,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2320
+      2071
     ]
   ],
   [
@@ -14774,7 +12831,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2323
+      2074
     ]
   ],
   [
@@ -14785,7 +12842,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2328
+      2079
     ]
   ],
   [
@@ -14796,7 +12853,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2329
+      2080
     ]
   ],
   [
@@ -14807,7 +12864,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2330
+      2081
     ]
   ],
   [
@@ -14818,7 +12875,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2333
+      2084
     ]
   ],
   [
@@ -14829,7 +12886,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2334
+      2085
     ]
   ],
   [
@@ -14840,7 +12897,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2335
+      2086
     ]
   ],
   [
@@ -14851,7 +12908,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2336
+      2087
     ]
   ],
   [
@@ -14862,7 +12919,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2341
+      2092
     ]
   ],
   [
@@ -14873,7 +12930,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2344
+      2095
     ]
   ],
   [
@@ -14884,7 +12941,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2349
+      2100
     ]
   ],
   [
@@ -14895,7 +12952,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2350
+      2101
     ]
   ],
   [
@@ -14906,7 +12963,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2351
+      2102
     ]
   ],
   [
@@ -14917,7 +12974,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2352
+      2103
     ]
   ],
   [
@@ -14928,7 +12985,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2353
+      2104
     ]
   ],
   [
@@ -14939,7 +12996,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2359
+      2110
     ]
   ],
   [
@@ -14950,7 +13007,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2360
+      2111
     ]
   ],
   [
@@ -14961,7 +13018,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2363
+      2114
     ]
   ],
   [
@@ -14972,7 +13029,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2364
+      2115
     ]
   ],
   [
@@ -14983,7 +13040,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2365
+      2116
     ]
   ],
   [
@@ -14994,7 +13051,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2366
+      2117
     ]
   ],
   [
@@ -15005,7 +13062,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2367
+      2118
     ]
   ],
   [
@@ -15016,7 +13073,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2368
+      2119
     ]
   ],
   [
@@ -15027,7 +13084,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2369
+      2120
     ]
   ],
   [
@@ -15038,7 +13095,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2370
+      2121
     ]
   ],
   [
@@ -15106,7 +13163,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2387
+      2138
     ]
   ],
   [
@@ -15117,7 +13174,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2388
+      2139
     ]
   ],
   [
@@ -15155,7 +13212,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2392
+      2143
     ]
   ],
   [
@@ -15166,7 +13223,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2393
+      2144
     ]
   ],
   [
@@ -15177,7 +13234,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2398
+      2149
     ]
   ],
   [
@@ -15188,7 +13245,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2399
+      2150
     ]
   ],
   [
@@ -15210,7 +13267,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2401
+      2152
     ]
   ],
   [
@@ -15221,7 +13278,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2402
+      2153
     ]
   ],
   [
@@ -15254,7 +13311,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2407
+      2158
     ]
   ],
   [
@@ -15315,7 +13372,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2419
+      2170
     ]
   ],
   [
@@ -15326,7 +13383,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2420
+      2171
     ]
   ],
   [
@@ -15337,7 +13394,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2421
+      2172
     ]
   ],
   [
@@ -15388,7 +13445,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2427
+      2178
     ]
   ],
   [
@@ -15399,7 +13456,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2428
+      2179
     ]
   ],
   [
@@ -15410,7 +13467,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2429
+      2180
     ]
   ],
   [
@@ -15421,7 +13478,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2430
+      2181
     ]
   ],
   [
@@ -15432,7 +13489,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2431
+      2182
     ]
   ],
   [
@@ -15467,7 +13524,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2435
+      2186
     ]
   ],
   [
@@ -15478,7 +13535,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2436
+      2187
     ]
   ],
   [
@@ -15524,7 +13581,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2447
+      2198
     ]
   ],
   [
@@ -15535,7 +13592,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2448
+      2199
     ]
   ],
   [
@@ -15546,7 +13603,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2449
+      2200
     ]
   ],
   [
@@ -15557,7 +13614,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2450
+      2201
     ]
   ],
   [
@@ -15568,7 +13625,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2451
+      2202
     ]
   ],
   [
@@ -15579,7 +13636,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2452
+      2203
     ]
   ],
   [
@@ -15590,7 +13647,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2453
+      2204
     ]
   ],
   [
@@ -15601,7 +13658,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2454
+      2205
     ]
   ],
   [
@@ -15612,7 +13669,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2455
+      2206
     ]
   ],
   [
@@ -15623,7 +13680,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2456
+      2207
     ]
   ],
   [
@@ -15634,7 +13691,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2457
+      2208
     ]
   ],
   [
@@ -15645,7 +13702,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2458
+      2209
     ]
   ],
   [
@@ -15656,7 +13713,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2459
+      2210
     ]
   ],
   [
@@ -15667,7 +13724,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2460
+      2211
     ]
   ],
   [
@@ -15678,7 +13735,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2461
+      2212
     ]
   ],
   [
@@ -15689,7 +13746,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2462
+      2213
     ]
   ],
   [
@@ -15700,7 +13757,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2463
+      2214
     ]
   ],
   [
@@ -15711,7 +13768,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2464
+      2215
     ]
   ],
   [
@@ -15722,7 +13779,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2465
+      2216
     ]
   ],
   [
@@ -15733,7 +13790,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2466
+      2217
     ]
   ],
   [
@@ -15744,7 +13801,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2467
+      2218
     ]
   ],
   [
@@ -15765,7 +13822,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2471
+      2222
     ]
   ],
   [
@@ -15786,7 +13843,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2473
+      2224
     ]
   ],
   [
@@ -15797,7 +13854,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2479
+      2230
     ]
   ],
   [
@@ -15808,7 +13865,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2480
+      2231
     ]
   ],
   [
@@ -15819,7 +13876,7 @@
     "assign",
     [
       "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave/zephyr/.config",
-      2486
+      2237
     ]
   ]
 ]

@@ -3833,37 +3833,35 @@ nordic_expansion_pwm: &pwm21 {
 
 
 &pinctrl {
- spi22_slave_default: spi22_slave_default {
+ spi21_default_alt: spi21_default_alt {
   group1 {
-   psels = <((((((3) * 32U) + (3)) & 0x1FFU) << 0U) | ((7U & 0xFFU) << 24U))>,
-    <((((((3) * 32U) + (0)) & 0x1FFU) << 0U) | ((8U & 0xFFU) << 24U))>,
-    <((((((3) * 32U) + (1)) & 0x1FFU) << 0U) | ((9U & 0xFFU) << 24U))>,
-    <((((((3) * 32U) + (2)) & 0x1FFU) << 0U) | ((10U & 0xFFU) << 24U))>;
+   psels = <((((((1) * 32U) + (24)) & 0x1FFU) << 0U) | ((7U & 0xFFU) << 24U))>,
+    <((((((1) * 32U) + (31)) & 0x1FFU) << 0U) | ((9U & 0xFFU) << 24U))>,
+    <((((((1) * 32U) + (14)) & 0x1FFU) << 0U) | ((8U & 0xFFU) << 24U))>,
+    <((((((1) * 32U) + (4)) & 0x1FFU) << 0U) | ((10U & 0xFFU) << 24U))>;
   };
  };
 
- spi22_slave_sleep: spi22_slave_sleep {
+ spi21_sleep_alt: spi21_sleep_alt {
   group1 {
-   psels = <((((((3) * 32U) + (3)) & 0x1FFU) << 0U) | ((7U & 0xFFU) << 24U))>,
-    <((((((3) * 32U) + (0)) & 0x1FFU) << 0U) | ((8U & 0xFFU) << 24U))>,
-    <((((((3) * 32U) + (1)) & 0x1FFU) << 0U) | ((9U & 0xFFU) << 24U))>,
-    <((((((3) * 32U) + (2)) & 0x1FFU) << 0U) | ((10U & 0xFFU) << 24U))>;
+   psels = <((((((1) * 32U) + (24)) & 0x1FFU) << 0U) | ((7U & 0xFFU) << 24U))>,
+    <((((((1) * 32U) + (31)) & 0x1FFU) << 0U) | ((9U & 0xFFU) << 24U))>,
+    <((((((1) * 32U) + (14)) & 0x1FFU) << 0U) | ((8U & 0xFFU) << 24U))>,
+    <((((((1) * 32U) + (4)) & 0x1FFU) << 0U) | ((10U & 0xFFU) << 24U))>;
    low-power-enable;
   };
  };
 };
 
-&spi22 {
+dut_spis: &spi21 {
  compatible = "nordic,nrf-spis";
  status = "okay";
- def-char = <0xAA>;
- pinctrl-0 = <&spi22_slave_default>;
- pinctrl-1 = <&spi22_slave_sleep>;
+ def-char = <0x00>;
+ pinctrl-0 = <&spi21_default_alt>;
+ pinctrl-1 = <&spi21_sleep_alt>;
  pinctrl-names = "default", "sleep";
- /delete-property/ cs-gpios;
  /delete-property/ rx-delay-supported;
  /delete-property/ rx-delay;
- /delete-property/ zephyr,pm-device-runtime-auto;
 };
 # 0 "<command-line>" 2
 # 1 "/opt/nordic/ncs/v3.3.1/zephyr/misc/empty_file.c"

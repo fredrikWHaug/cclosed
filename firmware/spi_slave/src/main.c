@@ -1,12 +1,13 @@
 /*
  * SPI Slave — receives a byte from master and responds.
+ * Uses spi21 with Nordic's proven pin assignments.
  */
 
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/spi.h>
 
-#define SPI_NODE DT_NODELABEL(spi22)
+#define SPI_NODE DT_NODELABEL(spi21)
 
 static const struct device *spi_dev = DEVICE_DT_GET(SPI_NODE);
 

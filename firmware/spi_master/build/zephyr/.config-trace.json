@@ -132,32 +132,29 @@
     "y",
     "bool",
     "y",
-    "assign",
+    "default",
     [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/zephyr/.config",
-      29
+      "/opt/nordic/ncs/v3.3.1/nrf/modules/../sysbuild/Kconfig.sysbuild",
+      11
     ]
   ],
   [
     "SB_CONFIG_PM_OVERRIDE_EXTERNAL_DRIVER_CHECK",
     "y",
     "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/zephyr/.config",
-      30
-    ]
+    null,
+    "unset",
+    null
   ],
   [
     "SB_CONFIG_BUILD_OUTPUT_BIN",
     "y",
     "bool",
     "y",
-    "assign",
+    "default",
     [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/zephyr/.config",
-      31
+      "/opt/nordic/ncs/v3.3.1/nrf/modules/../sysbuild/Kconfig.sysbuild",
+      61
     ]
   ],
   [
@@ -165,10 +162,10 @@
     "y",
     "bool",
     "y",
-    "assign",
+    "default",
     [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/zephyr/.config",
-      32
+      "/opt/nordic/ncs/v3.3.1/nrf/modules/../sysbuild/Kconfig.sysbuild",
+      69
     ]
   ],
   [
@@ -231,8 +228,11 @@
     "y",
     "bool",
     "y",
-    "assign",
-    null
+    "default",
+    [
+      "/opt/nordic/ncs/v3.3.1/nrf/modules/../sysbuild/Kconfig.flprcore",
+      29
+    ]
   ],
   [
     "SB_CONFIG_FLPRCORE_EMPTY",
@@ -246,67 +246,52 @@
     "SB_CONFIG_HPF",
     "y",
     "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/zephyr/.config",
-      44
-    ]
+    null,
+    "unset",
+    null
   ],
   [
     "SB_CONFIG_SECURE_BOOT_APPCORE",
     "y",
     "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/zephyr/.config",
-      50
-    ]
+    null,
+    "unset",
+    null
   ],
   [
     "SB_CONFIG_BT_FAST_PAIR_MODEL_ID",
     "y",
     "hex",
     "0x1000000",
-    "assign",
+    "default",
     [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/zephyr/.config",
-      56
+      "/opt/nordic/ncs/v3.3.1/nrf/modules/../sysbuild/Kconfig.bt_fast_pair",
+      12
     ]
   ],
   [
     "SB_CONFIG_BT_FAST_PAIR_ANTI_SPOOFING_PRIVATE_KEY",
     "y",
     "string",
-    "",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/zephyr/.config",
-      57
-    ]
+    null,
+    "unset",
+    null
   ],
   [
     "SB_CONFIG_MATTER",
     "y",
     "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/zephyr/.config",
-      60
-    ]
+    null,
+    "unset",
+    null
   ],
   [
     "SB_CONFIG_WIFI_NRF70",
     "y",
     "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/zephyr/.config",
-      65
-    ]
+    null,
+    "unset",
+    null
   ],
   [
     "SB_CONFIG_APPROTECT_DISABLE",
@@ -337,8 +322,11 @@
     "y",
     "bool",
     "y",
-    "assign",
-    null
+    "default",
+    [
+      "/opt/nordic/ncs/v3.3.1/nrf/modules/../sysbuild/Kconfig.approtect",
+      8
+    ]
   ],
   [
     "SB_CONFIG_SECURE_APPROTECT_DISABLE",
@@ -369,8 +357,11 @@
     "y",
     "bool",
     "y",
-    "assign",
-    null
+    "default",
+    [
+      "/opt/nordic/ncs/v3.3.1/nrf/modules/../sysbuild/Kconfig.approtect",
+      46
+    ]
   ],
   [
     "SB_CONFIG_SUPPORT_CRACEN",
@@ -871,12 +862,9 @@
     "SB_CONFIG_WARN_EXPERIMENTAL",
     "y",
     "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/zephyr/.config",
-      129
-    ]
+    null,
+    "unset",
+    null
   ],
   [
     "SB_CONFIG_DEPRECATED",
@@ -893,10 +881,10 @@
     "y",
     "bool",
     "y",
-    "assign",
+    "default",
     [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/zephyr/.config",
-      131
+      "/opt/nordic/ncs/v3.3.1/zephyr/share/sysbuild/Kconfig",
+      66
     ]
   ],
   [
@@ -926,8 +914,11 @@
     "y",
     "bool",
     "y",
-    "assign",
-    null
+    "default",
+    [
+      "/opt/nordic/ncs/v3.3.1/zephyr/share/sysbuild/images/bootloader/Kconfig",
+      15
+    ]
   ],
   [
     "SB_CONFIG_BOOTLOADER_MCUBOOT",
@@ -952,22 +943,16 @@
     "SB_CONFIG_COMPILER_WARNINGS_AS_ERRORS",
     "y",
     "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/zephyr/.config",
-      141
-    ]
+    null,
+    "unset",
+    null
   ],
   [
     "SB_CONFIG_MERGED_HEX_FILES",
     "y",
     "bool",
-    "n",
-    "assign",
-    [
-      "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/zephyr/.config",
-      142
-    ]
+    null,
+    "unset",
+    null
   ]
 ]
