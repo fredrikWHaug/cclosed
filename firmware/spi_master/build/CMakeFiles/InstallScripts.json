@@ -1,0 +1,15 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/cmake_install.cmake",
+		"/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/cmake_install.cmake",
+		"/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/cmake_install.cmake",
+		"/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/bootloader/cmake_install.cmake",
+		"/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/firmware_loader/cmake_install.cmake",
+		"/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/modules/nrf/cmake_install.cmake",
+		"/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/modules/mcuboot/cmake_install.cmake",
+		"/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/boards/cmake_install.cmake",
+		"/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/soc/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

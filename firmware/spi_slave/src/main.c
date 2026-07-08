@@ -1,6 +1,5 @@
 /*
- * SPI Slave — receives a byte from the master and prints it.
- * Responds with the received byte + 1 (so the master can verify the link).
+ * SPI Slave — receives a byte from master and responds.
  */
 
 #include <zephyr/kernel.h>
@@ -22,13 +21,13 @@ int main(void)
 	printk("=== SPI Slave ===\n");
 
 	if (!device_is_ready(spi_dev)) {
-		printk("SPI device not ready\n");
+		printk("SPI device not ready!\n");
 		return 0;
 	}
 	printk("SPI device ready, waiting for master...\n");
 
 	uint8_t rx_byte = 0;
-	uint8_t tx_byte = 0xAA; /* initial response */
+	uint8_t tx_byte = 0x55;
 
 	while (1) {
 		struct spi_buf tx_buf = { .buf = &tx_byte, .len = 1 };
@@ -37,13 +36,11 @@ int main(void)
 		struct spi_buf rx_buf = { .buf = &rx_byte, .len = 1 };
 		struct spi_buf_set rx_set = { .buffers = &rx_buf, .count = 1 };
 
-		/* This blocks until the master initiates a transaction */
 		int ret = spi_transceive(spi_dev, &spi_cfg, &tx_set, &rx_set);
 		if (ret) {
-			printk("SPI transceive error: %d\n", ret);
+			printk("SPI error: %d\n", ret);
 		} else {
-			printk("Received: 0x%02X  Responding with: 0x%02X\n",
-			       rx_byte, (uint8_t)(rx_byte + 1));
+			printk("Received: 0x%02X\n", rx_byte);
 			tx_byte = rx_byte + 1;
 		}
 	}

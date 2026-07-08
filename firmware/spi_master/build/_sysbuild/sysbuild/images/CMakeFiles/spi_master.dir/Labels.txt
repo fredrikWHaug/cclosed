@@ -1,0 +1,13 @@
+# Target labels
+ spi_master
+# Source files and their labels
+/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/CMakeFiles/spi_master
+/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/CMakeFiles/spi_master.rule
+/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/CMakeFiles/spi_master-complete.rule
+/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/spi_master-prefix/src/spi_master-stamp/spi_master-build.rule
+/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/spi_master-prefix/src/spi_master-stamp/spi_master-configure.rule
+/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/spi_master-prefix/src/spi_master-stamp/spi_master-download.rule
+/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/spi_master-prefix/src/spi_master-stamp/spi_master-install.rule
+/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/spi_master-prefix/src/spi_master-stamp/spi_master-mkdir.rule
+/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/spi_master-prefix/src/spi_master-stamp/spi_master-patch.rule
+/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/spi_master-prefix/src/spi_master-stamp/spi_master-update.rule

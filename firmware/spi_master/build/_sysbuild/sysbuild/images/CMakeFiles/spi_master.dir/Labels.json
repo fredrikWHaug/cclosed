@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/CMakeFiles/spi_master"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/CMakeFiles/spi_master.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/CMakeFiles/spi_master-complete.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/spi_master-prefix/src/spi_master-stamp/spi_master-build.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/spi_master-prefix/src/spi_master-stamp/spi_master-configure.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/spi_master-prefix/src/spi_master-stamp/spi_master-download.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/spi_master-prefix/src/spi_master-stamp/spi_master-install.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/spi_master-prefix/src/spi_master-stamp/spi_master-mkdir.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/spi_master-prefix/src/spi_master-stamp/spi_master-patch.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/_sysbuild/sysbuild/images/spi_master-prefix/src/spi_master-stamp/spi_master-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"spi_master"
+		],
+		"name" : "spi_master"
+	}
+}

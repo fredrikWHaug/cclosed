@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/_sysbuild/sysbuild/images/CMakeFiles/spi_slave"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/_sysbuild/sysbuild/images/CMakeFiles/spi_slave.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/_sysbuild/sysbuild/images/CMakeFiles/spi_slave-complete.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/_sysbuild/sysbuild/images/spi_slave-prefix/src/spi_slave-stamp/spi_slave-build.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/_sysbuild/sysbuild/images/spi_slave-prefix/src/spi_slave-stamp/spi_slave-configure.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/_sysbuild/sysbuild/images/spi_slave-prefix/src/spi_slave-stamp/spi_slave-download.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/_sysbuild/sysbuild/images/spi_slave-prefix/src/spi_slave-stamp/spi_slave-install.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/_sysbuild/sysbuild/images/spi_slave-prefix/src/spi_slave-stamp/spi_slave-mkdir.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/_sysbuild/sysbuild/images/spi_slave-prefix/src/spi_slave-stamp/spi_slave-patch.rule"
+		},
+		{
+			"file" : "/Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/_sysbuild/sysbuild/images/spi_slave-prefix/src/spi_slave-stamp/spi_slave-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"spi_slave"
+		],
+		"name" : "spi_slave"
+	}
+}

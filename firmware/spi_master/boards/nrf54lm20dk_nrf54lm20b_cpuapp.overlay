@@ -1,9 +1,4 @@
-/* Enable spi22 as SPI master on expansion header pins:
- *   SCK  = P3.03
- *   MOSI = P3.00
- *   MISO = P3.01
- *   CS   = P3.02
- */
+/* Enable spi22 as SPI master on expansion header pins */
 &spi22 {
 	status = "okay";
 };
