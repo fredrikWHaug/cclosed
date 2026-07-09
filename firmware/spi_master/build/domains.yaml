@@ -1,7 +1,0 @@
-default: spi_master
-build_dir: /Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build
-domains:
-  - name: spi_master
-    build_dir: /Users/fredrikwhaug/Desktop/cclosed/firmware/spi_master/build/spi_master
-flash_order:
-  - spi_master

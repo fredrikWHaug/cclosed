@@ -1,7 +1,0 @@
-default: spi_slave
-build_dir: /Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build
-domains:
-  - name: spi_slave
-    build_dir: /Users/fredrikwhaug/Desktop/cclosed/firmware/spi_slave/build/spi_slave
-flash_order:
-  - spi_slave

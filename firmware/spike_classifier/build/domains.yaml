@@ -1,7 +1,0 @@
-default: spike_classifier
-build_dir: /Users/fredrikwhaug/Desktop/cclosed/firmware/spike_classifier/build
-domains:
-  - name: spike_classifier
-    build_dir: /Users/fredrikwhaug/Desktop/cclosed/firmware/spike_classifier/build/spike_classifier
-flash_order:
-  - spike_classifier

@@ -1,7 +1,20 @@
-offline-reference/
-progress.md
-.DS_Store
+# Build artifacts (Zephyr / nRF Connect / CMake) — regenerated on every build
+build/
+
+# Python
+venv/
 __pycache__/
 *.pyc
+
+# Derived data / model outputs (large, regenerable)
 *.npz
 model/checkpoints/
+
+# Reference material: raw recordings + lab spike-sorting pipeline (huge, not ours)
+offline-reference/
+
+# Personal working notes
+progress.md
+
+# macOS
+.DS_Store

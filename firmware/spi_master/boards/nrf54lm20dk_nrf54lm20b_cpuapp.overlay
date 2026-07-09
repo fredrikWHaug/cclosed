@@ -1,19 +1,19 @@
-/* SPI master using spi22 — same pins as Nordic's working test */
+/* SPI master using spi22 on PORT3 pins (verified working between boards) */
 
 &pinctrl {
 	spi22_default_alt: spi22_default_alt {
 		group1 {
-			psels = <NRF_PSEL(SPIM_SCK, 1, 23)>,
-				<NRF_PSEL(SPIM_MISO, 1, 30)>,
-				<NRF_PSEL(SPIM_MOSI, 1, 13)>;
+			psels = <NRF_PSEL(SPIM_SCK, 3, 3)>,
+				<NRF_PSEL(SPIM_MISO, 3, 1)>,
+				<NRF_PSEL(SPIM_MOSI, 3, 0)>;
 		};
 	};
 
 	spi22_sleep_alt: spi22_sleep_alt {
 		group1 {
-			psels = <NRF_PSEL(SPIM_SCK, 1, 23)>,
-				<NRF_PSEL(SPIM_MISO, 1, 30)>,
-				<NRF_PSEL(SPIM_MOSI, 1, 13)>;
+			psels = <NRF_PSEL(SPIM_SCK, 3, 3)>,
+				<NRF_PSEL(SPIM_MISO, 3, 1)>,
+				<NRF_PSEL(SPIM_MOSI, 3, 0)>;
 			low-power-enable;
 		};
 	};
@@ -25,6 +25,8 @@
 	pinctrl-1 = <&spi22_sleep_alt>;
 	pinctrl-names = "default", "sleep";
 	overrun-character = <0x00>;
-	cs-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
+	/* CS is driven manually as a plain GPIO in main.c (P3.02),
+	 * so we intentionally do NOT declare cs-gpios here.
+	 */
 	zephyr,pm-device-runtime-auto;
 };

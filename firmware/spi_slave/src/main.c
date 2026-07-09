@@ -1,6 +1,9 @@
 /*
  * SPI Slave — receives a byte from master and responds.
  * Uses spi21 with Nordic's proven pin assignments.
+ *
+ * Note: SPIS spi_transceive returns rx_amount (bytes received) on success,
+ * NOT 0. So ret > 0 means success, ret < 0 means error.
  */
 
 #include <zephyr/kernel.h>
@@ -38,10 +41,10 @@ int main(void)
 		struct spi_buf_set rx_set = { .buffers = &rx_buf, .count = 1 };
 
 		int ret = spi_transceive(spi_dev, &spi_cfg, &tx_set, &rx_set);
-		if (ret) {
+		if (ret < 0) {
 			printk("SPI error: %d\n", ret);
 		} else {
-			printk("Received: 0x%02X\n", rx_byte);
+			printk("Received: 0x%02X (ret=%d)\n", rx_byte, ret);
 			tx_byte = rx_byte + 1;
 		}
 	}
