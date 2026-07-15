@@ -1,25 +1,17 @@
 /*
- * Logistic Regression Spike Classifier
+ * Logistic Regression spike classifier.
  *
- * One matrix multiply: output = W * input + b, then argmax.
- * That's the entire model.
+ * The entire model is one fully-connected layer:  logits = W * input + b,
+ * then argmax. Input is the flattened (8,40)=320-sample snippet.
+ *
+ * Inference math lives in the shared ../nn.h.
  */
 
 #include <zephyr/kernel.h>
 
+#include "nn.h"
 #include "../model_weights.h"
 #include "../test_data.h"
-
-static int argmax(const float *arr, int len)
-{
-	int best = 0;
-	for (int i = 1; i < len; i++) {
-		if (arr[i] > arr[best]) {
-			best = i;
-		}
-	}
-	return best;
-}
 
 int main(void)
 {
@@ -27,24 +19,17 @@ int main(void)
 	printk("Running inference on hardcoded test snippet...\n");
 	printk("True class: %d (unit %d)\n\n", TEST_TRUE_CLASS, TEST_TRUE_UNIT);
 
-	/* Flatten input: test_snippet is (8, 40) = 320 floats, already contiguous */
-	const float *input = test_snippet;
+	/* test_snippet is (8, 40) = 320 floats, already contiguous == flattened */
 	float output[N_CLASSES];
 
 	uint32_t t_start = k_uptime_get_32();
 
-	/* Single matrix multiply: output[c] = sum(W[c][i] * input[i]) + b[c] */
-	for (int c = 0; c < N_CLASSES; c++) {
-		float sum = logreg_b[c];
-		for (int i = 0; i < INPUT_DIM; i++) {
-			sum += logreg_w[c * INPUT_DIM + i] * input[i];
-		}
-		output[c] = sum;
-	}
+	/* Single linear layer, no ReLU: output = W * input + b */
+	nn_linear(test_snippet, output, logreg_w, logreg_b, INPUT_DIM, N_CLASSES, 0);
 
 	uint32_t t_end = k_uptime_get_32();
 
-	int predicted = argmax(output, N_CLASSES);
+	int predicted = nn_argmax(output, N_CLASSES);
 
 	printk("Output logits: ");
 	for (int i = 0; i < N_CLASSES; i++) {

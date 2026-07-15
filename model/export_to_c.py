@@ -33,7 +33,7 @@ def main():
     shank = 0
     checkpoint_path = Path(__file__).parent / "checkpoints" / f"shank{shank}_best.pt"
     dataset_path = Path(__file__).parent.parent / "dataset" / "dataset.npz"
-    output_dir = Path(__file__).parent.parent / "firmware" / "spike_classifier"
+    output_dir = Path(__file__).parent.parent / "firmware" / "classifiers" / "cnn"
 
     # Load model
     ckpt = torch.load(checkpoint_path, map_location="cpu", weights_only=False)

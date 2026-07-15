@@ -22,7 +22,7 @@ def export_array(f, name, arr, dtype="float"):
 def main():
     shank = 0
     dataset_path = Path(__file__).parent.parent / "dataset" / "dataset.npz"
-    output_dir = Path(__file__).parent.parent / "firmware" / "logreg_classifier"
+    output_dir = Path(__file__).parent.parent / "firmware" / "classifiers" / "logreg"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Load data and train
