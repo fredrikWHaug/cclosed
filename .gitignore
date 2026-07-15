@@ -16,5 +16,9 @@ offline-reference/
 # Personal working notes
 progress.md
 
+# Claude working agreement / local Claude config (personal, not shared)
+CLAUDE.md
+.claude/
+
 # macOS
 .DS_Store
