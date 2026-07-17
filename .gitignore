@@ -19,6 +19,9 @@ progress.md
 # Local scratch / experiments (personal, not shared)
 scratch/
 
+# Raw recordings: huge Intan .rhd sessions (not ours, regenerable from source)
+raw-data/
+
 # Claude working agreement / local Claude config (personal, not shared)
 CLAUDE.md
 .claude/
