@@ -2,10 +2,9 @@
     "nrf-connect.applications": [
         "${workspaceFolder}/firmware/spi_master",
         "${workspaceFolder}/firmware/spi_slave",
-        "${workspaceFolder}/firmware/classifiers/logreg",
-        "${workspaceFolder}/firmware/classifiers/cnn",
-        "${workspaceFolder}/firmware/classifiers/resnet",
         "${workspaceFolder}/firmware/spi/slave",
-        "${workspaceFolder}/firmware/spi/master"
+        "${workspaceFolder}/firmware/spi/master",
+        "${workspaceFolder}/firmware/spi/ndspi/slave",
+        "${workspaceFolder}/firmware/spi/ndspi/master"
     ]
 }
