@@ -1,17 +1,14 @@
 /*
- * SPI Slave — emulates an Intan RHD2132 streaming REAL spike data.
+ * SPI Slave — receives the master's SEQUENCE NUMBERS and prints them.
  *
- * Stands in for a real Intan chip so the master firmware is exercised against
- * the actual protocol:
- *   - receives a 16-bit CONVERT(C) command (2 bytes, MSB first, mode 0)
- *   - returns the next sample of a recorded spike trace as a 16-bit ADC value,
- *     with Intan's real 2-command pipeline delay (reply to cmd i goes out at i+2)
+ * Part of the data-integrity / latency test. The master streams 0,1,2,3,... as
+ * 16-bit words; this slave receives each one and prints it (one integer per
+ * line) over its serial port. A host-side Python script reads that stream and
+ * graphs it — gaps in the sequence reveal dropped data, arrival timing reveals
+ * streaming delay.
  *
- * The trace (spike_data.h) is a real single-channel recording built from
- * dataset.npz: baseline with several genuine spikes, pre-converted to 16-bit
- * offset-binary. Swap this DK for a real RHD2132/2164 and the master is
- * unchanged. (Single channel for now; the CONVERT channel is decoded but the
- * stream is 1-D — multi-channel playback is a later step.)
+ * Plain-number output (no banners between samples) keeps it trivial for Python
+ * to parse: any line that isn't a bare integer is ignored on the host side.
  *
  * Note: SPIS spi_transceive returns rx_amount (>0) on success, <0 on error.
  */
@@ -19,8 +16,6 @@
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/spi.h>
-
-#include "spike_data.h"
 
 #define SPI_NODE DT_NODELABEL(spi21)
 
@@ -32,35 +27,17 @@ static struct spi_config spi_cfg = {
 	.slave = 0,
 };
 
-/* Walk the recorded trace one sample per call, looping at the end. */
-static uint16_t next_spike_sample(void)
-{
-	static uint32_t t;
-	uint16_t val = spike_stream[t];
-
-	if (++t >= SPIKE_LEN) {
-		t = 0;
-	}
-	return val;
-}
-
 int main(void)
 {
-	printk("=== SPI Slave (Intan emulator, streaming real spikes) ===\n");
+	printk("=== SPI Slave - receiving sequence numbers ===\n");
 
 	if (!device_is_ready(spi_dev)) {
 		printk("SPI device not ready!\n");
 		return 0;
 	}
-	printk("SPI ready. Streaming %d-sample spike trace. Waiting for master...\n",
-	       SPIKE_LEN);
-
-	/* Two-deep pipeline: reply to command i is transmitted at transaction i+2. */
-	uint16_t resp_next = 0;
-	uint16_t resp_after = 0;
 
 	while (1) {
-		uint8_t tx[2] = { resp_next >> 8, resp_next & 0xFF };   /* preloaded reply */
+		uint8_t tx[2] = { 0, 0 };            /* nothing to send back */
 		uint8_t rx[2] = { 0, 0 };
 
 		struct spi_buf tx_buf = { .buf = tx, .len = 2 };
@@ -74,11 +51,8 @@ int main(void)
 			continue;
 		}
 
-		/* (channel is in rx[] bits [13:8]; unused while the stream is 1-D) */
-
-		/* Advance the pipeline: this command's result becomes due in 2 frames. */
-		resp_next = resp_after;
-		resp_after = next_spike_sample();
+		uint16_t seq = (uint16_t)((rx[0] << 8) | rx[1]);
+		printk("%u\n", seq);   /* one bare integer per received word */
 	}
 
 	return 0;
