@@ -16,6 +16,9 @@ offline-reference/
 # Personal working notes
 progress.md
 
+# Local scratch / experiments (personal, not shared)
+scratch/
+
 # Claude working agreement / local Claude config (personal, not shared)
 CLAUDE.md
 .claude/
