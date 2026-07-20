@@ -13,9 +13,6 @@ model/checkpoints/
 # Reference material: raw recordings + lab spike-sorting pipeline (huge, not ours)
 offline-reference/
 
-# Personal working notes
-progress.md
-
 # Local scratch / experiments (personal, not shared)
 scratch/
 
