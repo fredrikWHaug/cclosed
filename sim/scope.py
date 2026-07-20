@@ -31,7 +31,7 @@ for t0 in np.where(rng.random(N) < 5 / FS)[0]:
     signal[t0:t0 + spike.size] += spike[:N - t0]
 
 fig, ax = plt.subplots(figsize=(10, 3))
-(line,) = ax.plot(np.arange(WIN) / FS * 1000, signal[:WIN], lw=0.6, color="black")
+(line,) = ax.plot(np.arange(WIN) / FS * 1000, signal[:WIN], lw=0.6, color="blue")
 ax.set_xlabel("time (ms)"); ax.set_ylabel("µV"); ax.set_ylim(-140, 70)
 ax.set_title("synthetic extracellular stream (scrolling)")
 
