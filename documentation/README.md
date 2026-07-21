@@ -29,6 +29,7 @@ compression intelligence (spike detection, classification) runs on the
 | Document | What's inside |
 |----------|---------------|
 | [system-architecture.md](system-architecture.md) | Hardware, the full acquisition path, the compression-vs-fidelity spectrum, and the key design decisions. Start here. |
+| [onchip-pipeline.md](onchip-pipeline.md) | **The end-to-end demo**: raw `.rhd` → SPI → nRF54 (filter/detect/classify) → BLE → host. Results, honest caveats, and exact commands to reproduce and verify every number. |
 | [spi-acquisition-link.md](spi-acquisition-link.md) | The Intan ↔ nRF54 SPI link: protocol, the two-DK bench emulation, whole-frame neural-data transfer, wiring/config, and the hard-won debugging lessons. |
 | [on-chip-classifiers.md](on-chip-classifiers.md) | The three on-chip classifiers (logreg / CNN / ResNet) benchmarked on real silicon — accuracy vs. flash / RAM / latency. The compression-vs-fidelity curve, measured. |
 | [cross-day-generalization.md](cross-day-generalization.md) | Does a classifier trained on one recording day still work the next day? The representational-drift experiment, its honest result, and its caveats. |
@@ -36,13 +37,15 @@ compression intelligence (spike detection, classification) runs on the
 
 ## Status at a glance
 
+- **End-to-end chain**: ✅ demonstrated on two DKs — raw `.rhd` → SPI → nRF54
+  (biquad/CMR/decimate/detect/classify) → BLE → host, verified bit-for-bit and
+  5.3× faster than real time. See [onchip-pipeline.md](onchip-pipeline.md).
 - **SPI link**: working and understood — two DKs stand in for Intan ↔ nRF54,
   real recorded neural data transferred and checksum-verified.
 - **On-chip classifiers**: all three build and run on the `nrf54lm20b/cpuapp`
   target; within-day accuracy saturates at the linear/CNN end of the curve.
 - **Cross-day generalization**: a conservative host-side baseline exists
-  (logreg, peak-channel); next is same-shank 8-channel detection and closing the
-  on-chip loop.
+  (logreg, peak-channel); next is same-shank 8-channel detection.
 
 ## Conventions
 

@@ -121,6 +121,17 @@ the lessons generalize.
   shift-register slave that's always ready. In the real system the nRF is the
   *master*, so the hardest part of this exercise won't exist in the product.
 
+### Multi-frame streaming (the full chain)
+
+The whole-frame pattern scales up in `firmware/pipeline/` (see
+[onchip-pipeline.md](onchip-pipeline.md)): a full 8-channel raw stream is too big
+for one transfer, so it goes out in **3 frames** of 24000 words, each
+`[frame_idx][SYNC][data][checksum]` under one CS. The `frame_idx` lets the master
+place frames even if it starts reading mid-cycle, and each frame's checksum is
+verified — the receive was **72000/72000 words correct**. This is bulk
+transport-then-process; true per-sample 30 kHz streaming would need a faster clock
+and less per-frame overhead (a transport optimization, not a correctness gap).
+
 ## Relevance going forward
 
 For the real acquisition path the nRF54 is the SPI **master** talking to the

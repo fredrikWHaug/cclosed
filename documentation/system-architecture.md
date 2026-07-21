@@ -53,6 +53,11 @@ continuous voltage*, all channels, digitized. Spike detection and classification
 happen on the nRF54. The Intan is a dumb ADC frontend; all compression
 intelligence lives on the MCU. That boundary is the thesis.
 
+**This whole path now runs end-to-end** on two DKs (one emulating the Intan by
+replaying a recording) — see [onchip-pipeline.md](onchip-pipeline.md). Only the
+Intan silicon and the live mouse are still emulated; the MCU + SPI + BLE half is
+real.
+
 ## Compression-vs-fidelity spectrum
 
 Ordered from most faithful (least compressed) to most compressed (highest risk):
@@ -62,13 +67,14 @@ Ordered from most faithful (least compressed) to most compressed (highest risk):
 3. **Embeddings (clusterless)** — small learned feature vector per spike; cluster
    / decode offline.
 4. **On-chip sorted IDs** — `(unit_id, timestamp)`. Maximum compression, maximum
-   risk (an ID error is unrecoverable).
+   risk (an ID error is unrecoverable). **← built and demonstrated end-to-end
+   ([onchip-pipeline.md](onchip-pipeline.md)).**
 5. **Event-triggered** — high-fidelity raw only during detected events (e.g.
    ripples), nothing otherwise.
 
-On-chip classification (see [on-chip-classifiers.md](on-chip-classifiers.md))
-targets level 4. The [cross-day study](cross-day-generalization.md) tests whether
-those IDs stay valid across days.
+Level 4 is realized: the [on-chip pipeline](onchip-pipeline.md) emits
+`(unit_id, timestamp)` over BLE. The [cross-day study](cross-day-generalization.md)
+tests whether those IDs stay valid across days.
 
 ## Key design decisions
 

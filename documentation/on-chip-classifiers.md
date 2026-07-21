@@ -17,11 +17,14 @@ Classify a raw electrophysiology snippet from shank 0 — **8 channels × 40 sam
 snippet (first shank-0 sample of class 0, unit 29) so the on-device demos are
 directly comparable.
 
-> **Scope note.** These are *within-day* numbers: train and test are an 80/20
-> split of one recording session, and the input is the full 8-channel snippet
-> (which includes spatial/location information). That makes the task relatively
-> easy — see [cross-day-generalization.md](cross-day-generalization.md) for what
-> happens when the day changes and the location cue is removed.
+> **Scope note.** These are *within-day, random-split* numbers — the flattering
+> setup. Train/test are an 80/20 *random* split of one session on the full
+> 8-channel snippet (location included), and the accuracy is dominated by the
+> majority unit. Treat this doc as "how big a model does the classify step need?"
+> (answer: tiny), **not** as a deployment result. For the honest, deploy-valid
+> pipeline — causal filter, forward-in-time split, on-chip representation — see
+> [onchip-pipeline.md](onchip-pipeline.md); for cross-day, see
+> [cross-day-generalization.md](cross-day-generalization.md).
 
 ## The three models
 
@@ -105,6 +108,10 @@ python model/compare_models.py
 - The numeric correctness of every forward pass was checked offline against
   PyTorch before flashing (ResNet C-mirror matched to 1.7e-6); the on-chip run is
   the final confirmation.
+- **The classify step is now deployed for real** — not on a hardcoded snippet but
+  inside a live `raw → detect → classify → BLE` pipeline, retrained on the honest
+  on-chip representation. That's [onchip-pipeline.md](onchip-pipeline.md); this
+  doc's takeaway (a *linear* model suffices) is what justified using logreg there.
 - **Cross-day** is the open frontier: these within-day numbers say nothing about
   whether a day-1 model survives to day 2. See
   [cross-day-generalization.md](cross-day-generalization.md).
