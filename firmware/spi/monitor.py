@@ -106,9 +106,9 @@ def reader_thread(ser, mon, stop):
 
 def summary_line(st):
     pct = (100.0 * st["dropped"] / st["total"]) if st["total"] else 0.0
-    return (f"recv {st['total']:>8}  dropped {st['dropped']:>5} ({pct:5.2f}%)  "
-            f"reordered {st['reordered']:>4}  rate {st['rate']:6.0f} Hz  "
-            f"jitter {st['jitter']:5.1f} ms")
+    return (f"Received {st['total']:>8}  Dropped {st['dropped']:>5} ({pct:5.2f}%)  "
+            f"Reordered {st['reordered']:>4}  Rate {st['rate']:6.0f} Hz  "
+            f"Jitter {st['jitter']:5.1f} ms")
 
 
 def list_serial_ports():
@@ -147,12 +147,11 @@ def run_plot(mon, stop):
     (l2,) = ax2.plot([], [], lw=0.8)
     (l3,) = ax3.plot([], [], lw=1.5, color="crimson")
     ax1.set_ylabel("received value")
-    ax1.set_title("sequence (clean ramp = no loss; vertical jumps = dropped words)", fontsize=9)
+    ax1.set_title("Master counter / Monitor Counter", fontsize=9)
     ax2.set_ylabel("inter-arrival (ms)")
     ax2.set_title("streaming delay / jitter", fontsize=9)
     ax3.set_ylabel("cumulative drops")
-    ax3.set_xlabel("received sample #")
-    ax3.set_title("dropped words over time (flat = perfect)", fontsize=9)
+    ax3.set_title("dropped words over time", fontsize=9)
     txt = fig.text(0.5, 0.965, "", ha="center", va="top", fontsize=9, family="monospace")
     fig.subplots_adjust(hspace=0.5, top=0.9)
 
