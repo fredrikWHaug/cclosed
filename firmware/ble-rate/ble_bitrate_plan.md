@@ -41,7 +41,9 @@ at the central's minimum). At that point the number is the real ceiling.
 
 ---
 
-_Status: paused at ~234 kbit/s (macOS ceiling). Next: controlled central (Lever 5)._
+_Status: **~1.05 Mbps, 0 drops** via nRF-DK central (Lever 5) — 4.2× the macOS
+ceiling. The laptop was the throttle, not the nRF54. Considered done; push to ~1.4
+Mbps left as optional polish (SDK-specific RX-buffer / event-length tuning)._
 
 ## Results log
 
@@ -51,6 +53,15 @@ _Status: paused at ~234 kbit/s (macOS ceiling). Next: controlled central (Lever 
 | 1 | + 2M PHY | 2M ✅ | 30→50 ms | 247 | ~117 | ~60 | 0 |
 | 2 | + TX buffers ×24 | 2M | 30→50 ms | 247 | ~83 | ~44 | 0 |
 | 3 | + request 15 ms interval | 2M | 30→**15 ms** | 247 | **~234** | ~120 | 0 |
+| 4 | **nRF DK as central** (Lever 5) | 2M | **7.50 ms** | 247 | **~1048** | ~537 | 0 |
+
+**Cycle 4 — BREAKTHROUGH:** replaced the Mac with an nRF DK as central
+(`firmware/ble-rate/central`). As central *we* set 7.5 ms + 2M and reject the
+peripheral's param request. Result: **~1.05 Mbps, 0 drops** — **4.2× the macOS
+ceiling**, proving the wall was the laptop, not the nRF54. Steady at ~4 packets
+per connection event (537 pkt/s ÷ 133 events/s); 2M could in principle fit ~16,
+so there may be headroom toward ~1.4 Mbps (likely gated by central RX buffering
+/ event packing).
 
 **Cycle 1 finding:** 2M accepted but throughput *fell* — Mac widened the interval to
 50 ms and we were capped at **~3 packets/event** (= default TX buffer count of 3).
@@ -69,29 +80,35 @@ its floor, packets/event stuck at ~2.
 
 ---
 
-## Where we landed (macOS as central)
+## Where we landed
 
-- **Best sustained: ~234 kbit/s, 0 drops**, at 2M PHY / MTU 247 / 15 ms interval.
-- Firmware is **not** the limiter — our TX buffers sit full; the Mac accepts only
-  ~2 packets per connection event and we can't change that from the peripheral.
-- Config that got us here (all in `master/prj.conf` + a 15 ms interval request in
-  `main.c`): fat notifications (MTU/DLE), 2M PHY, big TX buffers, fast interval.
-- Honest ceiling on this path: **a macOS laptop is a throttled BLE central.** ~234
-  kbit/s is *its* plateau, not the nRF54's.
+**Two ceilings, one conclusion — the receiver is the variable, not the nRF54.**
 
-## Next step to break through (not done)
+| Central | Best sustained | interval | pkts/event | drops |
+|---------|----------------|----------|-----------|-------|
+| macOS laptop | ~234–248 kbit/s | 15 ms (Apple floor) | ~2 | 0 |
+| **nRF DK (ours)** | **~1.05 Mbps** | **7.5 ms** | ~4 | 0 |
 
-**Lever 5 — controlled central.** Replace the laptop with a receiver we fully own:
-- **2nd nRF DK as BLE central** (recommended): we set 2M + short interval + drain
-  every packet per event; measure throughput on-chip over serial. Finds the true
-  radio ceiling (expect toward ~1 Mbps) and *proves the chip is capable* — a clean
-  "controlled receiver vs. laptop" result. Also mirrors the real product (a custom
-  dongle, not a laptop).
-- **Android tablet** (Dr. Oh's tip): better BLE stack than macOS; needs an app.
+- On **macOS**, firmware was never the limiter — our TX buffers sat full; the Mac
+  accepts only ~2 packets/event at a 15 ms floor and we can't change that from the
+  peripheral. ~234 kbit/s is *its* plateau.
+- With an **nRF DK as central** (`firmware/ble-rate/central`), *we* set 7.5 ms +
+  2M + reject the peripheral's param request → **~1.05 Mbps, 0 drops, 4.2×** the
+  Mac. That is the real result: **the laptop was the throttle, not the chip.**
+- Config that got us here: fat notifications (MTU 247 + DLE), 2M PHY, big TX
+  buffers (master), and — decisively — a controlled central setting the params.
 
-The thesis takeaway stands either way: even ~1 Mbps sits far below raw broadband
-ephys (~10 Mbps / 32 ch), so on-chip reduction does the real work. This test pins
-the transmit ceiling — and shows the *receiver* is as much a design variable as the radio.
+## Optional polish (not pursued)
+
+Getting from ~1.05 → ~1.4 Mbps means lifting ~4 packets/event higher: more RX
+buffering on the central and/or longer connection-event length. It's SDK-specific
+(`CONFIG_BT_BUF_ACL_RX_COUNT` was rejected on NCS v3.3.1 — needs the correct
+symbol) and low-yield for a characterization thesis, so we stopped at 1.05 Mbps.
+
+The thesis takeaway: even ~1 Mbps sits far below raw broadband ephys (~10 Mbps /
+32 ch), so on-chip reduction does the real work. This test pins the transmit
+ceiling **and** shows the receiver is as much a design variable as the radio —
+the eventual product wants a controlled dongle, not a laptop.
 
 ---
 
