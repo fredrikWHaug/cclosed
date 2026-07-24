@@ -102,12 +102,16 @@ tests whether those IDs stay valid across days.
 
 ## Open hardware questions
 
-These are *not yet decided* and should be pinned before calling this a hardware plan:
+These are *not yet decided* and should be pinned before calling this a hardware plan.
+Chip facts below are grounded in [intan-rhd-reference.md](intan-rhd-reference.md).
 
-- **Which Intan part.** The bench emulation uses an RHD2132 (32-ch). An 80-ch
-  probe needs an RHD2164 (64-ch) plus a second device, or multiple chips.
+- **Which Intan part + the DDR fork.** The bench emulation uses an RHD2132 (32-ch).
+  64 channels means the **RHD2164**, whose SPI is **double-data-rate** — the master
+  must sample MISO on *both* clock edges, which a standard nRF SPI peripheral can't
+  do (it would capture only 32 of 64). Decide: **RHD2164 + solve DDR** on the nRF, or
+  **2 × RHD2132** on plain single-edge SPI (one MISO each). See reference §6.
 - **On-link sampling rate**, and where the 30 kHz → 10 kHz decimation happens (on
-  the MCU?).
+  the MCU?). Note the rate is set by our **CONVERT cadence**, not a chip register.
 - **Continuous stream vs. on-demand CONVERT**, and whether one SPI bus has the
-  throughput budget for 38 Mbps.
+  throughput budget for the raw rate (64 ch × 30 kS/s × 16 bit ≈ **30.7 Mbit/s**).
 - **Headstage**: how the mesh probe physically connects to the Intan.

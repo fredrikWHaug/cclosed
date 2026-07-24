@@ -20,6 +20,20 @@ _Last updated: 2026-07-21._
 
 ## Log
 
+### 2026-07-24 — Intan datasheet reference added
+
+Read the RHD2000-series (40 pp) and RHD2164 (16 pp) datasheets in full and distilled
+them into a page-cited reference: [intan-rhd-reference.md](intan-rhd-reference.md).
+Durable so future sessions (or fresh AI instances) don't re-derive from the PDFs.
+Key takeaways now grounded, not assumed:
+- **Sample rate is set by the controller's CONVERT cadence, not a chip register**
+  (no internal clock); ceiling 30 kS/s/channel.
+- **64 channels (RHD2164) needs DDR SPI** (both clock edges) — standard nRF SPI
+  captures only 32 of 64. Open design fork: RHD2164+DDR vs 2×RHD2132.
+- Manual CS-per-word is *required* by the chip (CS falling edge triggers the sample).
+- Raw 64-ch rate ≈ 30.7 Mbit/s vs ~1.05 Mbps BLE → the ~30× gap is the thesis.
+- Intan ships an STM32 SPI+DMA reference firmware worth reading before nRF work.
+
 ### 2026-07-24 — Serial monitor finalized (binary output, 80/20)
 
 Closed out the bandwidth push with the single high-value change and stopped there:

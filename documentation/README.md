@@ -29,6 +29,7 @@ compression intelligence (spike detection, classification) runs on the
 | Document | What's inside |
 |----------|---------------|
 | [system-architecture.md](system-architecture.md) | Hardware, the full acquisition path, the compression-vs-fidelity spectrum, and the key design decisions. Start here. |
+| [intan-rhd-reference.md](intan-rhd-reference.md) | **The Intan front-end, distilled from the datasheets** (page-cited): sampling rate, SPI protocol, register map, the 64-channel DDR constraint, power. Read this before any real-chip work. |
 | [onchip-pipeline.md](onchip-pipeline.md) | **The end-to-end demo**: raw `.rhd` → SPI → nRF54 (filter/detect/classify) → BLE → host. Results, honest caveats, and exact commands to reproduce and verify every number. |
 | [spi-acquisition-link.md](spi-acquisition-link.md) | The Intan ↔ nRF54 SPI link: protocol, the two-DK bench emulation, whole-frame neural-data transfer, wiring/config, and the hard-won debugging lessons. |
 | [on-chip-classifiers.md](on-chip-classifiers.md) | The three on-chip classifiers (logreg / CNN / ResNet) benchmarked on real silicon — accuracy vs. flash / RAM / latency. The compression-vs-fidelity curve, measured. |
