@@ -1,14 +1,12 @@
 /*
- * SPI Slave — receives the master's SEQUENCE NUMBERS and prints them.
+ * SPI Slave — receives the master's SEQUENCE NUMBERS and streams them out as
+ * RAW BINARY over the console UART: 2 bytes, little-endian, per received word.
  *
- * Part of the data-integrity / latency test. The master streams 0,1,2,3,... as
- * 16-bit words; this slave receives each one and prints it (one integer per
- * line) over its serial port. A host-side Python script reads that stream and
- * graphs it — gaps in the sequence reveal dropped data, arrival timing reveals
- * streaming delay.
- *
- * Plain-number output (no banners between samples) keeps it trivial for Python
- * to parse: any line that isn't a bare integer is ignored on the host side.
+ * Binary instead of ASCII printk("%u\n") removes the per-word formatting cost
+ * that capped the old monitor at ~2 kHz. The slave now keeps up with the
+ * master's full SPI rate (~8 kHz, set by the master's per-word CS timing), so
+ * the counter test runs at the real link speed. monitor.py locks onto the
+ * 2-byte stream and detects drops from sequence gaps.
  *
  * Note: SPIS spi_transceive returns rx_amount (>0) on success, <0 on error.
  */
@@ -16,10 +14,12 @@
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/spi.h>
+#include <zephyr/drivers/uart.h>
 
 #define SPI_NODE DT_NODELABEL(spi21)
 
 static const struct device *spi_dev = DEVICE_DT_GET(SPI_NODE);
+static const struct device *con = DEVICE_DT_GET(DT_CHOSEN(zephyr_console));
 
 static struct spi_config spi_cfg = {
 	.frequency = 1000000,
@@ -29,10 +29,14 @@ static struct spi_config spi_cfg = {
 
 int main(void)
 {
-	printk("=== SPI Slave - receiving sequence numbers ===\n");
+	/* Plain-text banner at boot; everything after is raw binary. monitor.py
+	 * locks onto the counter ramp and ignores this header automatically. */
+	printk("=== SPI Slave - streaming raw 16-bit counter (binary) ===\n");
+	printk("console current-speed = %d baud\n",
+	       DT_PROP(DT_CHOSEN(zephyr_console), current_speed));
 
-	if (!device_is_ready(spi_dev)) {
-		printk("SPI device not ready!\n");
+	if (!device_is_ready(spi_dev) || !device_is_ready(con)) {
+		printk("device not ready!\n");
 		return 0;
 	}
 
@@ -47,12 +51,12 @@ int main(void)
 
 		int ret = spi_transceive(spi_dev, &spi_cfg, &tx_set, &rx_set);
 		if (ret < 0) {
-			printk("SPI error: %d\n", ret);
-			continue;
+			continue;   /* drop the errored word (no ASCII - would desync stream) */
 		}
 
-		uint16_t seq = (uint16_t)((rx[0] << 8) | rx[1]);
-		printk("%u\n", seq);   /* one bare integer per received word */
+		uint16_t seq = (uint16_t)((rx[0] << 8) | rx[1]);   /* master sends MSB first */
+		uart_poll_out(con, (uint8_t)(seq & 0xFF));         /* out as little-endian */
+		uart_poll_out(con, (uint8_t)(seq >> 8));
 	}
 
 	return 0;

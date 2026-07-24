@@ -32,3 +32,9 @@ dut_spis: &spi21 {
 	/delete-property/ rx-delay;
 	zephyr,pm-device-runtime-auto;
 };
+
+/* Console UART to the host at 1 Mbaud (was 115200) so it can carry a much
+ * faster value stream. The debugger VCOM must support this rate. */
+&uart20 {
+	current-speed = <1000000>;
+};

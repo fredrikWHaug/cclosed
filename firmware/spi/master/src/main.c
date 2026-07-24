@@ -18,7 +18,8 @@
 
 #define SPI_NODE      DT_NODELABEL(spi22)
 #define CS_PIN        2       /* P3.02, driven manually */
-#define SEND_PERIOD_MS 5      /* ~200 Hz — slow enough the slave can print every value */
+#define SEND_PERIOD_US 10     /* push it: effective rate is capped ~8 kHz by the
+                              * per-word CS busy-waits in intan_send (Stage B trims those) */
 
 static const struct device *spi_dev = DEVICE_DT_GET(SPI_NODE);
 static const struct device *gpio3   = DEVICE_DT_GET(DT_NODELABEL(gpio3));
@@ -64,7 +65,7 @@ int main(void)
 	while (1) {
 		intan_send(seq);   /* send the counter; wraps at 65536 */
 		seq++;
-		k_msleep(SEND_PERIOD_MS);
+		k_usleep(SEND_PERIOD_US);
 	}
 
 	return 0;
