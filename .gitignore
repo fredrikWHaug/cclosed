@@ -25,3 +25,6 @@ CLAUDE.md
 
 # macOS
 .DS_Store
+
+# nRF Connect extension rewrites this constantly (app list) - local state
+.vscode/settings.json

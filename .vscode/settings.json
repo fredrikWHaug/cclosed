@@ -1,8 +1,0 @@
-{
-    "nrf-connect.applications": [
-        "${workspaceFolder}/firmware/spi_master",
-        "${workspaceFolder}/firmware/spi_slave",
-        "${workspaceFolder}/firmware/ble-rate/slave",
-        "${workspaceFolder}/firmware/ble-rate/master"
-    ]
-}
