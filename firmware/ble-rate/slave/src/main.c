@@ -1,12 +1,3 @@
-/*
- * BLE data-rate test - SLAVE (Intan surrogate / data source).
- *
- * Acts as the SPI slave, exactly like the real Intan will: on every transaction
- * the master clocks, it hands back the next value of an incrementing 32-bit
- * counter (little-endian on MISO). This stands in for the ADC producing samples.
- * The master forwards each value over BLE, and the host checks the counter for
- * gaps (dropped data) and measures throughput.
- */
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/spi.h>
@@ -18,7 +9,6 @@ static const struct device *spi_dev = DEVICE_DT_GET(SPI_NODE);
 static struct spi_config spi_cfg = {
 	.frequency = 1000000,
 	.operation = SPI_WORD_SET(8) | SPI_TRANSFER_MSB | SPI_OP_MODE_SLAVE, /* mode 0 */
-	.slave = 0,
 };
 
 int main(void)
