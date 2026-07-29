@@ -1,4 +1,3 @@
-#include <string.h>
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/gpio.h>
@@ -66,31 +65,6 @@ BT_CONN_CB_DEFINE(conn_cbs) = {
 	.disconnected = disconnected,
 };
 
-
-static void log_link(void)
-{
-	static uint16_t l_mtu, l_int = 0xFFFF;
-	static uint8_t l_phy;
-	struct bt_conn_info info;
-
-	if (!cur_conn || bt_conn_get_info(cur_conn, &info) != 0) {
-		return;
-	}
-	uint16_t mtu = bt_gatt_get_mtu(cur_conn);
-	uint8_t phy = info.le.phy ? info.le.phy->tx_phy : 0;
-
-	if (mtu == l_mtu && info.le.interval == l_int && phy == l_phy) {
-		return;
-	}
-	l_mtu = mtu;
-	l_int = info.le.interval;
-	l_phy = phy;
-
-	printk("[link] PHY=%sM  interval=%u.%02u ms  MTU=%u\n",
-	       (phy == BT_GAP_LE_PHY_2M) ? "2" : "1",
-	       (info.le.interval * 125) / 100, (info.le.interval * 125) % 100, mtu);
-}
-
 /* Clock one 4-byte counter word out of the slave, inside a manual-CS frame. */
 static void spi_read_word(uint8_t out[4])
 {
@@ -136,18 +110,10 @@ int main(void)
 	}
 	printk("subscribed - streaming SPI counter over BLE at max rate\n");
 
-	/* Lever #4: ask the central for a fast, fixed connection interval (15 ms).
-	 * The Mac may clamp or ignore it - log_link() will show what it actually did. */
-	if (cur_conn) {
-		struct bt_le_conn_param *cp = BT_LE_CONN_PARAM(12, 12, 0, 400); /* 15 ms, 4 s sup. */
-		bt_conn_le_param_update(cur_conn, cp);
-	}
-
 	uint8_t payload[PAYLOAD_MAX] = {0};
 
 	while (notify_enabled) {
 		spi_read_word(payload);   /* first 4 bytes = slave's counter (LE) */
-		log_link();               /* prints only when PHY/interval/MTU changes */
 
 		/* size this notification to the negotiated MTU (grows once the central
 		 * finishes the MTU exchange shortly after connecting) */
