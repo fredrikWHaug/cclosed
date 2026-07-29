@@ -1,21 +1,3 @@
-/*
- * BLE data-rate test - MASTER (the MCU).
- *
- * Real topology, end to end: clock a 32-bit counter word out of the SLAVE over
- * SPI (the Intan surrogate), then forward it to the host in a BLE notification.
- * Read one word, send it, read the next - so the chain self-paces to whichever
- * leg is slower and the counter the host sees stays a clean ramp.
- *
- * Because ONE CPU does both the (blocking) SPI read and the BLE notify in the
- * same loop, this measures the true slave->master->BLE throughput *including*
- * the CPU contention between SPI and BLE - which is exactly what DMA would later
- * relieve. A gap in the host's counter = data that never made it out.
- *
- * Throughput lever #1: each notification is sized to the negotiated ATT MTU, so
- * one packet carries up to ~180 bytes instead of the default 20. The first 4
- * bytes are the slave's counter (for drop detection); the rest is padding whose
- * only job is to fatten the packet so we can measure the pipe.
- */
 #include <string.h>
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
@@ -84,8 +66,7 @@ BT_CONN_CB_DEFINE(conn_cbs) = {
 	.disconnected = disconnected,
 };
 
-/* Print the negotiated link params once, and again whenever they change. Lets us
- * see what the central actually agreed to (2M? interval? MTU?) instead of guessing. */
+
 static void log_link(void)
 {
 	static uint16_t l_mtu, l_int = 0xFFFF;
