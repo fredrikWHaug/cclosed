@@ -1,16 +1,3 @@
-/*
- * BLE data-rate test - CENTRAL (the controlled receiver that replaces the Mac).
- *
- * Scans for 'cclosed-blerate' (our master), connects as CENTRAL - which means we
- * dictate the connection: 7.5 ms interval, 2M PHY, full data length, MTU 247.
- * We reject any parameter-change request from the peripheral so our aggressive
- * settings stick. Then we subscribe and just count what arrives:
- *   - throughput (kbit/s) printed once a second over THIS board's serial
- *   - drops: first 4 bytes of each notification are the slave's counter, so any
- *     gap = a lost packet.
- *
- * This finds the true radio ceiling instead of the macOS-throttled ~250 kbit/s.
- */
 #include <string.h>
 #include <zephyr/kernel.h>
 #include <zephyr/bluetooth/bluetooth.h>
@@ -20,7 +7,6 @@
 
 #define TARGET_NAME "cclosed-blerate"
 
-/* Same 128-bit UUIDs the master advertises/serves. */
 #define RATE_SVC BT_UUID_128_ENCODE(0x12345678, 0x1234, 0x5678, 0x1234, 0x56789abcdef0)
 #define RATE_CHR BT_UUID_128_ENCODE(0x12345678, 0x1234, 0x5678, 0x1234, 0x56789abcdef1)
 static struct bt_uuid_128 svc_uuid = BT_UUID_INIT_128(RATE_SVC);
@@ -31,26 +17,24 @@ static struct bt_gatt_discover_params disc;
 static struct bt_gatt_subscribe_params sub;
 static struct bt_gatt_exchange_params mtu_params;
 
-/* throughput accounting (written in the BT RX thread, read by main - benign race) */
-static volatile uint32_t win_bytes, win_pkts;   /* reset every 1 s window */
+static volatile uint32_t win_bytes, win_pkts;
 static volatile uint32_t tot_pkts, drops;
 static uint32_t last_seq;
 static bool have_last;
 
-/* 7.5 ms interval (6 x 1.25 ms), no latency, 1 s supervision timeout. */
 #define CONN_PARAM BT_LE_CONN_PARAM(6, 6, 0, 100)
 
 static uint8_t on_notify(struct bt_conn *conn, struct bt_gatt_subscribe_params *params,
 			 const void *data, uint16_t len)
 {
-	if (!data) {                 /* central unsubscribed / cleared */
+	if (!data) {                 
 		return BT_GATT_ITER_STOP;
 	}
 	uint32_t seq;
-	memcpy(&seq, data, sizeof(seq));   /* first 4 bytes = slave counter (LE) */
+	memcpy(&seq, data, sizeof(seq));   
 
 	if (have_last) {
-		uint32_t gap = seq - last_seq - 1;      /* wrap-safe */
+		uint32_t gap = seq - last_seq - 1;      
 		if (gap != 0 && gap < 0x80000000u) {
 			drops += gap;
 		}
@@ -73,20 +57,17 @@ static uint8_t discover_func(struct bt_conn *conn, const struct bt_gatt_attr *at
 	}
 
 	if (!bt_uuid_cmp(disc.uuid, &svc_uuid.uuid)) {
-		/* found the service -> discover the characteristic next */
 		disc.uuid = &chr_uuid.uuid;
 		disc.start_handle = attr->handle + 1;
 		disc.type = BT_GATT_DISCOVER_CHARACTERISTIC;
 		bt_gatt_discover(conn, &disc);
 	} else if (!bt_uuid_cmp(disc.uuid, &chr_uuid.uuid)) {
-		/* found the characteristic -> discover its CCC descriptor next */
 		sub.value_handle = bt_gatt_attr_value_handle(attr);
 		disc.uuid = BT_UUID_GATT_CCC;
 		disc.start_handle = attr->handle + 2;
 		disc.type = BT_GATT_DISCOVER_DESCRIPTOR;
 		bt_gatt_discover(conn, &disc);
 	} else {
-		/* found the CCC -> subscribe */
 		sub.notify = on_notify;
 		sub.value = BT_GATT_CCC_NOTIFY;
 		sub.ccc_handle = attr->handle;
@@ -119,7 +100,7 @@ static bool ad_has_name(struct bt_data *data, void *user_data)
 		if (data->data_len == strlen(TARGET_NAME) &&
 		    memcmp(data->data, TARGET_NAME, data->data_len) == 0) {
 			*found = true;
-			return false;   /* stop parsing */
+			return false;   
 		}
 	}
 	return true;
@@ -169,7 +150,6 @@ static void disconnected(struct bt_conn *conn, uint8_t reason)
 	bt_le_scan_start(BT_LE_SCAN_ACTIVE, scan_cb);
 }
 
-/* Reject the peripheral's connection-parameter request so our fast params hold. */
 static bool le_param_req(struct bt_conn *conn, struct bt_le_conn_param *param)
 {
 	return false;
@@ -183,8 +163,6 @@ BT_CONN_CB_DEFINE(conn_cbs) = {
 
 int main(void)
 {
-	printk("=== BLE data-rate CENTRAL (controlled receiver) ===\n");
-
 	if (bt_enable(NULL) != 0) {
 		printk("BLE init failed\n");
 		return 0;
@@ -209,7 +187,7 @@ int main(void)
 		uint16_t iv = 0;
 		struct bt_conn_info info;
 		if (bt_conn_get_info(cur_conn, &info) == 0) {
-			iv = info.le.interval;   /* units of 1.25 ms */
+			iv = info.le.interval;   
 		}
 		printk("[rate] %6u kbit/s   %5u pkts/s   interval %u.%02u ms   drops %u   total %u\n",
 		       kbps, p, (iv * 125) / 100, (iv * 125) % 100, drops, tot_pkts);

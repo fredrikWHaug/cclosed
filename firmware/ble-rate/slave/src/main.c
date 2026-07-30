@@ -8,13 +8,11 @@ static const struct device *spi_dev = DEVICE_DT_GET(SPI_NODE);
 
 static struct spi_config spi_cfg = {
 	.frequency = 1000000,
-	.operation = SPI_WORD_SET(8) | SPI_TRANSFER_MSB | SPI_OP_MODE_SLAVE, /* mode 0 */
+	.operation = SPI_WORD_SET(8) | SPI_TRANSFER_MSB | SPI_OP_MODE_SLAVE,
 };
 
 int main(void)
 {
-	printk("=== BLE-rate SLAVE (SPI data source) ===\n");
-
 	if (!device_is_ready(spi_dev)) {
 		printk("SPI device not ready!\n");
 		return 0;
@@ -23,7 +21,6 @@ int main(void)
 	uint32_t counter = 0;
 
 	while (1) {
-		/* little-endian counter on MISO; master forwards these 4 bytes as-is */
 		uint8_t tx[4] = {
 			(uint8_t)(counter),        (uint8_t)(counter >> 8),
 			(uint8_t)(counter >> 16),  (uint8_t)(counter >> 24),
@@ -40,7 +37,7 @@ int main(void)
 			printk("SPI error: %d\n", ret);
 			continue;
 		}
-		counter++;   /* next value, armed for the next clock-out */
+		counter++;
 	}
 
 	return 0;

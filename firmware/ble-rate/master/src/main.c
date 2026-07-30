@@ -81,8 +81,6 @@ static void spi_read_word(uint8_t out[4])
 
 int main(void)
 {
-	printk("=== BLE data-rate MASTER (SPI read -> BLE) ===\n");
-
 	if (!device_is_ready(spi_dev) || !device_is_ready(gpio3)) {
 		printk("SPI or GPIO not ready\n");
 		return 0;
