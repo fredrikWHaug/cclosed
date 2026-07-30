@@ -1,4 +1,3 @@
-/* SPI slave using spi21 on PORT3 pins (verified working between boards) */
 
 &pinctrl {
 	spi21_default_alt: spi21_default_alt {
