@@ -20,6 +20,27 @@ _Last updated: 2026-07-21._
 
 ## Log
 
+### 2026-07-31 — Both data-rate ceilings measured; SPI is the harder wall
+
+Pushed the BLE link to its true breaking point and pinned the SPI budget with real
+numbers. Documented in
+[system-architecture.md](system-architecture.md#the-two-data-rate-ceilings-both-now-measured-2026-07-31).
+Headlines:
+- **BLE egress ceiling = ~1.05 Mbps**, proven — held against three attempts to
+  raise it. BLE **back-pressures, it does not drop**, so "0 drops" never meant "at
+  the max." Forcing loss needs a free-running producer + bounded buffer.
+- **SPI ingestion is the *tighter* wall.** SPI clock ≈ bit rate; Intan caps SCLK at
+  24 MHz → **24 Mbit/s single-edge < 30.7 Mbit/s** for 64 ch. So **DDR is
+  throughput-mandatory**, and the nRF has only one SPI fast enough (HS ≤ 32 MHz; the
+  six 8 MHz instances can't carry even 32 ch @ 30 kS/s). Fork sharpened: FPGA-free
+  DDR (fragile) vs. 32 ch on one clean lane vs. drop to ~20 kS/s.
+- **nRF SAADC ≠ Intan:** on-chip ADC is 14-bit, 8 ch (AIN0–7), *no gain stage* — the
+  real reason Intan exists is the per-channel amplifier (×192) *before* the ADC, not
+  the extra bits or channels.
+- Added `offline-reference/peek_rhd.py` — dumps raw `uint16` ADC codes straight from
+  any `.rhd` (raw codes on disk; the `0.195×(code−32768)` → µV conversion is
+  software, post-load).
+
 ### 2026-07-24 — Intan datasheet reference added
 
 Read the RHD2000-series (40 pp) and RHD2164 (16 pp) datasheets in full and distilled
