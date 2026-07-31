@@ -19,7 +19,7 @@ static struct bt_gatt_exchange_params mtu_params;
 
 static volatile uint32_t win_bytes, win_pkts;
 static volatile uint32_t tot_pkts, drops;
-static uint32_t last_seq;
+static uint16_t last_seq;
 static bool have_last;
 
 #define CONN_PARAM BT_LE_CONN_PARAM(6, 6, 0, 100)
@@ -30,17 +30,21 @@ static uint8_t on_notify(struct bt_conn *conn, struct bt_gatt_subscribe_params *
 	if (!data) {                 
 		return BT_GATT_ITER_STOP;
 	}
-	uint32_t seq;
-	memcpy(&seq, data, sizeof(seq));   
+	const uint8_t *bytes = data;
 
-	if (have_last) {
-		uint32_t gap = seq - last_seq - 1;      
-		if (gap != 0 && gap < 0x80000000u) {
-			drops += gap;
+	/* packet carries len/2 consecutive 16-bit values - check every one */
+	for (uint16_t i = 0; i + 1 < len; i += 2) {
+		uint16_t seq = bytes[i] | (bytes[i + 1] << 8);
+
+		if (have_last) {
+			uint16_t gap = (uint16_t)(seq - last_seq - 1);   /* 16-bit wrap-safe */
+			if (gap != 0 && gap < 0x8000u) {
+				drops += gap;
+			}
 		}
+		last_seq = seq;
+		have_last = true;
 	}
-	last_seq = seq;
-	have_last = true;
 
 	tot_pkts++;
 	win_pkts++;
@@ -189,8 +193,8 @@ int main(void)
 		if (bt_conn_get_info(cur_conn, &info) == 0) {
 			iv = info.le.interval;   
 		}
-		printk("[rate] %6u kbit/s   %5u pkts/s   interval %u.%02u ms   drops %u   total %u\n",
-		       kbps, p, (iv * 125) / 100, (iv * 125) % 100, drops, tot_pkts);
+		printk("[rate] %6u kbit/s   %5u pkts/s   interval %u.%02u ms   cnt %5u   drops %u   total %u\n",
+		       kbps, p, (iv * 125) / 100, (iv * 125) % 100, (unsigned)last_seq, drops, tot_pkts);
 	}
 	return 0;
 }
