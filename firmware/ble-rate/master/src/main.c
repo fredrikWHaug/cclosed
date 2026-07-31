@@ -1,23 +1,26 @@
 #include <zephyr/kernel.h>
-#include <zephyr/device.h>
-#include <zephyr/drivers/gpio.h>
-#include <zephyr/drivers/spi.h>
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/gatt.h>
 #include <zephyr/bluetooth/conn.h>
+#include <string.h>
 
-#define SPI_NODE    DT_NODELABEL(spi22)
-#define CS_PIN      2 
-#define PAYLOAD_MAX 244
+#define PAYLOAD_MAX  244
+#define VALS_PER_PKT (PAYLOAD_MAX / 2)
 
-static const struct device *spi_dev = DEVICE_DT_GET(SPI_NODE);
-static const struct device *gpio3   = DEVICE_DT_GET(DT_NODELABEL(gpio3));
+#define PRODUCE_RATE_HZ 80000
+#define PER_TICK        (PRODUCE_RATE_HZ / 1000)
 
-static struct spi_config spi_cfg = {
-	.frequency = 1000000,
-	.operation = SPI_WORD_SET(8) | SPI_TRANSFER_MSB | SPI_OP_MODE_MASTER,
-	.slave = 0,
-};
+#define RING_CAP 4096
+
+static volatile uint32_t produced;
+static uint32_t sent;                
+static uint32_t lost;                
+
+static void produce_tick(struct k_timer *t)
+{
+	produced += PER_TICK;
+}
+K_TIMER_DEFINE(prod_timer, produce_tick, NULL);
 
 #define RATE_SVC BT_UUID_128_ENCODE(0x12345678, 0x1234, 0x5678, 0x1234, 0x56789abcdef0)
 #define RATE_CHR BT_UUID_128_ENCODE(0x12345678, 0x1234, 0x5678, 0x1234, 0x56789abcdef1)
@@ -63,30 +66,8 @@ BT_CONN_CB_DEFINE(conn_cbs) = {
 	.disconnected = disconnected,
 };
 
-static void spi_read_word(uint8_t out[4])
-{
-	uint8_t tx[4] = {0};   
-
-	struct spi_buf tb = { .buf = tx, .len = 4 };
-	struct spi_buf_set ts = { .buffers = &tb, .count = 1 };
-	struct spi_buf rb = { .buf = out, .len = 4 };
-	struct spi_buf_set rs = { .buffers = &rb, .count = 1 };
-
-	gpio_pin_set(gpio3, CS_PIN, 0);   
-	k_busy_wait(50);                  
-	spi_transceive(spi_dev, &spi_cfg, &ts, &rs);
-	k_busy_wait(50);
-	gpio_pin_set(gpio3, CS_PIN, 1);   
-}
-
 int main(void)
 {
-	if (!device_is_ready(spi_dev) || !device_is_ready(gpio3)) {
-		printk("SPI or GPIO not ready\n");
-		return 0;
-	}
-	gpio_pin_configure(gpio3, CS_PIN, GPIO_OUTPUT_HIGH); 
-
 	if (bt_enable(NULL) != 0) {
 		printk("BLE init failed\n");
 		return 0;
@@ -103,27 +84,45 @@ int main(void)
 	while (!notify_enabled) {
 		k_msleep(50);
 	}
-	printk("subscribed - streaming SPI counter over BLE at max rate\n");
+	printk("subscribed - producing %u vals/s, draining over BLE\n", PRODUCE_RATE_HZ);
 
-	uint8_t payload[PAYLOAD_MAX] = {0};
+	uint8_t payload[PAYLOAD_MAX];
+	uint32_t pkts = 0;
+
+	k_timer_start(&prod_timer, K_MSEC(1), K_MSEC(1));
 
 	while (notify_enabled) {
-		spi_read_word(payload);
+		uint32_t p = produced;
 
-		uint16_t len = cur_conn ? (bt_gatt_get_mtu(cur_conn) - 3) : 20;
-		if (len > PAYLOAD_MAX) {
-			len = PAYLOAD_MAX;
+		/* backlog overflowed: skip the oldest values, count them */
+		if (p - sent > RING_CAP) {
+			lost += (p - sent) - RING_CAP;
+			sent = p - RING_CAP;
 		}
 
-		int err;
-		do {
-			err = bt_gatt_notify(NULL, &rate_svc.attrs[1], payload, len);
-			if (err) {
-				k_yield();
+		/* not enough values for a full packet yet */
+		if (p - sent < VALS_PER_PKT) {
+			k_msleep(1);
+			continue;
+		}
+
+		for (uint32_t i = 0; i < VALS_PER_PKT; i++) {
+			uint16_t v = (uint16_t)(sent + i);
+			payload[2 * i]     = (uint8_t)v;
+			payload[2 * i + 1] = (uint8_t)(v >> 8);
+		}
+
+		if (bt_gatt_notify(NULL, &rate_svc.attrs[1], payload, PAYLOAD_MAX) == 0) {
+			sent += VALS_PER_PKT;
+			if (++pkts % 537 == 0) {
+				printk("[master] lost %u vals\n", lost);
 			}
-		} while (err && notify_enabled);
+		} else {
+			k_msleep(1);
+		}
 	}
 
+	k_timer_stop(&prod_timer);
 	printk("host unsubscribed - stopping\n");
 	return 0;
 }
