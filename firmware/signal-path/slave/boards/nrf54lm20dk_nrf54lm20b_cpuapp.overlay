@@ -1,0 +1,56 @@
+#include <zephyr/dt-bindings/adc/adc.h>
+#include <zephyr/dt-bindings/adc/nrf-saadc.h>
+
+/ {
+	zephyr,user {
+		io-channels = <&adc 0>;
+	};
+};
+
+&adc {
+	status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	channel@0 {
+		reg = <0>;
+		zephyr,gain = "ADC_GAIN_1_2";
+		zephyr,reference = "ADC_REF_INTERNAL";
+		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+		zephyr,input-positive = <NRF_SAADC_AIN7>;
+		zephyr,resolution = <14>;
+	};
+};
+
+&pinctrl {
+	spi21_default_alt: spi21_default_alt {
+		group1 {
+			psels = <NRF_PSEL(SPIS_SCK, 3, 3)>,
+				<NRF_PSEL(SPIS_MOSI, 3, 0)>,
+				<NRF_PSEL(SPIS_MISO, 3, 1)>,
+				<NRF_PSEL(SPIS_CSN, 3, 2)>;
+		};
+	};
+
+	spi21_sleep_alt: spi21_sleep_alt {
+		group1 {
+			psels = <NRF_PSEL(SPIS_SCK, 3, 3)>,
+				<NRF_PSEL(SPIS_MOSI, 3, 0)>,
+				<NRF_PSEL(SPIS_MISO, 3, 1)>,
+				<NRF_PSEL(SPIS_CSN, 3, 2)>;
+			low-power-enable;
+		};
+	};
+};
+
+&spi21 {
+	compatible = "nordic,nrf-spis";
+	status = "okay";
+	def-char = <0x00>;
+	pinctrl-0 = <&spi21_default_alt>;
+	pinctrl-1 = <&spi21_sleep_alt>;
+	pinctrl-names = "default", "sleep";
+	/delete-property/ rx-delay-supported;
+	/delete-property/ rx-delay;
+	zephyr,pm-device-runtime-auto;
+};
