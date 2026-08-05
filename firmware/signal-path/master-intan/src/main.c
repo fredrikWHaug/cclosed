@@ -1,21 +1,3 @@
-/*
- * signal-path MASTER-INTAN — drives the RHD2132 emulator exactly like the real
- * controller drives the real chip (DS p35-36), then streams channel 0 over BLE.
- *
- * Mechanics (documentation/intan-rhd-reference.md):
- *   - The master paces EVERYTHING: one CONVERT command = one sample; the
- *     "sample rate" is nothing but the rate of this loop. No slave clock.
- *   - CS pulses high between every 16-bit word (CS falling edge = sample).
- *   - Results are pipelined: the reply to command N arrives in word N+2, so
- *     the master keeps a 2-deep history of what it asked for.
- *   - Canonical init: dummy READs, bias WRITEs, ROM "INTAN" check, CALIBRATE
- *     + 9 dummy commands (DS p36).
- *   - Round-robin MUX cycle CONVERT(0..N_SLOTS-1), repeated at the per-channel
- *     rate. Channel 0 carries the real signal; the rest are unconnected.
- *
- * Deliberately SLOW (WORD_PERIOD_US): the emulated slave needs ~100 us to
- * re-arm its SPIS between words. Mechanics first, speed later.
- */
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/gpio.h>
@@ -24,10 +6,10 @@
 #include <zephyr/bluetooth/gatt.h>
 #include <zephyr/bluetooth/conn.h>
 
-#define WORD_PERIOD_US 1000            /* one SPI word per ms -> 1 kword/s aggregate */
-#define N_SLOTS 8                      /* MUX round-robin length; ch0/slot0 is real */
+#define WORD_PERIOD_US 1000         
+#define N_SLOTS 8         
 #define CH_REAL 0
-#define HALF 60                        /* ch0 samples per notification */
+#define HALF 60                        
 #define PAYLOAD (4 + HALF * 2)
 
 #define CMD_CONVERT(c) ((uint16_t)(((c) & 0x3F) << 8))
@@ -86,7 +68,6 @@ BT_CONN_CB_DEFINE(conn_cbs) = {
 	.disconnected = disconnected,
 };
 
-/* One Intan transaction: CS low, one 16-bit word, CS high. */
 static uint16_t xfer(uint16_t cmd)
 {
 	uint8_t tx[2] = { (uint8_t)(cmd >> 8), (uint8_t)cmd };
@@ -105,18 +86,17 @@ static uint16_t xfer(uint16_t cmd)
 	return (uint16_t)((rx[0] << 8) | rx[1]);
 }
 
-/* Canonical init (DS p36): dummies, config WRITEs, INTAN check, CALIBRATE. */
 static bool intan_init(void)
 {
 	static const uint16_t seq[] = {
 		CMD_READ(63), CMD_READ(63),
-		CMD_WRITE(0, 0xDE),            /* ADC config */
-		CMD_WRITE(1, 32),              /* ADC buffer bias (slow-rate table) */
-		CMD_WRITE(2, 40),              /* MUX bias (slow-rate table) */
-		CMD_WRITE(3, 0x00),            /* temp sensor off */
-		CMD_WRITE(4, 0x80),            /* offset-binary output, DSP HP off */
+		CMD_WRITE(0, 0xDE),          
+		CMD_WRITE(1, 32),              
+		CMD_WRITE(2, 40),            
+		CMD_WRITE(3, 0x00),         
+		CMD_WRITE(4, 0x80),  
 		CMD_READ(40), CMD_READ(41), CMD_READ(42), CMD_READ(43), CMD_READ(44),
-		CMD_READ(63), CMD_READ(63),    /* flush pipeline for the INTAN replies */
+		CMD_READ(63), CMD_READ(63),    
 		CMD_CALIBRATE,
 		CMD_DUMMY, CMD_DUMMY, CMD_DUMMY, CMD_DUMMY, CMD_DUMMY,
 		CMD_DUMMY, CMD_DUMMY, CMD_DUMMY, CMD_DUMMY,
@@ -127,7 +107,6 @@ static bool intan_init(void)
 		resp[i] = xfer(seq[i]);
 	}
 
-	/* READ(40..44) sit at seq[7..11]; replies arrive 2 words later */
 	char id[6] = {0};
 	for (int i = 0; i < 5; i++) {
 		id[i] = (char)(resp[9 + i] & 0xFF);
@@ -156,11 +135,10 @@ int main(void)
 		return 0;
 	}
 
-	k_msleep(100);                          /* let the slave boot and arm */
+	k_msleep(100);                     
 	intan_init();
 	printk("advertising as '%s' - connect and subscribe\n", CONFIG_BT_DEVICE_NAME);
 
-	/* history of which slot each in-flight command addressed (2-deep pipeline) */
 	uint8_t hist[2] = { 0xFF, 0xFF };
 	uint16_t ch0[HALF];
 	int nch0 = 0;
@@ -177,7 +155,7 @@ int main(void)
 
 		uint16_t r = xfer(CMD_CONVERT(slot));
 
-		uint8_t src = hist[0];              /* r answers this slot's CONVERT */
+		uint8_t src = hist[0];           
 		hist[0] = hist[1];
 		hist[1] = slot;
 		slot = (uint8_t)((slot + 1) % N_SLOTS);
