@@ -1,24 +1,12 @@
-/*
- * signal-path SLAVE — the "Intan" role, but with a REAL analog signal.
- *
- * SAADC digitizes P1.03 at 10 kS/s (hardware sample timer + EasyDMA) into
- * ping-pong buffers. A second thread serves the latest complete buffer over
- * SPIS as one frame under a single CS (the proven ndspi pattern):
- *
- *     [ seq ][ SYNC=0x7FFF ][ NS_F samples ][ checksum ]
- *
- * The SAADC DMA writes bufs[]; the SPIS DMA reads frame[] — a private copy
- * built between transactions. The two DMAs never share a buffer.
- */
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/adc.h>
 #include <zephyr/drivers/spi.h>
 
-#define SAMPLE_INTERVAL_US 100          /* 10 kS/s; <= 128 us keeps the HW sample timer */
-#define NS_F 240                        /* samples per frame = 24 ms of signal */
+#define SAMPLE_INTERVAL_US 100
+#define NS_F 240
 #define SYNC_WORD 0x7FFFu
-#define FT (NS_F + 3)                   /* seq + sync + data + checksum */
+#define FT (NS_F + 3)      
 
 static const struct adc_dt_spec adc_chan =
 	ADC_DT_SPEC_GET_BY_IDX(DT_PATH(zephyr_user), 0);
