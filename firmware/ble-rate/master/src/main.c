@@ -7,7 +7,7 @@
 #define PAYLOAD_MAX  244
 #define VALS_PER_PKT (PAYLOAD_MAX / 2)
 
-#define PRODUCE_RATE_HZ 80000
+#define PRODUCE_RATE_HZ 60000
 #define PER_TICK        (PRODUCE_RATE_HZ / 1000)
 
 #define RING_CAP 4096
