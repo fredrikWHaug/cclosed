@@ -1,15 +1,3 @@
-/*
- * signal-path-intan master: real RHD2164 -> nRF54 over SPI -> BLE -> laptop.
- *
- * Uniform-sampling version: a timer-paced sampler thread converts ONE channel
- * at a fixed rate into a ring buffer; the main thread drains the ring into BLE
- * packets. Decoupling sampling from BLE gives evenly-spaced samples -> a clean
- * sine at any frequency, and a real, known sample rate.
- *
- * Analog: sine on channel-0 input (in0), <= ~5 mV peak, 10 Hz - 10 kHz band.
- * Keep SAMPLE_RATE_HZ below the receiver's BLE ceiling or the ring overflows
- * (shows up as dropped packets / a rising "ring drops" count).
- */
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/gpio.h>
@@ -19,12 +7,11 @@
 #include <zephyr/bluetooth/conn.h>
 
 #define CH              0
-#define SAMPLE_RATE_HZ  6000              /* uniform ADC rate (Nyquist 3 kHz) */
+#define SAMPLE_RATE_HZ  6000             
 #define PAYLOAD         244
-#define SAMPLES_PER_PKT ((PAYLOAD - 2) / 2)   /* 2-byte seq + 121 x 16-bit */
+#define SAMPLES_PER_PKT ((PAYLOAD - 2) / 2)   
 #define RING_SAMPLES    8192
 
-/* ---- SPI to the Intan (proven config: spi22, manual CS on P3.02) ---- */
 static const struct device *spi_dev = DEVICE_DT_GET(DT_NODELABEL(spi22));
 static const struct device *gpio3   = DEVICE_DT_GET(DT_NODELABEL(gpio3));
 #define CS_PIN 2
@@ -56,13 +43,12 @@ static uint16_t xfer(uint16_t cmd)
 	return (uint16_t)((rx[0] << 8) | rx[1]);
 }
 
-/* Amplifier + ADC config (bandwidth DAC values from RHD datasheet p25/p26). */
 static const uint16_t init_seq[] = {
 	CMD_WRITE(0, 0xDE), CMD_WRITE(1, 32), CMD_WRITE(2, 40), CMD_WRITE(3, 0x00),
 	CMD_WRITE(4, 0x00),
 	CMD_WRITE(5, 0x00), CMD_WRITE(6, 0x00), CMD_WRITE(7, 0x00),
-	CMD_WRITE(8, 17), CMD_WRITE(9, 0), CMD_WRITE(10, 16), CMD_WRITE(11, 0),  /* f_H 10 kHz */
-	CMD_WRITE(12, 5), CMD_WRITE(13, 1),                                       /* f_L 10 Hz */
+	CMD_WRITE(8, 17), CMD_WRITE(9, 0), CMD_WRITE(10, 16), CMD_WRITE(11, 0),  
+	CMD_WRITE(12, 5), CMD_WRITE(13, 1),                                      
 	CMD_WRITE(14, 0xFF), CMD_WRITE(15, 0xFF), CMD_WRITE(16, 0xFF), CMD_WRITE(17, 0xFF),
 };
 
@@ -88,7 +74,6 @@ static void intan_init(void)
 	printk("Intan configured (f 10 Hz - 10 kHz, amps on, ADC calibrated)\n");
 }
 
-/* ---- BLE ---- */
 #define SVC_UUID BT_UUID_128_ENCODE(0x12345678, 0x1234, 0x5678, 0x1234, 0x56789abcdef0)
 #define CHR_UUID BT_UUID_128_ENCODE(0x12345678, 0x1234, 0x5678, 0x1234, 0x56789abcdef1)
 static struct bt_uuid_128 svc_uuid = BT_UUID_INIT_128(SVC_UUID);
@@ -127,9 +112,8 @@ BT_CONN_CB_DEFINE(conn_cbs) = {
 	.disconnected = disconnected,
 };
 
-/* ---- ring buffer + timer-paced sampler thread ---- */
 static uint16_t ring[RING_SAMPLES];
-static volatile uint32_t w_idx, r_idx;   /* single-producer / single-consumer */
+static volatile uint32_t w_idx, r_idx; 
 static volatile uint32_t ring_drops;
 
 K_SEM_DEFINE(tick_sem, 0, 1);
@@ -142,7 +126,7 @@ static void sampler_thread(void *a, void *b, void *c)
 		while (!notify_enabled) {
 			k_msleep(10);
 		}
-		xfer(CMD_CONVERT(CH));   /* prime the 2-command pipeline */
+		xfer(CMD_CONVERT(CH));
 		xfer(CMD_CONVERT(CH));
 		w_idx = r_idx = 0;
 		ring_drops = 0;
@@ -157,7 +141,7 @@ static void sampler_thread(void *a, void *b, void *c)
 				ring[w_idx] = s;
 				w_idx = nw;
 			} else {
-				ring_drops++;   /* ring full: BLE not keeping up */
+				ring_drops++;
 			}
 		}
 		k_timer_stop(&samp_timer);
