@@ -1,18 +1,8 @@
-"""Laptop receiver for the real-Intan signal path: RHD2164 -> nRF54 -> BLE -> here.
 
-Connects to the 'cclosed-sigpath' master, unpacks the 16-bit ADC codes, live-plots
-channel 0, and reports throughput + dropped packets (via the per-packet sequence
-number). Plotted by sample index, so the sine shape is faithful regardless of how
-bursty the underlying sampling was.
-
-    pip install bleak matplotlib numpy
-    python firmware/signal-path-intan/receiver.py
-"""
 import asyncio
 import collections
 import threading
 import time
-
 import numpy as np
 from bleak import BleakClient, BleakScanner
 import matplotlib.pyplot as plt
@@ -20,8 +10,8 @@ import matplotlib.animation as animation
 
 NAME = "cclosed-sigpath"
 CHR = "12345678-1234-5678-1234-56789abcdef1"
-WINDOW = 200                    # samples shown on the plot (smaller = more x-zoom)
-UV_PER_CODE = 0.195             # datasheet V_LSB, electrode-referred microvolts
+WINDOW = 200                    
+UV_PER_CODE = 0.195
 
 samples = collections.deque(maxlen=WINDOW)
 st = {"pkts": 0, "drops": 0, "win_bytes": 0, "win_samples": 0,
@@ -31,13 +21,13 @@ st = {"pkts": 0, "drops": 0, "win_bytes": 0, "win_samples": 0,
 def on_notify(_, data: bytearray):
     seq = data[0] | (data[1] << 8)
     if st["last_seq"] is not None:
-        gap = (seq - st["last_seq"] - 1) & 0xFFFF     # 16-bit wrap-safe, in packets
+        gap = (seq - st["last_seq"] - 1) & 0xFFFF
         if gap != 0 and gap < 0x8000:
             st["drops"] += gap
     st["last_seq"] = seq
 
     vals = np.frombuffer(data, dtype="<u2", offset=2).astype(np.float64)
-    samples.extend((vals - 32768.0) * UV_PER_CODE)     # center + to microvolts
+    samples.extend((vals - 32768.0) * UV_PER_CODE)     
 
     st["pkts"] += 1
     st["win_bytes"] += len(data)
@@ -75,7 +65,7 @@ threading.Thread(target=lambda: asyncio.run(ble_task()), daemon=True).start()
 fig, ax = plt.subplots(figsize=(11, 4))
 (line,) = ax.plot([], [], lw=1)
 ax.set_xlim(0, WINDOW)
-ax.set_ylim(-3250, 3250)        # zoomed 2x (half of +/- full-scale)
+ax.set_ylim(-3250, 3250)
 ax.set_xlabel("sample index")
 ax.set_ylabel("uV (electrode-referred)")
 ax.grid(True, alpha=0.3)
