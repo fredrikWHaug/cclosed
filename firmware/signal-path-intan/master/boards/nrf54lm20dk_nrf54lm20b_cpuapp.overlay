@@ -23,7 +23,5 @@
 	pinctrl-1 = <&spi22_sleep_alt>;
 	pinctrl-names = "default", "sleep";
 	overrun-character = <0x00>;
-	/* CS driven manually as a plain GPIO (P3.02) - the Intan requires CS to
-	 * pulse high between every 16-bit word. */
 	zephyr,pm-device-runtime-auto;
 };
