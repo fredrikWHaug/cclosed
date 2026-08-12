@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 950" font-family="Helvetica, Arial, sans-serif">
+  <rect width="1200" height="950" fill="#ffffff"/>
+
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+      <path d="M0,1 L9,5 L0,9 z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <text x="600" y="40" text-anchor="middle" font-size="21" font-weight="700" fill="#0f172a">main.c — execution &amp; data flow</text>
+  <text x="600" y="61" text-anchor="middle" font-size="13" fill="#64748b">time runs left → right · signal-path-intan / master</text>
+
+  <!-- ================= PHASE 1 ================= -->
+  <rect x="40" y="85" width="1120" height="190" rx="12" fill="#fcfcfd" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="60" y="112" font-size="11" font-weight="700" fill="#94a3b8" letter-spacing="1">PHASE 1 · BOOT — RUNS ONCE, IN ORDER</text>
+
+  <!-- c1 intan_init -->
+  <g>
+    <rect x="70" y="130" width="300" height="110" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+    <rect x="70" y="130" width="300" height="40" rx="12" fill="#475569"/>
+    <rect x="70" y="156" width="300" height="14" fill="#475569"/>
+    <text x="220" y="156" text-anchor="middle" font-size="13.5" font-weight="700" fill="#ffffff">intan_init()</text>
+    <text x="86" y="194" font-size="11.5" fill="#1f2937">configure amp + ADC over SPI</text>
+    <text x="86" y="211" font-size="11.5" fill="#1f2937">10 Hz–10 kHz · amps on · CALIBRATE</text>
+    <text x="86" y="228" font-size="11" font-family="monospace" fill="#64748b">~30 words via CMD_* → xfer()</text>
+  </g>
+  <path d="M370,185 L430,185" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+
+  <!-- c2 BLE up -->
+  <g>
+    <rect x="430" y="130" width="300" height="110" rx="12" fill="#faf5ff" stroke="#d8b4fe" stroke-width="1.5"/>
+    <rect x="430" y="130" width="300" height="40" rx="12" fill="#7c3aed"/>
+    <rect x="430" y="156" width="300" height="14" fill="#7c3aed"/>
+    <text x="580" y="156" text-anchor="middle" font-size="13.5" font-weight="700" fill="#ffffff">bt_enable() + advertise</text>
+    <text x="446" y="194" font-size="11.5" fill="#1f2937">BLE stack starts</text>
+    <text x="446" y="211" font-size="11.5" fill="#1f2937">advertising as 'cclosed-sigpath'</text>
+  </g>
+  <path d="M730,185 L790,185" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+
+  <!-- c3 wait -->
+  <g>
+    <rect x="790" y="130" width="300" height="110" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+    <rect x="790" y="130" width="300" height="40" rx="12" fill="#94a3b8"/>
+    <rect x="790" y="156" width="300" height="14" fill="#94a3b8"/>
+    <text x="940" y="156" text-anchor="middle" font-size="13.5" font-weight="700" fill="#ffffff">WAIT for subscriber</text>
+    <text x="806" y="194" font-size="11.5" fill="#1f2937">main() and sampler_thread both idle,</text>
+    <text x="806" y="211" font-size="11.5" fill="#1f2937">polling notify_enabled (still false)</text>
+  </g>
+
+  <!-- event pill -->
+  <path d="M600,275 L600,288" stroke="#64748b" stroke-width="1.6" fill="none"/>
+  <rect x="300" y="288" width="600" height="26" rx="13" fill="#fef9c3" stroke="#facc15" stroke-width="1.2"/>
+  <text x="600" y="305" text-anchor="middle" font-size="11.5" fill="#713f12">laptop subscribes  →  Zephyr calls ccc_changed()  →  notify_enabled = true</text>
+  <path d="M600,314 L600,330" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+
+  <!-- ================= PHASE 2 ================= -->
+  <rect x="40" y="330" width="1120" height="560" rx="12" fill="#fcfcfd" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="60" y="357" font-size="11" font-weight="700" fill="#94a3b8" letter-spacing="1">PHASE 2 · STEADY STATE — TWO THREADS, CONCURRENT, FOREVER</text>
+
+  <!-- ===== lane 1: sampler thread ===== -->
+  <rect x="60" y="375" width="1080" height="150" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.2"/>
+  <text x="76" y="399" font-size="11" font-weight="700" fill="#475569" letter-spacing="1">SAMPLER THREAD · 6000×/s</text>
+
+  <g>
+    <rect x="80" y="415" width="290" height="90" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+    <rect x="80" y="415" width="290" height="40" rx="12" fill="#475569"/>
+    <rect x="80" y="441" width="290" height="14" fill="#475569"/>
+    <text x="225" y="441" text-anchor="middle" font-size="13.5" font-weight="700" fill="#ffffff">timer tick</text>
+    <text x="96" y="477" font-size="11.5" fill="#1f2937">k_timer fires every 167 µs</text>
+    <text x="96" y="494" font-size="11.5" fill="#1f2937">k_sem_give → thread wakes</text>
+  </g>
+  <path d="M370,460 L420,460" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+
+  <g>
+    <rect x="420" y="415" width="290" height="90" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+    <rect x="420" y="415" width="290" height="40" rx="12" fill="#2563eb"/>
+    <rect x="420" y="441" width="290" height="14" fill="#2563eb"/>
+    <text x="565" y="441" text-anchor="middle" font-size="13.5" font-weight="700" fill="#ffffff">sample the Intan</text>
+    <text x="436" y="477" font-size="11.5" font-family="monospace" fill="#1f2937">xfer(CMD_CONVERT(0))</text>
+    <text x="436" y="494" font-size="11.5" fill="#1f2937">16-bit code back over SPI</text>
+  </g>
+  <path d="M710,460 L760,460" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+
+  <g>
+    <rect x="760" y="415" width="290" height="90" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+    <rect x="760" y="415" width="290" height="40" rx="12" fill="#475569"/>
+    <rect x="760" y="441" width="290" height="14" fill="#475569"/>
+    <text x="905" y="441" text-anchor="middle" font-size="13.5" font-weight="700" fill="#ffffff">produce into ring</text>
+    <text x="776" y="477" font-size="11.5" font-family="monospace" fill="#1f2937">ring[w_idx] = s; w_idx++</text>
+    <text x="776" y="494" font-size="11.5" fill="#1f2937">ring full? → ring_drops++</text>
+  </g>
+
+  <!-- ring buffer (shared) -->
+  <path d="M905,505 C905,538 790,540 730,553" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+  <text x="880" y="537" font-size="10.5" font-family="monospace" fill="#9a3412">w_idx</text>
+  <g>
+    <rect x="380" y="555" width="440" height="66" rx="12" fill="#fff7ed" stroke="#fb923c" stroke-width="1.6"/>
+    <text x="600" y="583" text-anchor="middle" font-size="13.5" font-weight="700" fill="#9a3412">ring[8192] — shared sample buffer</text>
+    <text x="600" y="603" text-anchor="middle" font-size="11" font-family="monospace" fill="#9a3412">single producer (w_idx) · single consumer (r_idx)</text>
+  </g>
+  <path d="M560,621 C560,655 300,660 222,698" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+  <text x="500" y="652" font-size="10.5" font-family="monospace" fill="#9a3412">r_idx</text>
+
+  <!-- ===== lane 2: main thread ===== -->
+  <rect x="60" y="660" width="1080" height="150" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.2"/>
+  <text x="76" y="684" font-size="11" font-weight="700" fill="#166534" letter-spacing="1">MAIN THREAD · ~50 packets/s</text>
+
+  <g>
+    <rect x="80" y="700" width="270" height="90" rx="12" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+    <rect x="80" y="700" width="270" height="40" rx="12" fill="#16a34a"/>
+    <rect x="80" y="726" width="270" height="14" fill="#16a34a"/>
+    <text x="215" y="726" text-anchor="middle" font-size="13.5" font-weight="700" fill="#ffffff">drain the ring</text>
+    <text x="96" y="762" font-size="11.5" fill="#1f2937">wait until ≥121 samples,</text>
+    <text x="96" y="779" font-size="11.5" font-family="monospace" fill="#1f2937">read ring[r_idx++] ×121</text>
+  </g>
+  <path d="M350,745 L390,745" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+
+  <g>
+    <rect x="390" y="700" width="270" height="90" rx="12" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+    <rect x="390" y="700" width="270" height="40" rx="12" fill="#16a34a"/>
+    <rect x="390" y="726" width="270" height="14" fill="#16a34a"/>
+    <text x="525" y="726" text-anchor="middle" font-size="13.5" font-weight="700" fill="#ffffff">pack one packet</text>
+    <text x="406" y="762" font-size="11.5" font-family="monospace" fill="#1f2937">[seq | 121 × 16-bit]</text>
+    <text x="406" y="779" font-size="11.5" fill="#1f2937">= 244 bytes</text>
+  </g>
+  <path d="M660,745 L700,745" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+
+  <g>
+    <rect x="700" y="700" width="260" height="90" rx="12" fill="#faf5ff" stroke="#d8b4fe" stroke-width="1.5"/>
+    <rect x="700" y="700" width="260" height="40" rx="12" fill="#7c3aed"/>
+    <rect x="700" y="726" width="260" height="14" fill="#7c3aed"/>
+    <text x="830" y="726" text-anchor="middle" font-size="13.5" font-weight="700" fill="#ffffff">bt_gatt_notify()</text>
+    <text x="716" y="762" font-size="11.5" fill="#1f2937">retry until queued;</text>
+    <text x="716" y="779" font-size="11.5" fill="#1f2937">radio sends next conn event</text>
+  </g>
+  <path d="M960,745 L988,745" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#arr)"/>
+  <text x="974" y="733" font-size="9.5" fill="#64748b" text-anchor="middle">2.4 GHz</text>
+
+  <g>
+    <rect x="988" y="700" width="140" height="90" rx="12" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+    <rect x="988" y="700" width="140" height="40" rx="12" fill="#16a34a"/>
+    <rect x="988" y="726" width="140" height="14" fill="#16a34a"/>
+    <text x="1058" y="726" text-anchor="middle" font-size="13.5" font-weight="700" fill="#ffffff">laptop</text>
+    <text x="1002" y="762" font-size="11.5" font-family="monospace" fill="#1f2937">receiver.py</text>
+    <text x="1002" y="779" font-size="11.5" fill="#1f2937">plots + rate</text>
+  </g>
+
+  <!-- footer note -->
+  <text x="600" y="865" text-anchor="middle" font-size="11.5" fill="#64748b">
+    disconnect → notify_enabled = false → both lanes stop and fall back to WAIT (Phase 1, right card)
+  </text>
+
+  <text x="600" y="925" text-anchor="middle" font-size="11" fill="#94a3b8" font-style="italic">
+    convention: startup sequence (Phase 1) + concurrent swimlane data flow (Phase 2) — standard RTOS documentation style
+  </text>
+</svg>
