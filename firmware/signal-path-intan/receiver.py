@@ -10,7 +10,7 @@ import matplotlib.animation as animation
 
 NAME = "cclosed-sigpath"
 CHR = "12345678-1234-5678-1234-56789abcdef1"
-WINDOW = 200                    
+WINDOW = 240                     # ~12 cycles of a 300 Hz sine at 6000 S/s
 UV_PER_CODE = 0.195
 
 samples = collections.deque(maxlen=WINDOW)
@@ -65,7 +65,7 @@ threading.Thread(target=lambda: asyncio.run(ble_task()), daemon=True).start()
 fig, ax = plt.subplots(figsize=(11, 4))
 (line,) = ax.plot([], [], lw=1)
 ax.set_xlim(0, WINDOW)
-ax.set_ylim(-3250, 3250)
+ax.set_ylim(-10000, 10000)        # 3 mVpp electrode signal = +/-1500 uV, with headroom
 ax.set_xlabel("sample index")
 ax.set_ylabel("uV (electrode-referred)")
 ax.grid(True, alpha=0.3)
