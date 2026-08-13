@@ -1,30 +1,11 @@
-# Build artifacts (Zephyr / nRF Connect / CMake) — regenerated on every build
 build/
 
-# Python
 venv/
 __pycache__/
 *.pyc
 
-# Derived data / model outputs (large, regenerable)
-*.npz
-model/checkpoints/
-
-# Reference material: raw recordings + lab spike-sorting pipeline (huge, not ours)
-offline-reference/
-
-# Local scratch / experiments (personal, not shared)
-scratch/
-
-# Raw recordings: huge Intan .rhd sessions (not ours, regenerable from source)
-raw-data/
-
-# Claude working agreement / local Claude config (personal, not shared)
-CLAUDE.md
 .claude/
 
-# macOS
 .DS_Store
 
-# nRF Connect extension rewrites this constantly (app list) - local state
 .vscode/settings.json
