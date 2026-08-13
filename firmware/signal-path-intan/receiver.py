@@ -65,7 +65,7 @@ threading.Thread(target=lambda: asyncio.run(ble_task()), daemon=True).start()
 fig, ax = plt.subplots(figsize=(11, 4))
 (line,) = ax.plot([], [], lw=1)
 ax.set_xlim(0, WINDOW)
-ax.set_ylim(-10000, 10000)        # 3 mVpp electrode signal = +/-1500 uV, with headroom
+ax.set_ylim(-5000, 5000)        # 3 mVpp electrode signal = +/-1500 uV, with headroom
 ax.set_xlabel("sample index")
 ax.set_ylabel("uV (electrode-referred)")
 ax.grid(True, alpha=0.3)
