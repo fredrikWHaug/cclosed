@@ -19,7 +19,7 @@
 2. **Ceiling = 30 kS/s per channel** (1.05 MS/s aggregate ÷ 35 multiplexed slots). [DS p7, p15]
 3. Amplifier **gain is fixed at 192**; ADC step **V_LSB = 0.195 µV** at the electrode. [DS p6]
 4. **Analog bandwidth IS configurable** in registers: upper cutoff f_H (100 Hz–20 kHz) and lower cutoff f_L (0.1–500 Hz). [DS p6, p25–26]
-5. An **on-chip DSP high-pass** (Reg 4) does offset removal — the same job as the biquad high-pass in our pipeline. [DS p33]
+5. An **on-chip DSP high-pass** (Reg 4) does offset removal on-chip, in hardware. [DS p33]
 6. **SPI is mode 0, 16-bit MSB-first, and CS must pulse high between *every* word** — the CS falling edge is what triggers each ADC sample. Our manual-CS firmware is *required*, not a workaround. [DS p15]
 7. Protocol is **pipelined**: a `CONVERT` result comes back **two commands later**. [DS p16]
 8. **64 channels (RHD2164) needs double-data-rate (DDR) SPI** — sampling MISO on *both* clock edges. Standard SPI (one edge) gets you **32 of the 64 channels**. This is the key nRF constraint. [2164 p9–11]
@@ -36,7 +36,7 @@
 | RHD2132 | 32 | 32 unipolar + 1 common ref | 8×8 mm 56-QFN | 1 |
 | **RHD2164** | **64** | 64 unipolar + 1 common ref | 9×7 mm 104-BGA | **4** |
 
-[DS p2; 2164 p2, p14]. Our recorded `.rhd` data is RHD2132-class (32 unipolar + shared `ref_elec`). The 64-channel rig implies the **RHD2164** — see §6 for why that matters.
+[DS p2; 2164 p2, p14]. The real chip now bonded and bring-up-verified on the bench is a **RHD2164** — see §6 for why 64 channels is a genuinely harder problem than 32.
 
 ---
 
@@ -127,7 +127,7 @@ The two 16-bit results are merged onto one MISO line by a **double-data-rate (DD
 
 - `LVDS_en` pin selects **LVDS** (differential pairs, terminated) or **standard CMOS** SPI. [DS p5]
 - **CMOS is only recommended for low rates / short wires**: noise rises with CMOS at high ADC rates — Intan recommends CMOS only for **≤175 kS/s (16 amps)** or **≤5 kS/s/channel (32 amps)**; use **LVDS** above that or over long cables. [DS p12]
-- Our two-DK bench runs **standard CMOS at 1 MHz SCLK** — well inside the safe zone. The real headstage over a cable will likely want LVDS.
+- Our bench (nRF54 + real Intan) runs **standard CMOS at 1 MHz SCLK** — well inside the safe zone. The real headstage over a cable will likely want LVDS.
 
 ---
 
@@ -198,7 +198,7 @@ Levers: lower sample rate, lower f_H (7.6 µA/kHz per amp), power down unused ch
 | single-chip ADC max (1.05 MS/s × 16) | 16.8 Mbit/s [DS p11] |
 | **— our measured BLE ceiling —** | **~1.05 Mbit/s** |
 
-The gap between ~30 Mbit/s in and ~1 Mbit/s out is **~30×**. That is exactly the on-chip compression / spike-detection problem this project characterizes. See [ble_bitrate_plan.md](../firmware/ble-rate/ble_bitrate_plan.md) for the measured transmit ceiling.
+The gap between ~30 Mbit/s in and ~1 Mbit/s out is **~30×**. That is exactly the on-chip compression / spike-detection problem this project characterizes. See [system-architecture.md](system-architecture.md#the-two-measured-ceilings-2026-07-31-ble-rate) for the measured transmit ceiling.
 
 ---
 
@@ -211,7 +211,6 @@ The gap between ~30 Mbit/s in and ~1 Mbit/s out is **~30×**. That is exactly th
 
 ## 13. How this maps to *our* build
 
-- **Manual CS per word** in `firmware/spi/*` and `firmware/pipeline/master` is not a Zephyr quirk — the Intan *requires* CS pulsed each word, and the CS falling edge triggers the sample. [DS p15] See [spi-acquisition-link.md](spi-acquisition-link.md).
-- **The nRF's on-chip biquad high-pass** duplicates the Intan's DSP HP (Reg 4). On the real chip we could offload it — a compression-vs-fidelity design lever.
-- **Decimate 30 k → 10 k** in the pipeline assumes 30 kS/s acquisition — which is the chip's ceiling, set by our CONVERT cadence, not a chip setting.
-- **8 shanks × 8 = 64 channels** → RHD2164 → the DDR decision in §6 is the next real hardware question. Tracked in [system-architecture.md](system-architecture.md#open-hardware-questions).
+- **Manual CS per word** in `firmware/board-bring-up` and `firmware/signal-path-intan/master` is not a Zephyr quirk — the Intan *requires* CS pulsed each word, and the CS falling edge triggers the sample. [DS p15]
+- **LVDS_en must be tied to GND** to get standard CMOS signaling — confirmed the hard way during real bring-up: left floating, the chip defaults to LVDS via an internal pull-up, and a single-ended nRF SPI simply cannot talk to a chip expecting differential inputs. See §7.
+- **64 channels (RHD2164)** — the DDR decision in §6 is the next real hardware question once single-channel throughput is understood. Tracked in [system-architecture.md](system-architecture.md#open-questions-current-not-aspirational).
