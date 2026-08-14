@@ -7,7 +7,7 @@
 #include <zephyr/bluetooth/conn.h>
 
 #define CH              0
-#define SAMPLE_RATE_HZ  6000             
+#define SAMPLE_RATE_HZ  10000
 #define PAYLOAD         244
 #define SAMPLES_PER_PKT ((PAYLOAD - 2) / 2)   
 #define RING_SAMPLES    8192
