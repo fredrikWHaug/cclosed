@@ -1,56 +1,47 @@
 # Wireless Ephys on nRF54LM20B — Documentation
 
-On-chip neural-data compression for a wireless electrophysiology implant.
-The scientific question is **compression vs. fidelity**: how far can neural data
-be squeezed *on the chip* — from raw voltage down to spike identities — before it
-stops being scientifically useful?
+The long-run scientific question is **compression vs. fidelity**: how far can
+neural data be squeezed *on the chip* — from raw voltage down to spike
+identities — before it stops being scientifically useful. That work is
+currently **paused** (see [project-log.md](project-log.md)) while the physical
+signal chain gets proven on real hardware — a real, bonded Intan RHD2164 chip,
+not an emulation.
 
-This folder is the durable reference for the project. The topic docs describe how
-things work and why; the [project log](project-log.md) is the chronological
-status and roadmap.
+This folder is the durable reference for the project. The topic docs describe
+how things work and why; the [project log](project-log.md) is the
+chronological status and roadmap.
 
-## The system in one diagram
+## The current signal path — real, one channel, validated
 
 ```
-  mouse  ─►  80-ch mesh probe  ─►  Intan RHD  ─►  nRF54LM20B  ─►  BLE  ─►  host
-             (10 shanks × 8)      (amp + ADC,     (SPI master:
-                                   SPI slave)      detect, classify,
-                                                   compress)
-             ── raw µV ──►    ── 16-bit ADC ──►   ── unit IDs + ──►
-                                 samples             timestamps
+  function generator  ─►  Intan RHD2164  ─►  nRF54LM20B  ─►  BLE  ─►  laptop
+  (sine, mV-scale)        (real chip,        (SPI master:                  live plot
+                           amp + ADC,          timer-paced sample,
+                           SPI slave)          ring buffer, notify)
 ```
 
-The Intan is a dumb amplifier + ADC that streams **raw voltage**; every bit of
-compression intelligence (spike detection, classification) runs on the
-**nRF54**. That boundary is the whole thesis.
+Confirmed working end-to-end: a real analog sine, through the real chip, over
+SPI, over BLE, live-plotted — cross-checked two independent ways (a raw-SPI
+diagnostic print vs. the full BLE-relayed plot agree on amplitude and timing).
 
 ## Document map
 
 | Document | What's inside |
 |----------|---------------|
-| [system-architecture.md](system-architecture.md) | Hardware, the full acquisition path, the compression-vs-fidelity spectrum, and the key design decisions. Start here. |
-| [intan-rhd-reference.md](intan-rhd-reference.md) | **The Intan front-end, distilled from the datasheets** (page-cited): sampling rate, SPI protocol, register map, the 64-channel DDR constraint, power. Read this before any real-chip work. |
-| [onchip-pipeline.md](onchip-pipeline.md) | **The end-to-end demo**: raw `.rhd` → SPI → nRF54 (filter/detect/classify) → BLE → host. Results, honest caveats, and exact commands to reproduce and verify every number. |
-| [spi-acquisition-link.md](spi-acquisition-link.md) | The Intan ↔ nRF54 SPI link: protocol, the two-DK bench emulation, whole-frame neural-data transfer, wiring/config, and the hard-won debugging lessons. |
-| [on-chip-classifiers.md](on-chip-classifiers.md) | The three on-chip classifiers (logreg / CNN / ResNet) benchmarked on real silicon — accuracy vs. flash / RAM / latency. The compression-vs-fidelity curve, measured. |
-| [cross-day-generalization.md](cross-day-generalization.md) | Does a classifier trained on one recording day still work the next day? The representational-drift experiment, its honest result, and its caveats. |
-| [project-log.md](project-log.md) | The living status + roadmap: what's done, what's next, and the literature thread. Chronological; points into the topic docs. |
+| [system-architecture.md](system-architecture.md) | Current hardware, the 3 active firmware projects, the real signal path, and the two measured throughput ceilings. Start here. |
+| [intan-rhd-reference.md](intan-rhd-reference.md) | **The Intan front-end, distilled from the datasheets** (page-cited): sampling, SPI protocol, register map, the 64-channel DDR constraint, power. Read before any real-chip work. |
+| [project-log.md](project-log.md) | The living status + roadmap: the hardware bring-up story, what's done, what's next. Chronological. |
 
 ## Status at a glance
 
-- **End-to-end chain**: ✅ demonstrated on two DKs — raw `.rhd` → SPI → nRF54
-  (biquad/CMR/decimate/detect/classify) → BLE → host, verified bit-for-bit and
-  5.3× faster than real time. See [onchip-pipeline.md](onchip-pipeline.md).
-- **SPI link**: working and understood — two DKs stand in for Intan ↔ nRF54,
-  real recorded neural data transferred and checksum-verified.
-- **On-chip classifiers**: all three build and run on the `nrf54lm20b/cpuapp`
-  target; within-day accuracy saturates at the linear/CNN end of the curve.
-- **Cross-day generalization**: a conservative host-side baseline exists
-  (logreg, peak-channel); next is same-shank 8-channel detection.
+- **Real Intan RHD2164**: bonded, powered, SPI-verified alive (`board-bring-up/`).
+- **Real signal path, one channel**: validated end-to-end — `signal-path-intan/`.
+- **BLE ceiling**: ~1.05 Mbps / ~65,500 samples/s, actually found (not just
+  "0 drops observed") — `ble-rate/`.
+- **On-chip classifier / compression work**: removed from the working tree,
+  preserved in git history, deferred until the signal path above is solid.
 
 ## Conventions
 
 - Board target: `nrf54lm20dk/nrf54lm20b/cpuapp`, nRF Connect SDK v3.3.1.
-- Git: `main` + `dev` only; feature branches cut from `dev`, rebased back,
-  ff-merged, deleted. Linear history.
 - Firmware is built and flashed by Fredrik via the VS Code Nordic extension.
