@@ -1,13 +1,3 @@
-"""Live view of the on-chip classifier: plot the incoming window, its label, and
-the time it occurred.
-
-The nRF (classification-pilot/master, advertising as 'cclosed-classify') does
-the classification on-chip and sends, per window:
-    [seq u16][class u8][flags u8][ts_ms u32][score_q15 i16][window u16 * N]
-This script just decodes and displays it -- no classification happens here.
-
-    python classify_plot.py
-"""
 
 import asyncio
 import re

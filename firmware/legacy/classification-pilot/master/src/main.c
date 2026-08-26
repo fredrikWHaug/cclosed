@@ -5,12 +5,20 @@
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/gatt.h>
 #include <zephyr/bluetooth/conn.h>
+#include <math.h>
+#include "templates.h"
 
 #define CH              0
 #define SAMPLE_RATE_HZ  10000
-#define PAYLOAD         244
-#define SAMPLES_PER_PKT ((PAYLOAD - 2) / 2)   
+#define WIN_LEN         100          /* samples per classification window       */
 #define RING_SAMPLES    8192
+#define SCORE_MIN       0.5f         /* best Pearson r below this -> "uncertain" */
+#define CLASS_NONE      255
+
+#define HDR_LEN   10
+#define PKT_LEN   (HDR_LEN + 2 * WIN_LEN)
+BUILD_ASSERT(PKT_LEN <= 244, "packet exceeds ATT payload");
+BUILD_ASSERT(WIN_LEN >= TEMPLATE_LEN, "window shorter than template");
 
 static const struct device *spi_dev = DEVICE_DT_GET(DT_NODELABEL(spi22));
 static const struct device *gpio3   = DEVICE_DT_GET(DT_NODELABEL(gpio3));
@@ -47,8 +55,8 @@ static const uint16_t init_seq[] = {
 	CMD_WRITE(0, 0xDE), CMD_WRITE(1, 32), CMD_WRITE(2, 40), CMD_WRITE(3, 0x00),
 	CMD_WRITE(4, 0x00),
 	CMD_WRITE(5, 0x00), CMD_WRITE(6, 0x00), CMD_WRITE(7, 0x00),
-	CMD_WRITE(8, 17), CMD_WRITE(9, 0), CMD_WRITE(10, 16), CMD_WRITE(11, 0),  
-	CMD_WRITE(12, 5), CMD_WRITE(13, 1),                                      
+	CMD_WRITE(8, 17), CMD_WRITE(9, 0), CMD_WRITE(10, 16), CMD_WRITE(11, 0),
+	CMD_WRITE(12, 5), CMD_WRITE(13, 1),
 	CMD_WRITE(14, 0xFF), CMD_WRITE(15, 0xFF), CMD_WRITE(16, 0xFF), CMD_WRITE(17, 0xFF),
 };
 
@@ -74,6 +82,51 @@ static void intan_init(void)
 	printk("Intan configured (f 10 Hz - 10 kHz, amps on, ADC calibrated)\n");
 }
 
+static void classify(const float *win, uint8_t *cls, float *score)
+{
+	float best_r = -2.0f;
+	uint8_t best_c = CLASS_NONE;
+
+	for (int c = 0; c < N_CLASSES; c++) {
+		for (int lag = 0; lag <= WIN_LEN - TEMPLATE_LEN; lag++) {
+			const float *seg = &win[lag];
+
+			float mean = 0.0f;
+			for (int i = 0; i < TEMPLATE_LEN; i++) {
+				mean += seg[i];
+			}
+			mean /= TEMPLATE_LEN;
+
+			float var = 0.0f;
+			for (int i = 0; i < TEMPLATE_LEN; i++) {
+				float d = seg[i] - mean;
+				var += d * d;
+			}
+			var /= TEMPLATE_LEN;
+			float sd = sqrtf(var);
+			if (sd < 1e-6f) {
+				continue;          /* flat segment, no shape to match */
+			}
+
+			float dot = 0.0f;
+			for (int i = 0; i < TEMPLATE_LEN; i++) {
+				dot += (seg[i] - mean) * TEMPLATES[c][i];
+			}
+			float r = dot / ((float)TEMPLATE_LEN * sd);
+
+			if (r > best_r) {
+				best_r = r;
+				best_c = c;
+			}
+		}
+	}
+
+	*score = best_r;
+	*cls   = (best_r >= SCORE_MIN) ? best_c : CLASS_NONE;
+}
+
+/* ---- BLE ------------------------------------------------------------------- */
+
 #define SVC_UUID BT_UUID_128_ENCODE(0x12345678, 0x1234, 0x5678, 0x1234, 0x56789abcdef0)
 #define CHR_UUID BT_UUID_128_ENCODE(0x12345678, 0x1234, 0x5678, 0x1234, 0x56789abcdef1)
 static struct bt_uuid_128 svc_uuid = BT_UUID_INIT_128(SVC_UUID);
@@ -85,7 +138,7 @@ static void ccc_changed(const struct bt_gatt_attr *attr, uint16_t value)
 	notify_enabled = (value == BT_GATT_CCC_NOTIFY);
 }
 
-BT_GATT_SERVICE_DEFINE(sig_svc,
+BT_GATT_SERVICE_DEFINE(clf_svc,
 	BT_GATT_PRIMARY_SERVICE(&svc_uuid),
 	BT_GATT_CHARACTERISTIC(&chr_uuid.uuid, BT_GATT_CHRC_NOTIFY,
 			       BT_GATT_PERM_NONE, NULL, NULL, NULL),
@@ -112,8 +165,10 @@ BT_CONN_CB_DEFINE(conn_cbs) = {
 	.disconnected = disconnected,
 };
 
+/* ---- acquisition (timer-paced sampler + ring buffer, as in signal-path) ---- */
+
 static uint16_t ring[RING_SAMPLES];
-static volatile uint32_t w_idx, r_idx; 
+static volatile uint32_t w_idx, r_idx;
 static volatile uint32_t ring_drops;
 
 K_SEM_DEFINE(tick_sem, 0, 1);
@@ -169,40 +224,65 @@ int main(void)
 	}
 	printk("advertising as '%s' - connect and subscribe\n", CONFIG_BT_DEVICE_NAME);
 
-	uint8_t pkt[PAYLOAD];
+	uint8_t pkt[PKT_LEN];
 	uint16_t seq = 0;
+	static float    win[WIN_LEN];
+	static uint16_t raw[WIN_LEN];
 
 	while (1) {
 		while (!notify_enabled) {
 			k_msleep(20);
 		}
-		printk("subscribed - streaming ch%d at %d S/s\n", CH, SAMPLE_RATE_HZ);
+		printk("subscribed - classifying ch%d, %d-sample windows at %d S/s\n",
+		       CH, WIN_LEN, SAMPLE_RATE_HZ);
 		seq = 0;
 
 		while (notify_enabled) {
 			uint32_t avail = (w_idx + RING_SAMPLES - r_idx) % RING_SAMPLES;
-			if (avail < SAMPLES_PER_PKT) {
+			if (avail < WIN_LEN) {
 				k_msleep(1);
 				continue;
 			}
-			pkt[0] = seq;
-			pkt[1] = seq >> 8;
-			for (int i = 0; i < SAMPLES_PER_PKT; i++) {
+
+			for (int i = 0; i < WIN_LEN; i++) {
 				uint16_t s = ring[r_idx];
 				r_idx = (r_idx + 1) % RING_SAMPLES;
-				pkt[2 + 2 * i] = s;
-				pkt[3 + 2 * i] = s >> 8;
+				raw[i] = s;
+				win[i] = (float)s;   /* z-score in classify() removes offset/scale */
 			}
+			uint32_t ts = k_uptime_get_32();
+
+			uint8_t cls;
+			float score;
+			classify(win, &cls, &score);
+			int16_t sq = (int16_t)(score * 32767.0f);
+
+			pkt[0] = seq;
+			pkt[1] = seq >> 8;
+			pkt[2] = cls;
+			pkt[3] = 0;
+			pkt[4] = ts;
+			pkt[5] = ts >> 8;
+			pkt[6] = ts >> 16;
+			pkt[7] = ts >> 24;
+			pkt[8] = sq;
+			pkt[9] = sq >> 8;
+			for (int i = 0; i < WIN_LEN; i++) {
+				pkt[HDR_LEN + 2 * i]     = raw[i];
+				pkt[HDR_LEN + 2 * i + 1] = raw[i] >> 8;
+			}
+
 			int err;
 			do {
-				err = bt_gatt_notify(NULL, &sig_svc.attrs[1], pkt, PAYLOAD);
+				err = bt_gatt_notify(NULL, &clf_svc.attrs[1], pkt, PKT_LEN);
 				if (err) {
 					k_yield();
 				}
 			} while (err && notify_enabled);
 			seq++;
-			if ((seq % 50) == 0 && ring_drops) {
-				printk("ring drops %u (lower SAMPLE_RATE_HZ)\n", ring_drops);
+
+			if ((seq % 100) == 0 && ring_drops) {
+				printk("ring drops %u (lower SAMPLE_RATE_HZ or WIN_LEN)\n", ring_drops);
 			}
 		}
 		printk("unsubscribed\n");
