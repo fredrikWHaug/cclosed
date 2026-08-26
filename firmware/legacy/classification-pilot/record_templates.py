@@ -1,23 +1,3 @@
-"""Record one template per waveform class and write master/src/templates.h.
-
-Templates are the reference waveforms the nRF cross-correlates incoming windows
-against. Recording flow (you are the ground truth -- you set the FG):
-
-    1. Flash the RAW-streaming firmware first (firmware/signal-path-intan/master,
-       advertises as 'cclosed-sigpath'). This script consumes that raw stream.
-    2. Run this script. For each class it prompts you to set the function
-       generator to that waveform, then captures a few seconds and averages
-       many aligned cycles into one clean, z-scored template.
-    3. It writes master/src/templates.h. Then flash classification-pilot/master.
-
-    python record_templates.py            # record from the live FG over BLE
-    python record_templates.py --analytic # no hardware: write ideal math templates
-
-Keep the SAME function-generator frequency here and at classify time -- a
-fixed-length template only matches its own period (see waveform_classification_
-backrgound.md).
-"""
-
 import asyncio
 import sys
 from pathlib import Path
@@ -85,12 +65,6 @@ def write_header(templates):
 
 
 async def record_all():
-    """Connect ONCE and record all classes over the same link.
-
-    The raw-stream firmware stops advertising after its first connection and
-    does not auto-resume on disconnect, so a connect-per-class approach only
-    finds the device the first time. One persistent connection avoids that.
-    """
     print(f"scanning for '{NAME}'...")
     dev = await BleakScanner.find_device_by_name(NAME, timeout=30)
     if dev is None:
