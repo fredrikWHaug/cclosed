@@ -1,6 +1,8 @@
 #include <stdio.h>
 
-int[] acquire() {
+int ring_buffer[]
+
+int *acquire() {
     int ring_buffer[1000];
     return ring_buffer;
 }
