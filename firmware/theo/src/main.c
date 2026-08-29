@@ -1,10 +1,13 @@
-#include <stdio.h>
+#include <stdint.h>
+#include <zephyr/drivers/spi.h>
 
-int ring_buffer[]
+uint16_t acquire() {
+    
+}
 
-int *acquire() {
-    int ring_buffer[1000];
-    return ring_buffer;
+uint16_t intan_transceive_word(int cmd) {
+    int word = spi_transceiver(dev, config, tx_bufs, rx_bufs);
+    return word
 }
 
 int main() {
