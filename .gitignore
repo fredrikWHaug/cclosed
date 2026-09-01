@@ -13,4 +13,4 @@ __pycache__/
 # Tex support files
 .aux
 .log
-.pdf
+.pdfx
