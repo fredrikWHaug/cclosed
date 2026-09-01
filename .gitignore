@@ -9,3 +9,8 @@ __pycache__/
 .DS_Store
 
 .vscode/settings.json
+
+# Tex support files
+.aux
+.log
+.pdf
