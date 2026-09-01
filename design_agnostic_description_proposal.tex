@@ -1,0 +1,126 @@
+% ES100 Project Proposal --- DESIGN-AGNOSTIC restructure (exploration copy).
+% Sibling to proposal.tex (kept as reference). The change explored here:
+% the offline/online split is a DESIGN decision --- in fact the axis along
+% which the two design approaches differ --- so it is removed from the
+% design-agnostic Description and relocated to the Design section, where the
+% offline phase is characterized as part of Approach A.
+
+% ======= LaTeX Setup ======= %
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{times}
+\usepackage{indentfirst}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\linespread{1.15}
+
+\begin{document}
+
+\section*{Project Proposal}
+
+% ======= Problem Statement ======= %
+\subsection*{Problem Statement}
+The bandwidth of Bluetooth Low Energy (BLE) 6.0 is too low to support transmission
+of raw neural extracellular electrophysiology data (hereby referred to as continuous
+neural data) sampled at the industry standard from more than two recording channels
+at once for offline spike sorting and consequent neuroscientific analysis [insert reference].
+
+% ======= Need ======= %
+\subsection*{Need Derived from Problem Statement}
+Compress continuous neural data on the head stage of a rodent without domain-specific
+loss of fidelity for wireless transmission.
+
+% ======= Design Requirements and Technical Specifications ======= %
+\section*{Design Requirements and Technical Specifications}
+\subsection*{Description}
+
+This section decomposes the stated need into the behaviors any valid solution must
+exhibit (the functional requirements) and the measurable qualities those behaviors
+must satisfy (the technical requirements). Both are stated independently of any
+particular design; the design approaches that could realize them are considered
+separately in the Design section.
+
+Compressing continuous neural data without domain-specific loss of fidelity requires
+isolating and preserving exactly the domain-relevant events---the spikes, their
+identities, and their times---while discarding the remainder of the signal. Any
+solution must therefore perform five operations: it must \emph{acquire} extracellular
+voltage from multiple recording channels, \emph{detect} spike events within the
+acquired signal, \emph{record} the time at which each detected spike occurs,
+\emph{sort} each detected spike by assigning it a unit identity, and \emph{transmit}
+each unit identity, paired with its timestamp, over a wireless link. These five
+operations constitute the functional requirements of the system. Each imposes one or
+more technical requirements---the measurable qualities its implementation must
+satisfy---grouped by the operation that produces them in Table 1.
+
+These technical requirements were first derived independently for each operation. One
+requirement, however, resisted this per-operation decomposition: that no spike be
+lost. A sample or detected spike dropped anywhere in the chain---whether during
+acquisition, transmission to the sorter, or over the wireless link---compromises the
+final result identically. It is therefore treated as a system-level requirement
+spanning the full pipeline, summarized separately in Table 2, rather than attached to
+any single functional requirement in Table 1.
+
+\begin{table}[h]
+\centering
+\caption{Per-operation technical requirements of the system.}
+\label{tab:perop}
+{\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}l L L L L@{}}
+\toprule
+Label & Requirement & Specification & Quantitative value & Measurement method \\
+\midrule
+T1  & $\geq 3$ channels amplified and digitized & channel count & $\geq 3$; target 32 & count channels in acquired stream \\
+T2  & Sample fast enough for the spike band & per-channel sample rate & $\geq 12.5$~kS/s; design 25~kS/s & FFT of a known replayed signal \\
+T3  & Digitization keeps up across channels & aggregate conversion rate & $\geq$ channels $\times$ per-channel rate & sustained conversion count \\
+T4  & Resolve spikes above the noise floor & resolution / SNR & 16-bit; SNR [TBD] & noise and SNR on a known input \\
+T5  & Link carries the digitized stream & ADC$\to$processor throughput & $\geq$ channels $\times$ rate $\times$ bits & dropped-sample count \\
+T6  & Spikes separated from the LFP & high-pass corner & $\sim$300~Hz & filter frequency response \\
+T7  & Detect spikes reliably & sensitivity / false-positive rate & TPR [TBD]; FPR [TBD] & compare to Kilosort 4.0 \\
+T8  & A timestamp is recorded per spike & timestamp presence & one per detected spike & inspect output stream \\
+T9  & Each spike assigned a unit identity & unit identity & one of $K$ units & inspect output \\
+T10 & Sort better than chance & accuracy vs.\ Kilosort & $> 1/K$ (chance); [TBD] & confusion matrix vs.\ Kilosort \\
+T11 & Packet carries identity and timestamp & packet content & 5~B (1~B ID $+$ 4~B ts) & inspect received packets \\
+\bottomrule
+\end{tabularx}
+}
+\end{table}
+
+% [NEXT STEP: Table 2 --- system-level (cross-cutting) requirements:
+%  no-loss/keep-up, and timestamp fidelity (stable clock, resolution,
+%  stamped-at-detection).]
+
+% ======= Design ======= %
+\section*{Consideration of Multiple Design Approaches}
+
+The functional and technical requirements above admit more than one design. The
+approaches considered here differ principally in \emph{how} and \emph{when} spikes are
+sorted---the operation that assigns each detected spike a unit identity. This single
+choice determines whether the system requires a separate offline phase at all.
+
+\subsection*{Approach A: Offline-Supervised Sorting (Two-Phase)}
+This approach operates in two phases under different constraints. An offline phase,
+run once on a workstation, sorts a reference recording via unsupervised clustering and
+trains a classifier on the resulting labeled units. An online phase, running on the
+SoC, performs supervised inference against this pre-trained model. The offline phase
+is not subject to the power, latency, or memory constraints of the device; the online
+phase is. Its requirements therefore include the offline preparation as a
+precondition: a labeled unit library and trained classifier must exist before the
+device operates. [Systematic statement of the offline-phase operations and their
+requirements belongs here.]
+
+\subsection*{Approach B: Online-Unsupervised Sorting (Single-Phase)}
+This approach performs all sorting on the device as data arrive, using an online
+clustering algorithm (e.g., Osort). No offline phase and no reference recording are
+required; the system is self-contained and needs no per-subject calibration. Because
+clustering must proceed without the full data set available in advance, sorted-unit
+stability and accuracy are expected to be lower than the supervised approach---the
+central trade-off between the two designs.
+
+% [NEXT STEP: comparison of the two approaches against the critical technical
+%  requirements (accuracy, memory, calibration burden, self-containment), and
+%  the subsystem interactions each implies.]
+
+\end{document}
