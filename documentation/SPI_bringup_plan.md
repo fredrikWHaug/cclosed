@@ -49,9 +49,95 @@ Our 20–30 kS/s/ch target is **4–6× above** that CMOS-safe threshold. The me
 
 **This is the "PCB design / mixed-signal" help-ask**, not embedded development: confirming reliable SCLK at the required throughput given real trace/wiring signal integrity, and evaluating whether LVDS is needed to hit the speed and noise targets simultaneously.
 
+## 3.5 Chip-select mechanism & SPIM instance — RESOLVED (2026-09-01)
+
+This is the concrete answer to what §2 hand-waved as "a DMA-driven SPI pipeline." Two
+independent methods **converged** on the key numbers: (a) a direct read of the
+**nRF54LM20B datasheet §11.19 (SPIM Electrical specification)** — primary source; and
+(b) an adversarially-verified research workflow (12/12 central claims corroborated
+across Nordic product spec, nrfx HAL, and Zephyr driver sources). The load-bearing
+frequency figures from the workflow match the datasheet reading exactly.
+
+### The silicon ceiling (datasheet §11.19, verbatim values)
+- `fSPIM` (standard instances): **8 Mbps** max.
+- `fSPIM,HS` (high-speed): **32 Mbps** max — footnote: *"For SPIM00 using GPIO port P2."*
+- `tSPIM,CSCK` (SCK period): **31.25 ns** min → confirms 32 MHz on the HS instance.
+- `tSPIM,START` (START task → transmission started): **1 µs** — a per-transfer startup latency (matters below).
+
+**Instances:** SPIM00 (high-speed, MCU domain), SPIM20–24 (standard), SPIM30 (low-power).
+**The old `spi22` is a standard 8 Mbps instance.** Consequence: `spi22` **physically cannot**
+do 32 ch × 30 kHz — 8 Mbps ÷ 16 bit ÷ 32 ch ≈ **15 kHz/ch max**. **SPIM00 (32 MHz, on port
+P2, extra-high-drive pins) is required for the scaling path.** This supersedes §2's
+"~17–20 MHz on `spi22`" — 20 MHz is reachable *only* on SPIM00.
+
+### The chip-select landscape (four mechanisms)
+1. **Zephyr `cs-gpios` = software CS.** `spi_nrfx_spim.c` toggles a plain GPIO via
+   `spi_context_cs_control()` around each transfer and leaves nrfx `.ss_pin` unused, so
+   `PSEL.CSN` is never programmed. Correct, but CPU-bound and one-transfer-per-call →
+   **does not scale.** (Effectively what the old `xfer()` did.)
+2. **Silicon hardware CSN** (`PSEL.CSN` + `CSNPOL` + `IFTIMING.CSNDUR`). The peripheral
+   pulses CSN per **transaction** (asserts at START, deasserts at END). Set **MAXCNT = 2
+   bytes → one 16-bit word per transaction → CSN pulses per word in silicon** — exactly
+   the Intan requirement. Gated by the nrfx feature `NRF_SPIM_HAS_HW_CSN`; **whether
+   SPIM00 specifically carries it is UNCONFIRMED** (on nRF52 only SPIM3/4 had it).
+3. **nrfx_spim direct.** Exposes `nrf_spim_csn_configure()`, `use_hw_ss`, and **array-list
+   mode**. **Required**, because Zephyr's generic SPI API issues one transfer at a time
+   and has no property to enable hardware CSN.
+4. **EasyDMA array-list + SHORTS `END_START` / DPPI chaining.** DMA walks a list of
+   per-word buffers; `END_START` (or a DPPI channel) re-arms the next transaction in
+   hardware, CSN pulsing between each — **zero CPU per word.**
+
+### Decision (fast now AND rewrite-proof)
+Build acquisition on **nrfx_spim + hardware CSN on SPIM00**, driven by **EasyDMA
+array-list transactions (MAXCNT = 2) chained via `END_START`/DPPI** — from the start,
+**even for the ≥3-channel minimum.**
+- *Why not the `cs-gpios` software path even for the minimum:* it's a dead end (8 MHz
+  cap, CPU-toggled CS, one transfer per call). Nothing about it survives the jump to 32
+  channels, so building on it is throwaway work.
+- *Why this scales:* the same nrfx primitive goes from 1 word to a 32-channel list —
+  scaling is a list-length + SCLK change, **not a rewrite.**
+- *Concretely:* retarget **`spi22`/P3 → SPIM00/P2** (extra-high-drive); configure CSN in
+  nrfx, **not** via devicetree `cs-gpios` (which would re-engage the software path — and
+  on P2 may fail outright, since that port reportedly lacks GPIOTE on related nRF54L parts).
+
+### The governing ceiling is the per-word restart cadence, NOT SCLK
+The Intan mandates CS-high between every 16-bit word, so **each word is an irreducible
+transaction — you cannot batch words into one long DMA transfer.** The only figure found
+for per-word restart/turnaround is **~1 µs** (single DevZone thread, unverified) →
+~1 M words/s → **right at the 960 k words/s requirement, essentially no margin.** This
+cadence, not the 32 MHz SCLK, is what decides whether 32 ch × 30 kHz is reachable.
+
+### Fallback ladder (if the primary path can't sustain 960 k words/s)
+1. **PRIMARY:** SPIM00 @ ~20 MHz, nrfx, silicon CSN, array-list MAXCNT=2 chained via `END_START`/DPPI.
+2. **If SPIM00 lacks HW-CSN:** keep SPIM00 @ 20 MHz, generate the per-word CS pulse with a
+   **GPIOTE pin driven by DPPI off the SPIM END/START events** — still hardware-timed,
+   zero CPU per word. (Requires checking P2 GPIOTE availability.)
+3. **If restart cadence caps below 960 k words/s:** drop to **20–25 kS/s/ch** (640–800 k
+   words/s) — no architecture change, only a sample-rate constant. (This is the design
+   point already recommended in §1.)
+4. **Last resort (real rewrite):** external SPI master (CPLD/FPGA) generating the
+   CS-per-word framing, or a different host part.
+
+### The one bench measurement that decides it
+On SPIM00 with array-list + `END_START`/DPPI + hardware CSN engaged, scope the **sustained
+per-word cadence** — CSN rising edge of one word to first SCLK edge of the next, over a
+long run — and confirm CSN is actually toggling in silicon. This simultaneously proves
+(a) SPIM00 has *usable* HW-CSN (the single most load-bearing unknown) and (b) the real
+throughput ceiling. Under ~1.04 µs/word → 32-channel headroom; otherwise → rung 3.
+
+### Devicetree's limited role
+The overlay can bring SPIM00 up on its P2 pins, but the `nordic,nrf-spim` binding has **no
+property to enable silicon CSN**, and adding `cs-gpios` forces the software-CS path back
+on. So the overlay reserves the instance + pins only; CSN is configured in **nrfx C**
+(`nrf_spim_csn_configure` + `CSNPOL` + `IFTIMING.CSNDUR`), deliberately not in devicetree.
+Pin numbers, the `spi00` node label, the drive-mode token, and the max `clock-frequency`
+the binding accepts must be checked against the SoC dtsi / pin map (unverified here).
+
+---
+
 ## 4. Open questions (need verification, not assumption)
 
-1. What SCLK frequency does the nRF54LM20B's `spi22` instance actually sustain reliably on our real bonded-Intan wiring? (Datasheet ceiling is 25 MHz; achievable-in-practice is unverified.) → probe with `board-bring-up`.
+1. ~~What SCLK frequency does `spi22` sustain?~~ **ANSWERED (§3.5, 2026-09-01):** `spi22` is a standard **8 Mbps** instance and cannot do 32 ch × 30 kHz (~15 kHz/ch max). **SPIM00 (32 MHz, port P2) is required** for the scaling path. Remaining sub-question: the *achievable* per-word restart cadence on SPIM00 (the real ceiling) — bench-measure per §3.5.
 2. Does the nRF54LM20B have native LVDS-capable I/O, or does LVDS require an external translator chip? → **Partially checked (2026-08-27):** the Nordic product page lists three packages (CSP98 3.67×3.85 mm / 98-ball / 0.35 mm pitch / 66 GPIO; CSP61 3.02×2.43 mm / 61-ball; QFN52 6×6 mm / 52-pin / 32 GPIO), 128 MHz Cortex-M33, 512 KB RAM, 2 MB flash — but it says **nothing about an LVDS I/O standard**. No confirmation of native LVDS support was found; the working assumption is therefore **an external LVDS↔CMOS translator chip would be needed** if LVDS is required. Still needs datasheet-level (not product-page) confirmation before deciding.
 3. At the recommended 20–25 kS/s/ch design point, is CMOS signaling's noise penalty actually tolerable for spike detection, or does LVDS become necessary regardless of raw speed? (5 kS/s/ch CMOS-safe threshold from the Intan datasheet still applies even at the lower design point — 20–25 kS/s/ch is still 4–5× over it.)
 
@@ -67,3 +153,4 @@ Our 20–30 kS/s/ch target is **4–6× above** that CMOS-safe threshold. The me
 ## Status / decision log
 
 - **2026-08-27** — Document created. Captures the firmware/hardware split identified while drafting the "embedded development" help-ask for Dr. Moyer's advisor-search email. Design point set at 20–25 kS/s/ch (not the 30 kHz stretch case) pending the CMOS/LVDS decision.
+- **2026-09-01** — Added §3.5: chip-select mechanism & SPIM-instance decision. Method: direct read of nRF54LM20B datasheet §11.19 (primary source) + an adversarially-verified research workflow (12/12 claims corroborated); the two converged. **Key results:** the old `spi22` (8 Mbps) cannot scale to 32 ch; **SPIM00 (32 MHz, port P2) is required**; the path forward is **nrfx_spim + silicon hardware CSN + EasyDMA array-list chained via `END_START`/DPPI**, adopted from the start (not `cs-gpios`, which is a non-scaling software-CS dead end). The real ceiling is the **per-word transaction restart cadence** (~1 µs unverified, ~no margin), not SCLK — one bench measurement (§3.5) decides it. Biggest unconfirmed fact: whether SPIM00 specifically carries the HW-CSN feature.
