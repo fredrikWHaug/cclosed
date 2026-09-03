@@ -3,14 +3,11 @@ build/
 venv/
 __pycache__/
 *.pyc
-
-.claude/
-
 .DS_Store
 
-.vscode/settings.json
+.claude/
+.vscode
 
-# Tex support files
-.aux
-.log
-.pdfx
+*.aux
+*.log
+*.pdf
