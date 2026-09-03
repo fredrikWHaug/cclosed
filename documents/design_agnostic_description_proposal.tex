@@ -69,11 +69,12 @@ Compressing continuous neural data without fidelity loss of spatiotemporal spike
 requires isolating and preserving exactly the neural spike events at the required resolution. Any
 solution to the problem statement meeting the need must therefore perform five operations: 
 it must \emph{acquire} extracellular voltage from multiple recording channels, \emph{detect} 
-spike events within the acquired signal, \emph{record} the time at which each detected spike occurs,
-\emph{classify} each detected spike and assigning it a unit identity, and \emph{transmit}
-each unit identity, paired with its timestamp, over a wireless link. These five
+spike events within the acquired signal, \emph{log} the time at which each detected spike occurs,
+\emph{classify} each detected spike and assign it a unit identity, and \emph{transmit}
+each unit identity coupled with its timestamp over a wireless link. These five
 behaviors constitute the functional requirements of the system put forth in Table 1. Each functional 
-requirement further imposes one or more technical requirements grouped by the behavior that produces them in Table 2.
+requirement generally further imposes one or more technical requirements grouped by the behavior that produces them in Table 2.
+The exception to this are system-wide technical requirements treated accordingly.
 
 % ======= Table 1 ======= %
 \begin{table}[H]
@@ -89,13 +90,23 @@ Label & Functional requirement \\
 \midrule
 F1 & \emph{Acquire} extracellular voltage from multiple recording channels \\
 F2 & \emph{Detect} spike events within the acquired signal \\
-F3 & \emph{Record} the time at which each detected spike occurs \\
-F4 & \emph{Classify} each detected spike, assigning it a unit identity \\
-F5 & \emph{Transmit} each unit identity, paired with its timestamp, over a wireless link \\
+F3 & \emph{log} the time at which each detected spike occurs \\
+F4 & \emph{Classify} each detected spike and assign it a unit identity \\
+F5 & \emph{Transmit} each unit identity coupled with its timestamp over a wireless link \\
 \bottomrule
 \end{tabularx}
 }
 \end{table}
+
+\iffalse
+These technical requirements were first derived independently for each operation. One
+requirement, however, resisted this per-operation decomposition: that no spike be
+lost. A sample or detected spike dropped anywhere in the chain---whether during
+acquisition, transmission to the sorter, or over the wireless link---compromises the
+final result identically. It is therefore treated as a system-level requirement
+spanning the full pipeline, summarized separately in Table 2, rather than attached to
+any single functional requirement in Table 1.
+\fi 
 
 % ======= Table 2 ======= %
 \begin{table}[H]
@@ -125,20 +136,6 @@ T11 & Packet carries identity and timestamp & packet content & 5~B (1~B ID $+$ 4
 }
 \end{table}
 
-\iffalse
-These technical requirements were first derived independently for each operation. One
-requirement, however, resisted this per-operation decomposition: that no spike be
-lost. A sample or detected spike dropped anywhere in the chain---whether during
-acquisition, transmission to the sorter, or over the wireless link---compromises the
-final result identically. It is therefore treated as a system-level requirement
-spanning the full pipeline, summarized separately in Table 2, rather than attached to
-any single functional requirement in Table 1.
-\fi
-
-% [NEXT STEP: Table 2 --- system-level (cross-cutting) requirements:
-%  no-loss/keep-up, and timestamp fidelity (stable clock, resolution,
-%  stamped-at-detection).]
-
 % ======= Design ======= %
 \section*{Consideration of Multiple Design Approaches}
 
@@ -166,8 +163,9 @@ clustering must proceed without the full data set available in advance, sorted-u
 stability and accuracy are expected to be lower than the supervised approach---the
 central trade-off between the two designs.
 
-% [NEXT STEP: comparison of the two approaches against the critical technical
-%  requirements (accuracy, memory, calibration burden, self-containment), and
-%  the subsystem interactions each implies.]
+% [NEXT STEP (? - potentially but have to be extremely diligent and follow the rubric and template here): 
+% comparison of the two approaches against the critical technical
+% requirements (accuracy, memory, calibration burden, self-containment), and
+% the subsystem interactions each implies.] 
 
 \end{document}
