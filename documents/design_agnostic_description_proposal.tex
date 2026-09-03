@@ -145,6 +145,14 @@ precondition: a labeled unit library and trained classifier must exist before th
 device operates. [Systematic statement of the offline-phase operations and their
 requirements belongs here.]
 
+The proposed system consists of two overarching parts, or phases, under different 
+constraints: one offline phase and one online phase. The offline phase runs once 
+on a workstation where it sorts a reference recording and trains the classifier. The 
+online phase, running on the SoC, performs inference against the resulting pre-trained 
+model. Only the online phase is subject to the power, latency, and memory constraints that
+motivate this thesis. The requirements described below apply exclusively to the
+online phase unless otherwise noted.
+
 \subsection*{Approach B: Online-Unsupervised Sorting (Single-Phase)}
 This approach performs all sorting on the device as data arrive, using an online
 unsupervised clustering algorithm. No offline phase and no reference recording are
