@@ -28,8 +28,8 @@ of individual neurons within and across anatomically defined brain regions~[3].
 
 A desire to measure action potentials at increased scales has motivated the development of 
 high-density silicon recording probes. The Neuropixels 1.0 probe, introduced in 2017, is an intracranial 
-high-density probe for extracellular electrophysiology recordings in rodents, recording from 384 
-channels simultaneously~[3]. Its successor, the Neuropixels 2.0, was presented in 2021 and extends recording capacity
+high-density probe for extracellular electrophysiology recordings in rodents, equipped with 384 
+channels for simultaneous recording~[3]. Its successor, the Neuropixels 2.0, was presented in 2021 and extends recording capacity
 to as many as 5120 channels~[4]. Such systems have enabled groundbreaking discoveries in
 systems neuroscience, and the Neuropixels 3.0 is currently being developed~[5, 6]. 
 Higher channel counts, however, impose a proportionally higher bandwidth requirement.
@@ -72,9 +72,7 @@ it must \emph{acquire} extracellular voltage from multiple recording channels, \
 spike events within the acquired signal, \emph{log} the time at which each detected spike occurs,
 \emph{classify} each detected spike and assign it a unit identity, and \emph{transmit}
 each unit identity coupled with its timestamp over a wireless link. These five
-behaviors constitute the functional requirements of the system put forth in Table 1. Each functional 
-requirement generally further imposes one or more technical requirements grouped by the behavior that produces them in Table 2.
-The exception to this are system-wide technical requirements treated accordingly.
+behaviors constitute the functional requirements of the system summarized in Table 1.
 
 % ======= Table 1 ======= %
 \begin{table}[H]
@@ -98,15 +96,8 @@ F5 & \emph{Transmit} each unit identity coupled with its timestamp over a wirele
 }
 \end{table}
 
-\iffalse
-These technical requirements were first derived independently for each operation. One
-requirement, however, resisted this per-operation decomposition: that no spike be
-lost. A sample or detected spike dropped anywhere in the chain---whether during
-acquisition, transmission to the sorter, or over the wireless link---compromises the
-final result identically. It is therefore treated as a system-level requirement
-spanning the full pipeline, summarized separately in Table 2, rather than attached to
-any single functional requirement in Table 1.
-\fi 
+Each functional requirement generally further imposes one or more technical 
+requirements grouped by the behavior that produces them, summarized in Table 2.
 
 % ======= Table 2 ======= %
 \begin{table}[H]
@@ -139,17 +130,16 @@ T11 & Packet carries identity and timestamp & packet content & 5~B (1~B ID $+$ 4
 % ======= Design ======= %
 \section*{Consideration of Multiple Design Approaches}
 
-The functional and technical requirements above admit more than one design. The
-approaches considered here differ principally in \emph{how} and \emph{when} spikes are
-sorted---the operation that assigns each detected spike a unit identity. This single
-choice determines whether the system requires a separate offline phase at all.
+The functional and technical requirements put forth allow for more than one design. The
+approaches considered here differ principally in functional requirement F4, how spikes are
+classified.
 
 \subsection*{Approach A: Offline-Supervised Sorting (Two-Phase)}
 This approach operates in two phases under different constraints. An offline phase,
 run once on a workstation, sorts a reference recording via unsupervised clustering and
 trains a classifier on the resulting labeled units. An online phase, running on the
 SoC, performs supervised inference against this pre-trained model. The offline phase
-is not subject to the power, latency, or memory constraints of the device; the online
+is not subject to the power, latency, or memory constraints of the devicethe online
 phase is. Its requirements therefore include the offline preparation as a
 precondition: a labeled unit library and trained classifier must exist before the
 device operates. [Systematic statement of the offline-phase operations and their
@@ -157,15 +147,15 @@ requirements belongs here.]
 
 \subsection*{Approach B: Online-Unsupervised Sorting (Single-Phase)}
 This approach performs all sorting on the device as data arrive, using an online
-clustering algorithm (e.g., Osort). No offline phase and no reference recording are
+unsupervised clustering algorithm. No offline phase and no reference recording are
 required; the system is self-contained and needs no per-subject calibration. Because
 clustering must proceed without the full data set available in advance, sorted-unit
-stability and accuracy are expected to be lower than the supervised approach---the
-central trade-off between the two designs.
+stability and accuracy are expected to be lower than the supervised approach, which
+is believed to be the central trade-off between the two designs.
 
 % [NEXT STEP (? - potentially but have to be extremely diligent and follow the rubric and template here): 
 % comparison of the two approaches against the critical technical
 % requirements (accuracy, memory, calibration burden, self-containment), and
-% the subsystem interactions each implies.] 
+% the subsystem interactions each implies.]
 
 \end{document}
