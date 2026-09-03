@@ -1,10 +1,3 @@
-% ES100 Project Proposal --- DESIGN-AGNOSTIC restructure (exploration copy).
-% Sibling to proposal.tex (kept as reference). The change explored here:
-% the offline/online split is a DESIGN decision --- in fact the axis along
-% which the two design approaches differ --- so it is removed from the
-% design-agnostic Description and relocated to the Design section, where the
-% offline phase is characterized as part of Approach A.
-
 % ======= LaTeX Setup ======= %
 \documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
@@ -19,17 +12,45 @@
 
 \section*{Project Proposal}
 
+% ======= Background and Motivation ======= %
+\subsection*{Background and Motivation}
+Whether the substance of thought is reducible to physical processes remains an open
+question. Nevertheless, evidence undisputedly suggests that the organized interplay between
+neurons in the central nervous system gives rise to human sensory and cognitive
+capacity~[1]. The first recording of what is now known as an action potential---the voltage 
+across an electrically excitable cell's membrane as a function of time---was
+published in 1868 by Julius Bernstein~[2]. Derived from frog tissue using a 
+differential rheotome, an apparatus he invented, Bernstein's measurement provided 
+pivotal evidence for theories regarding neural dynamics propounded by physicists 
+and physiologists preceding him~[2]. The interplay between neurons can, in turn, be studied by measuring the action potentials 
+of individual neurons within and across anatomically defined brain regions~[3].
+
+A desire to measure action potentials at scale motivated the development of high-channel-count recording probes. 
+The Neuropixels 1.0 probe, introduced in 2017, is an intracranial probe for extracellular electrophysiology 
+recordings in rodents, sampling 384 channels simultaneously~[3]. Its successor, the Neuropixels 2.0, extends this to as many
+as 5120 recording sites~[4]. Such systems have enabled groundbreaking discoveries in
+systems neuroscience~[5]. Higher channel counts, however, impose a proportionally higher
+bandwidth requirement.
+
+The industry-standard analog front end for sampling raw extracellular voltage uses a 16-bit analog-to-digital converter
+(ADC) typically configured with a 30~kHz sampling rate~[6, 7]. At these settings, a full Neuropixels 2.0 
+quad-base recording produces a data rate of 2.56~Gbps (see appendix for calculation). Bluetooth Low Energy 6.0 (BLE) 
+is the state-of-the-art consumer wireless communication protocol with a power budget suitable for an implantable device [8,9].
+In contrast to the data rate generated from a Neuropixels 2.0 recording, BLE has a theoretical maximum data rate of 4~Mbps, just
+~0.16 percent of the raw data rate generated~[8]. Fortunately, many questions in neuroscientific inquiry require only 
+action potential signatures, which constitute a small fraction of the continuous raw signal~[10],~[11].
+
 % ======= Problem Statement ======= %
 \subsection*{Problem Statement}
-The bandwidth of Bluetooth Low Energy (BLE) 6.0 is too low to support transmission
-of raw neural extracellular electrophysiology data (hereby referred to as continuous
-neural data) sampled at the industry standard from more than two recording channels
-at once for offline spike sorting and consequent neuroscientific analysis [insert reference].
+The bandwidth of Bluetooth Low Energy 6.0 is too low to support transmission
+of raw neural extracellular electrophysiology data sampled at the industry standard 
+from more than two recording channels at once for offline spike sorting and consequent 
+neuroscientific analysis [12].
 
 % ======= Need ======= %
 \subsection*{Need Derived from Problem Statement}
-Compress continuous neural data on the head stage of a rodent without domain-specific
-loss of fidelity for wireless transmission.
+Compress continuous neural data on the recording head stage of a rodent 
+for wireless transmission without fidelity loss of spatiotemporal spike information.
 
 % ======= Design Requirements and Technical Specifications ======= %
 \section*{Design Requirements and Technical Specifications}
@@ -42,7 +63,7 @@ particular design; the design approaches that could realize them are considered
 separately in the Design section.
 
 Compressing continuous neural data without domain-specific loss of fidelity requires
-isolating and preserving exactly the domain-relevant events---the spikes, their
+isolating and preserving exactly the domain-relevant events. the spikes, their
 identities, and their times---while discarding the remainder of the signal. Any
 solution must therefore perform five operations: it must \emph{acquire} extracellular
 voltage from multiple recording channels, \emph{detect} spike events within the
