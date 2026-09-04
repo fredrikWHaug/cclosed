@@ -30,7 +30,7 @@ Wireless Transmission over Bluetooth Low Energy}
 \setcounter{section}{-1}
 \section{Executive Summary}
 This thesis addresses a bandwidth bottleneck in wireless neural recording. Bluetooth Low
-Energy (BLE) 6.0, the leading low-power wireless protocol, has a 4~Mbps theoretical ceiling
+Energy 6.0, the leading low-power wireless protocol, has a 4~Mbps theoretical ceiling
 but reaches only $\sim$1~Mbps in practice. Extracellular action potentials contain
 frequencies from around 300~Hz to 6~kHz and are sampled at 30~kHz as the standard in the
 field. At 16-bit resolution, each channel produces 480~kbps. BLE can therefore stream raw
@@ -78,17 +78,16 @@ questions in neuroscientific inquiry require only neural spike signatures, const
 small fraction of the continuous raw signal~[11, 12].
 
 \subsection{Stakeholders, Client, and End User of the Solution}
-The primary stakeholders are systems neuroscientists who study how populations of neurons
-give rise to behavior. Their central experimental paradigm correlates neural activity with
+The primary stakeholders are systems neuroscientists who study how the firing of populations of neurons
+relate to behavior. The central experimental paradigm in systems neuroscience correlates neural activity with
 what an animal is doing, which requires the animal to move and behave freely. Present
-high-density recording, however, tethers the animal to an acquisition system by a cable
-that carries the raw data stream, constraining natural movement, precluding many social and
-naturalistic assays, and limiting how many animals can be recorded at once. These
-researchers would directly benefit from a recording head stage that transmits the neural
+high-density recordings, however, tethers the animal to an acquisition system by a cable
+that carries the raw data stream. This constrains natural movement, precluding for example social experiments. 
+These researchers would directly benefit from a recording head stage that transmits the neural
 information relevant to their analysis wirelessly, freeing the animal from the tether while
-preserving the spike-level detail their experiments depend on. They are therefore both the
-end users of the proposed solution and the community whose scientific questions motivate
-it.
+preserving the spike-level detail their experiments require. Systems neuroscientists therefore
+consitute the community whose scientific questions motivate the proposed system, and the
+end users of the proposed solution.
 
 \subsection{Problem Statement}
 The bandwidth of Bluetooth Low Energy 6.0 is too low to support transmission of raw neural
@@ -102,29 +101,29 @@ analysis~[21].
 \subsection{Existing Solutions}
 Existing approaches to the bandwidth problem fall into three groups: transmitting raw or
 lightly-processed data for offline sorting, classifying spikes on-device on hardware
-unsuited to wireless deployment, and calibrating templates offline to classify on-device in
+incompatible with wireless deployment, and calibrating templates offline to classify on-device in
 simulation only. The dominant paradigm transmits raw or lightly processed data and sorts
-offline. Headstages with off the shelf components either stream the raw signal and sort
+offline. Headstages with off-the-shelf components either stream the raw signal and sort
 entirely offline~[13] or detect and wavelet-compress spikes on-device yet still cluster
 them at the receiver~[14]. In both, the wireless link carries waveforms, not neural
-identities. On-device classification exists, but on hardware unsuited to this
+identities. On-device classification exists, but on hardware not suited to achieve this
 goal. Fabricated custom-silicon application-specific integrated circuits (ASICs) reach
 85--99\% on-chip accuracy~[15, 16, 17] but are inaccessible parts validated only on
-replayed data with no radio, while the closest commodity systems sort on programmable logic
-run real-time template matching on an Intan-plus-FPGA headstage in a freely-moving
+replayed data with no radio. While the closest commodity systems sort on programmable logic
+and run real-time template matching on an Intan-plus-FPGA headstage in a freely-moving
 primate~[18], Wu et al.~[19] run unsupervised OSort on an FPGA yet the former logs to an SD
 card and neither integrates a wireless link. Finally, the two-stage scheme of calibrating
-templates offline and classifying on-device so that only identities are transmitted was
+templates offline and classifying on-device so that only identities transmitted was
 shown feasible only in simulation~[20]. No prior system, to my knowledge, performs
 on-device single-unit classification and wirelessly transmits the resulting spike
-identities on a commodity Bluetooth Low Energy SoC.
+identities on an off-the-shelf Bluetooth Low Energy SoC.
 
 \subsection{Previous Work}
-Work completed so far comprises a single printed circuit board. A custom printed circuit
-board for testing the signal path, carrying a bonded Intan RHD2164 analog front end
+Work completed so far consists of a single printed circuit board (PCB). A custom PCB
+for testing the signal path, carrying a bonded Intan RHD2164 analog front end
 interfaced to an nRF54LM20B SoC over SPI. The board has been brought up and used to
-validate end-to-end single-channel acquisition. A known analog input digitized by the Intan
-and relayed over the SoC's Bluetooth Low Energy link. Establishing the acquisition front end
+validate end-to-end single-channel acquisition. A known analog input was digitized by the Intan
+and relayed over the SoC's Bluetooth Low Energy link, establishing the acquisition front end
 on which the remaining functional requirements will be built.
 
 \subsection{Proposed Solution}
@@ -203,7 +202,7 @@ Label & Requirement & Specification \\
 \multicolumn{3}{@{}l}{\textbf{F1 --- Acquire}} \\
 \addlinespace[2pt]
 T1  & $\geq 3$ channels amplified and digitized & $\geq 3$; target 32 \\
-T2  & Sample fast enough for the spike band & $\geq 12.5$~kS/s; design 25~kS/s \\
+T2  & Sample fast enough for the spike band & $\geq 12$~kS/s; target 30~kS/s \\
 T3  & Digitization keeps up across channels & $\geq$ channels $\times$ per-channel rate \\
 T4  & Resolve spikes above the noise floor & 16-bit; SNR [TBD] \\
 T5  & Link carries the digitized stream & $\geq$ channels $\times$ rate $\times$ bits \\
@@ -255,25 +254,19 @@ above 97\%~[15, 16], setting the reference against which the detection target is
 
 \emph{Timekeeping (F3)} imposes T8. Because the proposed solution preserves
 spatiotemporal spike information, each detected spike must carry a timestamp referenced to
-the acquisition clock---one per event being the minimal sufficient encoding (T8).
+the acquisition clock, whcih is one per event being the minimal sufficient encoding (T8).
 
 \emph{Classification (F4)} imposes T9--T10. Each spike is assigned to one of $K$ resolved
-units (T9). As a minimum viable criterion, on-device assignment must exceed chance---$1/K$
-for $K$ balanced units---relative to offline Kilosort labels~[24] (T10). This floor is
-deliberately conservative: comparable on-chip sorters achieve classification accuracies of
-roughly 85--99\%~[15, 16, 17], which sets the aspirational reference, while exceeding chance
-is the falsifiable bar that proves the pipeline classifies rather than guesses.
+units (T9). As a minimum viable criterion, on-device assignment must exceed chance relative 
+to offline Kilosort labels~[24] (T10). This floor is deliberately conservative: comparable 
+on-chip sorters achieve classification accuracies of roughly 85--99\%~[15, 16, 17], which 
+sets the aspirational reference, while exceeding chance is the falsifiable bar that proves 
+the pipeline classifies rather than guesses.
 
 \emph{Transmission (F5)} imposes T11. The compression the proposed solution demands is realized by
-transmitting, per spike, only a unit identity and a timestamp rather than the raw waveform:
-a one-byte identity together with a four-byte timestamp---a 32-bit counter that wraps only
-after $\sim$40~hours at 30~kHz---total five bytes per event, against the roughly eighty
+transmitting only a unit identity and a timestamp per spike rather than the raw waveform:
+a one-byte identity together with a four-byte timestamp, total five bytes per event, against the roughly eighty
 bytes a raw forty-sample snippet would require~[A4] (T11).
-
-The three values left as [TBD]---the front-end SNR (T4), the detection sensitivity and
-false-positive rate (T7), and the classification-accuracy target (T10)---are quantities
-better fixed by direct measurement than by assertion; the corresponding measurement methods
-are documented separately.
 
 % ======= Appendix ======= %
 \section*{Appendix}
