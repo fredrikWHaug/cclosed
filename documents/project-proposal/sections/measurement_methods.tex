@@ -1,0 +1,65 @@
+% ======= Measurement Methods ======= %
+\section*{Measurement Methods}
+
+Every technical requirement is verified by a concrete measurement rather than
+asserted, and the methods fall into a small number of families. For
+\emph{acquisition} (F1), channel count (T1) is confirmed by counting the
+independent channels present in the acquired stream; the per-channel sample rate
+(T2) is checked by replaying a known input and confirming the expected spectral
+content in its FFT; aggregate throughput (T3) is measured as the sustained
+conversion count over a fixed interval; front-end resolution and signal-to-noise
+ratio (T4) are measured from the noise floor and a known-amplitude input; and the
+ADC-to-processor link (T5) is validated by counting dropped samples under
+sustained load. For \emph{detection} (F2), the high-pass corner (T6) is read off
+the measured filter frequency response, and detection performance (T7) is
+benchmarked against Kilosort~4.0 applied to a concurrent reference recording. For
+\emph{timekeeping} (F3), the presence of exactly one timestamp per detected spike
+(T8) is confirmed by inspecting the output stream. For \emph{classification}
+(F4), the assignment of a unit identity to each spike (T9) is confirmed by
+inspecting the output, and sorting accuracy (T10) is measured as a confusion
+matrix against offline Kilosort labels. For \emph{transmission} (F5), the
+five-byte packet content (T11) is confirmed by inspecting the received packets.
+These methods are summarized against their requirements in
+Table~\ref{tab:measmethod}.
+
+% ======= Measurement-method table (Table 2 without the specification column) ======= %
+\begin{table}[H]
+\centering
+\caption{Measurement method for each technical requirement}
+\label{tab:measmethod}
+{\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}l L L L@{}}
+\toprule
+Label & Requirement & Quantitative value & Measurement method \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{F1 --- Acquire}} \\
+\addlinespace[2pt]
+T1  & $\geq 3$ channels amplified and digitized & $\geq 3$; target 32 & count channels in acquired stream \\
+T2  & Sample fast enough for the spike band & $\geq 12.5$~kS/s; design 25~kS/s & FFT of a known replayed signal \\
+T3  & Digitization keeps up across channels & $\geq$ channels $\times$ per-channel rate & sustained conversion count \\
+T4  & Resolve spikes above the noise floor & 16-bit; SNR [TBD] & noise and SNR on a known input \\
+T5  & Link carries the digitized stream & $\geq$ channels $\times$ rate $\times$ bits & dropped-sample count \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{F2 --- Detect}} \\
+\addlinespace[2pt]
+T6  & Spikes separated from the LFP & $\sim$300~Hz & filter frequency response \\
+T7  & Detect spikes reliably & TPR [TBD]; FPR [TBD] & compare to Kilosort 4.0 \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{F3 --- Log}} \\
+\addlinespace[2pt]
+T8  & A timestamp is recorded per spike & one per detected spike & inspect output stream \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{F4 --- Classify}} \\
+\addlinespace[2pt]
+T9  & Each spike assigned a unit identity & one of $K$ units & inspect output \\
+T10 & Sort better than chance & $> 1/K$ (chance); [TBD] & confusion matrix vs.\ Kilosort \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{F5 --- Transmit}} \\
+\addlinespace[2pt]
+T11 & Packet carries identity and timestamp & 5~B (1~B ID $+$ 4~B ts) & inspect received packets \\
+\bottomrule
+\end{tabularx}
+}
+\end{table}
