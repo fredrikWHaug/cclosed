@@ -1,0 +1,53 @@
+% ======= Design ======= %
+\section*{Consideration of Multiple Design Approaches}
+
+The functional and technical requirements put forth allow for more than one design. The
+approaches considered here differ principally in functional requirement F4, how spikes are
+classified.
+
+\subsection*{Approach A: Offline-Supervised Sorting (Two-Phase)}
+This approach operates in two phases under different constraints. An offline phase,
+run once on a workstation, sorts a reference recording via unsupervised clustering and
+trains a classifier on the resulting labeled units. An online phase, running on the
+SoC, performs supervised inference against this pre-trained model. The offline phase
+is not subject to the power, latency, or memory constraints of the devicethe online
+phase is. Its requirements therefore include the offline preparation as a
+precondition: a labeled unit library and trained classifier must exist before the
+device operates. [Systematic statement of the offline-phase operations and their
+requirements belongs here.]
+
+The proposed system consists of two overarching parts, or phases, under different 
+constraints: one offline phase and one online phase. The offline phase runs once 
+on a workstation where it sorts a reference recording and trains the classifier. The 
+online phase, running on the SoC, performs inference against the resulting pre-trained 
+model. Only the online phase is subject to the power, latency, and memory constraints that
+motivate this thesis. The requirements described below apply exclusively to the
+online phase unless otherwise noted.
+
+\subsection*{Approach B: Online-Unsupervised Sorting (Single-Phase)}
+This approach performs all sorting on the device as data arrive, using an online
+unsupervised clustering algorithm. No offline phase and no reference recording are
+required; the system is self-contained and needs no per-subject calibration. Because
+clustering must proceed without the full data set available in advance, sorted-unit
+stability and accuracy are expected to be lower than the supervised approach, which
+is believed to be the central trade-off between the two designs.
+
+\subsection*{Feature Space: Single-Channel Temporal vs.\ Multi-Channel Spatiotemporal}
+Orthogonal to the supervised/unsupervised choice above is the feature space used to
+discriminate units. A single channel exposes only \emph{temporal} waveform features,
+whereas co-located channels (as in a tetrode or high-density probe) additionally expose
+\emph{spatial} features---a spike's graded amplitude across adjacent electrodes---which
+substantially improve the separation of neurons that are near-identical on any single
+channel. This also sharpens the meaning of ``channels'': the bandwidth argument
+(Table~2, T1) concerns \emph{independent} channels, whereas spatiotemporal sorting
+requires \emph{co-located} channels that share the same neurons. Spatiotemporal
+discrimination is the higher-fidelity target, consistent with dense-probe practice and
+with fabricated on-chip sorters that rely on spatial features; single-channel temporal
+sorting is retained as the provable minimum. The former additionally requires
+probe-geometry-aware simulated data (e.g., MEArec), a dependency the single-channel case
+does not impose.
+
+% [NEXT STEP (? - potentially but have to be extremely diligent and follow the rubric and template here): 
+% comparison of the two approaches against the critical technical
+% requirements (accuracy, memory, calibration burden, self-containment), and
+% the subsystem interactions each implies.]
