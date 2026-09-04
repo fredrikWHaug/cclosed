@@ -1,8 +1,8 @@
 # Project Log & Roadmap
 
 > **Summary.** The living "where are we / what's next" page. Durable how/why lives
-> in the topic docs ([architecture](system-architecture.md),
-> [Intan reference](intan-rhd-reference.md)); this page is the chronological
+> in the topic docs ([architecture](01-system-architecture.md),
+> [Intan reference](02-intan-rhd-reference.md)); this page is the chronological
 > status and roadmap that points into them.
 
 _Last updated: 2026-08-13._
@@ -14,7 +14,7 @@ _Last updated: 2026-08-13._
 | **Real Intan RHD2164** | ✅ **bonded, powered, SPI-verified alive** | ROM reads `"INTAN"` — [project log below](#2026-08-13--real-intan-rhd2164-signal-path-validated-end-to-end-one-channel) |
 | **Real signal path, one channel** | ✅ **validated end-to-end** | FG sine → real Intan → SPI → nRF54 → BLE → laptop, cross-checked two ways |
 | BLE breaking point | ✅ actually found | ~1.05 Mbps / ~65,500 samples/s, proven by forcing real drops, not just observing 0 — see below |
-| SPI ingestion ceiling | ✅ measured | 24 Mbit/s single-edge (Intan's 24 MHz cap) — [system-architecture.md](system-architecture.md#the-two-measured-ceilings-2026-07-31-ble-rate) |
+| SPI ingestion ceiling | ✅ measured | 24 Mbit/s single-edge (Intan's 24 MHz cap) — [01-system-architecture.md](01-system-architecture.md#the-two-measured-ceilings-2026-07-31-ble-rate) |
 | On-chip classifier / compression pipeline | ⬜ removed from repo, deferred | see [2026-08-13 entry](#2026-08-13--repo-stripped-to-hardware-bring-up-scope) |
 
 ## Log
@@ -81,7 +81,7 @@ almost exactly) and backing off to find the 0-drop knee.
 ### 2026-07-31 — Both data-rate ceilings measured; SPI is the harder wall
 
 Documented in
-[system-architecture.md](system-architecture.md#the-two-measured-ceilings-2026-07-31-ble-rate).
+[01-system-architecture.md](01-system-architecture.md#the-two-measured-ceilings-2026-07-31-ble-rate).
 Headlines:
 - **BLE egress ceiling = ~1.05 Mbps**, proven. BLE back-pressures, it does not
   drop — "0 drops" never meant "at the max" until the fix above.
@@ -94,7 +94,7 @@ Headlines:
 ### 2026-07-24 — Intan datasheet reference added
 
 Read the RHD2000-series and RHD2164 datasheets in full and distilled them into
-a page-cited reference: [intan-rhd-reference.md](intan-rhd-reference.md).
+a page-cited reference: [02-intan-rhd-reference.md](02-intan-rhd-reference.md).
 Durable — grounded in the datasheet, not tied to any specific firmware, so it
 survived the later repo cleanup intact.
 
@@ -107,6 +107,6 @@ survived the later repo cleanup intact.
 - [ ] **The channel-count fork** — full 64 ch needs DDR (fragile FPGA-free
   trick or a hardware DDR receiver) vs. 32 ch on one clean lane vs. lower
   sample rate to fit more channels. See
-  [intan-rhd-reference.md](intan-rhd-reference.md) §6.
+  [02-intan-rhd-reference.md](02-intan-rhd-reference.md) §6.
 - [ ] **Bring the classifier/compression work back**, now against real
   (not emulated) Intan data, once the signal path above is solid.

@@ -3,11 +3,11 @@
 > **Summary.** The long-run scientific question is **compression vs. fidelity**:
 > how far can neural data be squeezed *on the chip* before it stops being
 > scientifically useful. That work (spike classifiers, on-chip pipeline) was
-> deliberately set aside — see [project-log.md](project-log.md) — to first prove
+> deliberately set aside — see [03-project-log.md](03-project-log.md) — to first prove
 > the physical signal chain end-to-end on real hardware. **This doc now describes
 > only what's currently real and in the repo.**
 
-Related: [intan-rhd-reference.md](intan-rhd-reference.md) · [project-log.md](project-log.md)
+Related: [02-intan-rhd-reference.md](02-intan-rhd-reference.md) · [03-project-log.md](03-project-log.md)
 
 ## Current hardware
 
@@ -20,7 +20,7 @@ Related: [intan-rhd-reference.md](intan-rhd-reference.md) · [project-log.md](pr
 
 The RHD2164 is real silicon now, not an emulation — getting it powered, wired,
 and talking took a genuinely hard bring-up (BGA reflow, LVDS_en mode select,
-grounding both `in0` and the reference input). See [project-log.md](project-log.md)
+grounding both `in0` and the reference input). See [03-project-log.md](03-project-log.md)
 for that story.
 
 ## What's actually running (3 firmware projects, `firmware/`)
@@ -84,7 +84,7 @@ batch many samples/events per packet, always.
 - **Channel count fork** (unchanged from the datasheet-level analysis): full
   64 ch @ 30 kS/s needs DDR (fragile, FPGA-free trick or a hardware DDR
   receiver) vs. scoping to 32 ch on one clean SPI lane vs. dropping sample rate
-  to fit more channels — see [intan-rhd-reference.md](intan-rhd-reference.md) §6.
+  to fit more channels — see [02-intan-rhd-reference.md](02-intan-rhd-reference.md) §6.
 - **Multi-channel on the current real chip** — `signal-path-intan` only reads
   channel 0 today; round-robin CONVERT across more channels is the natural
   next step once single-channel throughput is understood.
@@ -95,5 +95,5 @@ The original scientific goal — how much can neural data be compressed on-chip
 (raw voltage → threshold crossings → embeddings → sorted unit IDs) before it
 stops being useful — is unchanged as the eventual target, but the classifier
 work that explored it was removed from the repo to focus on hardware first (see
-[project-log.md](project-log.md)). It will come back once the real signal path
+[03-project-log.md](03-project-log.md)). It will come back once the real signal path
 is solid enough to feed it real, not emulated, data.

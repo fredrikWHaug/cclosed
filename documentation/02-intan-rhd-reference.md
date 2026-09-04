@@ -198,7 +198,7 @@ Levers: lower sample rate, lower f_H (7.6 µA/kHz per amp), power down unused ch
 | single-chip ADC max (1.05 MS/s × 16) | 16.8 Mbit/s [DS p11] |
 | **— our measured BLE ceiling —** | **~1.05 Mbit/s** |
 
-The gap between ~30 Mbit/s in and ~1 Mbit/s out is **~30×**. That is exactly the on-chip compression / spike-detection problem this project characterizes. See [system-architecture.md](system-architecture.md#the-two-measured-ceilings-2026-07-31-ble-rate) for the measured transmit ceiling.
+The gap between ~30 Mbit/s in and ~1 Mbit/s out is **~30×**. That is exactly the on-chip compression / spike-detection problem this project characterizes. See [01-system-architecture.md](01-system-architecture.md#the-two-measured-ceilings-2026-07-31-ble-rate) for the measured transmit ceiling.
 
 ---
 
@@ -213,4 +213,4 @@ The gap between ~30 Mbit/s in and ~1 Mbit/s out is **~30×**. That is exactly th
 
 - **Manual CS per word** in `firmware/board-bring-up` and `firmware/signal-path-intan/master` is not a Zephyr quirk — the Intan *requires* CS pulsed each word, and the CS falling edge triggers the sample. [DS p15]
 - **LVDS_en must be tied to GND** to get standard CMOS signaling — confirmed the hard way during real bring-up: left floating, the chip defaults to LVDS via an internal pull-up, and a single-ended nRF SPI simply cannot talk to a chip expecting differential inputs. See §7.
-- **64 channels (RHD2164)** — the DDR decision in §6 is the next real hardware question once single-channel throughput is understood. Tracked in [system-architecture.md](system-architecture.md#open-questions-current-not-aspirational).
+- **64 channels (RHD2164)** — the DDR decision in §6 is the next real hardware question once single-channel throughput is understood. Tracked in [01-system-architecture.md](01-system-architecture.md#open-questions-current-not-aspirational).
