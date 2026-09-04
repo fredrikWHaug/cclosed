@@ -58,7 +58,7 @@ for wireless transmission without fidelity loss of spatiotemporal spike informat
 \section*{Design Requirements and Technical Specifications}
 \subsection*{Description}
 
-This section decomposes the stated need into the behaviors any valid solution must
+[CONSIDER CUTTING (Marks remark on readability)] This section decomposes the stated need into the behaviors any valid solution must
 exhibit (the functional requirements) and the measurable qualities those behaviors
 must satisfy (the technical requirements). Furthermore, the specific values for the technical 
 requirements (technical specifications) are asserted. Requirements and specifications are stated 
@@ -70,14 +70,14 @@ requires isolating and preserving exactly the neural spike events at the require
 solution to the problem statement meeting the need must therefore perform five operations: 
 it must \emph{acquire} extracellular voltage from multiple recording channels, \emph{detect} 
 spike events within the acquired signal, \emph{log} the time at which each detected spike occurs,
-\emph{classify} each detected spike and assign it a unit identity, and \emph{transmit}
+\emph{classify} each detected spike and assign it a unit identity [should this be two requirements?], and \emph{transmit}
 each unit identity coupled with its timestamp over a wireless link. These five
 behaviors constitute the functional requirements of the system summarized in Table 1.
 
 % ======= Table 1 ======= %
 \begin{table}[H]
 \centering
-\caption{Functional requirements of the system.}
+\caption{Functional requirements of the proposed system.}
 \label{tab:funcreq}
 {\footnotesize
 \setlength{\tabcolsep}{4pt}
@@ -88,7 +88,7 @@ Label & Functional requirement \\
 \midrule
 F1 & \emph{Acquire} extracellular voltage from multiple recording channels \\
 F2 & \emph{Detect} spike events within the acquired signal \\
-F3 & \emph{log} the time at which each detected spike occurs \\
+F3 & \emph{Log} the time at which each detected spike occurs \\
 F4 & \emph{Classify} each detected spike and assign it a unit identity \\
 F5 & \emph{Transmit} each unit identity coupled with its timestamp over a wireless link \\
 \bottomrule
@@ -97,7 +97,10 @@ F5 & \emph{Transmit} each unit identity coupled with its timestamp over a wirele
 \end{table}
 
 Each functional requirement generally further imposes one or more technical 
-requirements grouped by the behavior that produces them, summarized in Table 2.
+requirements grouped by the behavior that produces them. Each technical requirement 
+follows from one of three sources: a first-principles calculation, a value  established in the 
+prior-art literature, or preliminary testing conducted for this project. The technical requirements
+summarized as T1 through T11 in table 2 with accopmanying justification following the table. 
 
 % ======= Table 2 ======= %
 \begin{table}[H]
@@ -126,6 +129,53 @@ T11 & Packet carries identity and timestamp & packet content & 5~B (1~B ID $+$ 4
 \end{tabularx}
 }
 \end{table}
+
+\emph{Acquisition (F1)} imposes T1--T5. As established in the problem statement,
+Bluetooth Low Energy cannot carry raw data beyond two channels. Recording from at least
+three channels (T1) is therefore the minimum that exceeds this baseline. Extracellular 
+spike energy occupies approximately 300~Hz--6~kHz~[14], so by the Nyquist--Shannon sampling theorem faithful 
+capture requires a per-channel rate of at least $\sim$12~kS/s~[A3]; the 30~kS/s field standard~[7, 8] (T2)
+adds ~3x oversampling margin accounting for non-perfections of the bandpass filter. The
+digitization must keep pace with every channel at once, so the aggregate conversion
+throughput must be at least the product of channel count and per-channel rate (T3). Spike
+amplitudes of tens to hundreds of microvolts must be resolved above a microvolt-scale
+noise floor, for which the industry-standard 16-bit converter~[7, 8] provides sufficient
+dynamic range (T4). Finally, the digitized stream must reach the processor without loss,
+so the link throughput must meet or exceed the aggregate data rate (T5); the same
+investigation identified link throughput as the binding constraint on channel count, as
+the serial interfaces of commercial BLE SoCs span roughly 8--32~Mbps depending on the
+instance used~[19].
+
+\emph{Detection (F2)} imposes T6--T7. Spikes are superimposed on the local field
+potential, which occupies frequencies below $\sim$300~Hz~[14]; a high-pass corner near
+300~Hz therefore isolates the spike band (T6). Detection must then recover a useful
+fraction of true spikes without over-triggering on noise, benchmarked against the
+established Kilosort sorter as ground truth~[18] (T7); fabricated on-chip sorters report
+detection accuracies above 97\%~[15, 16], setting the reference against which the
+detection target is calibrated.
+
+\emph{Timekeeping (F3)} imposes T8. Because the need specifies preservation of
+spatiotemporal spike information, each detected spike must carry a timestamp referenced to
+the acquisition clock---one per event being the minimal sufficient encoding (T8).
+
+\emph{Classification (F4)} imposes T9--T10. Each spike is assigned to one of $K$ resolved
+units (T9). As a minimum viable criterion, on-device assignment must exceed
+chance---$1/K$ for $K$ balanced units---relative to offline Kilosort labels~[18] (T10).
+This floor is deliberately conservative: comparable on-chip sorters achieve classification
+accuracies of roughly 85--99\%~[15, 16, 17], which sets the aspirational reference, while
+exceeding chance is the falsifiable bar that proves the pipeline classifies rather than
+guesses.
+
+\emph{Transmission (F5)} imposes T11. The compression the need demands is realized by
+transmitting, per spike, only a unit identity and a timestamp rather than the raw
+waveform: a one-byte identity together with a four-byte timestamp---a 32-bit counter that
+wraps only after $\sim$40~hours at 30~kHz---total five bytes per event, against the roughly
+eighty bytes a raw forty-sample snippet would require~[A4] (T11).
+
+The three values left as [TBD]---the front-end SNR (T4), the detection sensitivity and
+false-positive rate (T7), and the classification-accuracy target (T10)---are quantities
+better fixed by direct measurement than by assertion; the method for each is stated in the
+measurement-method column of Table~2.
 
 % ======= Design ======= %
 \section*{Consideration of Multiple Design Approaches}
