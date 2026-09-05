@@ -12,8 +12,9 @@
 \setcounter{tocdepth}{2}
 \usepackage[hidelinks]{hyperref}
 
-\title{On-Device Classification of Neural Action Potentials for\\
-Wireless Transmission over Bluetooth Low Energy}
+\title{Project Proposal: On-Device Classification of 
+Neural Action Potentials for Wireless Transmission 
+over Bluetooth Low Energy}
 \author{Fredrik Willumsen Haug \\[0.6em]
 {\normalsize Project Advisor: Dr.\ Saehyuck Oh} \\[0.2em]
 {\normalsize SEAS Faculty Thesis Reader: Professor Gage Hills}}
@@ -78,22 +79,23 @@ questions in neuroscientific inquiry require only neural spike signatures, const
 small fraction of the continuous raw signal~[11, 12].
 
 \subsection{Stakeholders, Client, and End User of the Solution}
-The primary stakeholders are systems neuroscientists who study how the firing of populations of neurons
-relate to behavior. The central experimental paradigm in systems neuroscience correlates neural activity with
-what an animal is doing, which requires the animal to move and behave freely. Present
-high-density recordings, however, tethers the animal to an acquisition system by a cable
-that carries the raw data stream. This constrains natural movement, precluding for example social experiments. 
-These researchers would directly benefit from a recording head stage that transmits the neural
-information relevant to their analysis wirelessly, freeing the animal from the tether while
-preserving the spike-level detail their experiments require. Systems neuroscientists therefore
-consitute the community whose scientific questions motivate the proposed system, and the
-end users of the proposed solution.
+The primary stakeholders are systems neuroscientists who study how the firing of populations 
+of neurons relate to behavior. The central experimental paradigm in systems neuroscience 
+correlates neural activity with what an animal is doing, which requires the animal to move 
+and behave freely. Present high-density recordings, however, tethers the animal to an 
+acquisition system by a cable that carries the raw data stream. This constrains natural 
+movement, precluding for example social experiments. These researchers would directly 
+benefit from a recording head stage that transmits the neural information relevant to 
+their analysis wirelessly, freeing the animal from the tether while preserving the 
+spike-level detail their experiments require. Systems neuroscientists therefore consitute 
+the community whose scientific questions motivate the proposed system, and the end 
+users of the proposed solution.
 
 \subsection{Problem Statement}
-The bandwidth of Bluetooth Low Energy 6.0 is too low to support transmission of raw neural
-extracellular electrophysiology data sampled at the industry standard from more than two
-recording channels at once for offline spike sorting and consequent neuroscientific
-analysis~[21].
+The bandwidth of Bluetooth Low Energy 6.0 is too low to support transmission of raw 
+neural extracellular electrophysiology data sampled at the industry standard from more 
+than two recording channels at once for offline spike sorting and consequent 
+neuroscientific analysis~[21].
 
 % ======= 2. Existing Solutions and Previous Work ======= %
 \section{Existing Solutions and Previous Work}
@@ -101,14 +103,14 @@ analysis~[21].
 \subsection{Existing Solutions}
 Existing approaches to the bandwidth problem fall into three groups: transmitting raw or
 lightly-processed data for offline sorting, classifying spikes on-device on hardware
-incompatible with wireless deployment, and calibrating templates offline to classify on-device in
-simulation only. The dominant paradigm transmits raw or lightly processed data and sorts
-offline. Headstages with off-the-shelf components either stream the raw signal and sort
-entirely offline~[13] or detect and wavelet-compress spikes on-device yet still cluster
-them at the receiver~[14]. In both, the wireless link carries waveforms, not neural
-identities. On-device classification exists, but on hardware not suited to achieve this
-goal. Fabricated custom-silicon application-specific integrated circuits (ASICs) reach
-85--99\% on-chip accuracy~[15, 16, 17] but are inaccessible parts validated only on
+incompatible with wireless deployment, and calibrating templates offline to classify 
+on-device in simulation only. The dominant paradigm transmits raw or lightly processed 
+data and sorts offline. Headstages with off-the-shelf components either stream the raw 
+signal and sort entirely offline~[13] or detect and wavelet-compress spikes on-device yet 
+still cluster them at the receiver~[14]. In both, the wireless link carries waveforms, not 
+neural identities. On-device classification exists, but on hardware not suited to achieve 
+this goal. Fabricated custom-silicon application-specific integrated circuits (ASICs) 
+reach 85--99\% on-chip accuracy~[15, 16, 17] but are inaccessible parts validated only on
 replayed data with no radio. While the closest commodity systems sort on programmable logic
 and run real-time template matching on an Intan-plus-FPGA headstage in a freely-moving
 primate~[18], Wu et al.~[19] run unsupervised OSort on an FPGA yet the former logs to an SD
@@ -139,12 +141,12 @@ information that neuroscientific analysis depends on.
 \section{Design Requirements and Technical Specifications}
 
 \subsection{Description}
-This section decomposes the problem statement into the behaviors any valid solution must exhibit
-(the functional requirements) and the measurable qualities those behaviors must satisfy (the
-technical requirements). Furthermore, the specific values for the technical requirements
-(technical specifications) are asserted. Requirements and specifications are stated
-independently of any particular design; the design approaches that could realize them will
-be considered separately in a design section.
+This section decomposes the problem statement into the behaviors any valid solution must 
+exhibit (the functional requirements) and the measurable qualities those behaviors must 
+satisfy (the technical requirements). Furthermore, the specific values for the technical 
+requirements (technical specifications) are asserted. Requirements and specifications are 
+stated independently of any particular design; the design approaches that could realize 
+them will be considered separately in a design section.
 
 Compressing continuous neural data without fidelity loss of spatiotemporal spike
 information requires isolating and preserving exactly the neural spike events at the
@@ -263,10 +265,11 @@ on-chip sorters achieve classification accuracies of roughly 85--99\%~[15, 16, 1
 sets the aspirational reference, while exceeding chance is the falsifiable bar that proves 
 the pipeline classifies rather than guesses.
 
-\emph{Transmission (F5)} imposes T11. The compression the proposed solution demands is realized by
-transmitting only a unit identity and a timestamp per spike rather than the raw waveform:
-a one-byte identity together with a four-byte timestamp, total five bytes per event, against the roughly eighty
-bytes a raw forty-sample snippet would require~[A4] (T11).
+\emph{Transmission (F5)} imposes T11. The compression the proposed solution demands is 
+realized by transmitting only a unit identity and a timestamp per spike rather than the 
+raw waveform: a one-byte identity together with a four-byte timestamp, total five bytes 
+per event, against the roughly eighty bytes a raw forty-sample snippet would require~[A4] 
+(T11).
 
 % ======= Appendix ======= %
 \section*{Appendix}
