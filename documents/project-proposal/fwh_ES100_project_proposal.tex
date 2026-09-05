@@ -30,17 +30,17 @@ over Bluetooth Low Energy}
 % ======= 0. Executive Summary ======= %
 \setcounter{section}{-1}
 \section{Executive Summary}
-This thesis addresses a bandwidth bottleneck in wireless neural recording. Bluetooth Low
-Energy 6.0, the leading low-power wireless protocol, has a 4~Mbps theoretical ceiling
-but reaches only $\sim$1~Mbps in practice. Extracellular action potentials contain
-frequencies from around 300~Hz to 6~kHz and are sampled at 30~kHz as the standard in the
-field. At 16-bit resolution, each channel produces 480~kbps. BLE can therefore stream raw
-data from only two channels which is far below modern high-density probes with hundreds to
-thousands of channels. Instead of transmitting raw data for offline spike sorting, this
-project detects and classifies spikes on-device, transmitting only a unit ID and timestamp
-per spike. This cuts the per-spike data volume by orders of magnitude, enabling far more
-channels to be streamed wirelessly on a commercial BLE system-on-chip which is a capability
-not previously demonstrated on commercial hardware.
+This thesis proposal addresses a bandwidth bottleneck in wireless neural recording. Bluetooth Low
+Energy 6.0 (BLE) is the leading low-power, off-the-shelf wireless communication protocol, and has a 
+theoretical data rate ceiling of 4~Mbps. Neural action potentials, also called neural spikes, contain frequencies in the 
+range from 300~Hz to 6~kHz. Raw extracellular electrophysiology data, also referred to as contionuous neural data,
+is therefore sampled at 30~kHz as the field standard to ensure signal integrity for offline identification of putative individual neural units recorded. 
+Thus, using the field-standard analog-to-digital converter (ADC) resolution of 16 bits, 480~kbps are generated per channel, 
+imposing a theoretical eight-channel recording ceiling for wireless data transmission.
+
+Modern high-density silicon recording probe systems can have up to thousands of recoring channels. Therefore, wireless
+transmission of continuous neural data from state-of-the-art recording probes is impossible through BLE. The proposed project
+performs neural identification on-device, resulting in an off-the-shelf solution for high fidelity wireless transmission of domain specific neural data compatable with modern recording systems.
 
 % ======= 1. Problem Identification ======= %
 \section{Problem Identification}
