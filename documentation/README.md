@@ -1,17 +1,10 @@
 # Wireless Ephys on nRF54LM20B — Documentation
 
-The long-run scientific question is **compression vs. fidelity**: how far can
-neural data be squeezed *on the chip* — from raw voltage down to spike
-identities — before it stops being scientifically useful. That work is
-currently **paused** (see the [Project Log](#3-project-log-and-roadmap)) while the
-physical signal chain gets proven on real hardware — a real, bonded Intan
-RHD2164 chip, not an emulation.
+The engineering problem at hand is optimizing fidelity as a function of compression: 
+how far can neural data for systems neuroscience be compressed on the headstage of a 
+rodent before it stops being scientifically useful.
 
-This file is the **single, self-contained reference** for the project. Each
-numbered section below is also kept as a standalone file in this directory,
-indexed to match (see [Isolated Source Files](#isolated-source-files)).
-Forward-looking plans, design options, and research notes live separately under
-[Ideation & Planning](#ideation--planning).
+This file contains the complete documentation reference for the project. It can also be found at website/documentation. 
 
 ## Table of Contents
 
@@ -462,17 +455,3 @@ documentation of work already done above. These live under
 - [`nrf54-package-selection.md`](ideas/nrf54-package-selection.md) — package decision (QFN52 / CSP61 / CSP98) for the not-yet-built custom PCB.
 - [`SPI_bringup_plan.md`](ideas/SPI_bringup_plan.md) — plan for scaling SPI acquisition to 32 channels (firmware + signal-integrity halves; the CSN/SPIM00 decision).
 - [`waveform_classification_backrgound.md`](ideas/waveform_classification_backrgound.md) — time-series ML research background + faculty notes.
-
-## Isolated Source Files
-
-Each numbered section above is also kept as a standalone Markdown file in this
-directory, indexed to match its section number:
-
-| Section | Standalone file |
-|---------|-----------------|
-| [1. System Architecture](#1-system-architecture) | [`01-system-architecture.md`](01-system-architecture.md) |
-| [2. Intan RHD Reference](#2-intan-rhd-reference) | [`02-intan-rhd-reference.md`](02-intan-rhd-reference.md) |
-| [3. Project Log and Roadmap](#3-project-log-and-roadmap) | [`03-project-log.md`](03-project-log.md) |
-
-Supporting diagrams: [`signal-path-intan-master-flow.svg`](signal-path-intan-master-flow.svg),
-[`signal-path-intan-master-modules.svg`](signal-path-intan-master-modules.svg).
