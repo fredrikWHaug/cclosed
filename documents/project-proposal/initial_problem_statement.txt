@@ -1,4 +1,0 @@
-The bandwidth of Bluetooth Low Energy 6.0 is too low to support transmission of raw 
-neural extracellular electrophysiology data sampled at the industry standard from more 
-than two recording channels at once for offline spike sorting and consequent 
-neuroscientific analysis~[21].
