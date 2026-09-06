@@ -340,10 +340,10 @@ _Last updated: 2026-08-13._
 
 | Area | State | Detail |
 |------|-------|--------|
-| **Real Intan RHD2164** | ✅ **bonded, powered, SPI-verified alive** | ROM reads `"INTAN"` |
-| **Real signal path, one channel** | ✅ **validated end-to-end** | FG sine → real Intan → SPI → nRF54 → BLE → laptop, cross-checked two ways |
-| BLE breaking point | ✅ actually found | ~1.05 Mbps / ~65,500 samples/s, proven by forcing real drops, not just observing 0 |
-| SPI ingestion ceiling | ✅ measured | 24 Mbit/s single-edge (Intan's 24 MHz cap) — see [System Architecture](#the-two-measured-ceilings-2026-07-31-ble-rate) |
+| **Real Intan RHD2164** | **bonded, powered, SPI-verified alive** | ROM reads `"INTAN"` |
+| **Real signal path, one channel** | **validated end-to-end** | FG sine → real Intan → SPI → nRF54 → BLE → laptop, cross-checked two ways |
+| BLE breaking point | actually found | ~1.05 Mbps / ~65,500 samples/s, proven by forcing real drops, not just observing 0 |
+| SPI ingestion ceiling | measured | 24 Mbit/s single-edge (Intan's 24 MHz cap) — see [System Architecture](#the-two-measured-ceilings-2026-07-31-ble-rate) |
 | On-chip classifier / compression pipeline | ⬜ removed from repo, deferred | see the 2026-08-13 repo-strip entry below |
 
 ### Log
