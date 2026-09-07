@@ -1,23 +1,26 @@
 % ======= LaTeX Setup ======= %
 \documentclass[11pt]{article}
-\usepackage[margin=1in]{geometry}
+\usepackage[letterpaper, margin=1in]{geometry}
 \usepackage{times}
 \usepackage{indentfirst}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{float}
 \usepackage{amsmath}
+\usepackage{graphicx}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
 \linespread{1.15}
 \setcounter{tocdepth}{2}
 \usepackage[hidelinks]{hyperref}
+\usepackage{caption}
+\captionsetup{font=small, labelfont=bf}
 
-\title{Project Proposal: On-Device Classification of 
-Neural Action Potentials for Wireless Transmission 
-over Bluetooth Low Energy}
+\title{{\large ES100 Project Proposal}\\[0.5em]
+On-Device Classification of Neural Action Potentials\\
+for Wireless Transmission over Bluetooth Low Energy}
 \author{Fredrik Willumsen Haug \\[0.3em]
 {\normalsize Bioengineering} \\[0.6em]
-{\normalsize Project Advisor: Dr.\ Saehyuck Oh \qquad Thesis Reader: Professor Gage Hills}}
+{\normalsize Advised by Dr.\ Saehyuck Oh and Professor Gage Hills}}
 \date{}
 
 \begin{document}
@@ -44,6 +47,19 @@ probes, however, carry up to thousands of channels, so transmitting their raw da
 impossible. The proposed project instead performs neural identification on-device, yielding an
 off-the-shelf solution for wireless transmission of putatively identified neurons
 compatible with modern recording systems.
+
+\vspace*{\fill}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/figure1.png}
+\caption{System overview. A head-mounted device classifies each detected extracellular
+spike to its neuron of origin on-device and transmits only the resulting unit identity and
+timestamp over Bluetooth Low Energy (BLE).}
+\label{fig:overview}
+\end{figure}
+
+\vspace*{\fill}
 
 \clearpage
 
@@ -156,8 +172,8 @@ front end on which the remaining functional requirements will be built.
 % ======= 3.1 Description and Functional Requirements ======= % 
 \subsection{Description and Functional Requirements}
 This section decomposes the problem statement into the behaviors any valid solution must 
-exhibit (the functional requirements) and the measurable qualities those behaviors must 
-satisfy (the technical requirements). Furthermore, the specific values for the technical 
+exhibit (functional requirements) and the measurable qualities those behaviors must 
+satisfy (technical requirements). Furthermore, the specific values for the technical 
 requirements (technical specifications) are asserted. Requirements and specifications are 
 stated independently of any particular design; the design approaches that could realize 
 them will be considered in-depth for checkpoint 1.
@@ -165,10 +181,10 @@ them will be considered in-depth for checkpoint 1.
 Compressing continuous neural data without fidelity loss of spatiotemporal spike
 information requires isolating and preserving exactly the neural spike events at the
 required resolution. Any solution to the problem statement must therefore
-perform five operations: it must \emph{acquire} extracellular voltage from multiple
-recording channels, \emph{detect} spike events within the acquired signal, \emph{log} the
-time at which each detected spike occurs, \emph{classify} each detected spike and assign it
-a unit identity, and \emph{transmit} each unit identity coupled with its timestamp over a
+perform five operations: it must acquire extracellular voltage from multiple
+recording channels, detect spike events within the acquired signal, log the
+time at which each detected spike occurs, classify each detected spike and assign it
+a unit identity, and transmit each unit identity coupled with its timestamp over a
 wireless link. These five behaviors constitute the functional requirements of the system
 summarized in Table~\ref{tab:funcreq}.
 
@@ -195,14 +211,12 @@ F5 & \emph{Transmit} each unit identity coupled with its timestamp over a wirele
 \end{table}
 
 % ======= 3.2 Technical Requirements and Specifications ======= %
-\subsection{Technical Requirements}
-Each functional requirement generally further imposes one or more technical requirements
-grouped by the behavior that instantiates a technical requirement. Each technical
-requirement follows from one of three sources: a first-principles calculation, a value
-established in the prior-art literature, or preliminary testing conducted for this
+\subsection{Technical Requirements and Specifications}
+Each functional requirement generally further imposes one or more technical requirements. 
+Each technical requirement follows from one of three sources: a first-principles calculation, 
+a value established in the prior-art literature, or preliminary testing conducted for this
 project. The technical requirements are summarized as T1 through T11 grouped by functional
-requirement in Table~\ref{tab:techreq}. Accompanying justification of the derived technical
-requirements follows after Table~\ref{tab:techreq}.
+requirement in Table~\ref{tab:techreq}, with accompanying justifications following the table.
 
 % ======= Table 2 ======= %
 \begin{table}[H]
@@ -221,13 +235,13 @@ Label & Requirement & Specification & Quantitative value \\
 T1  & Acquire from more independent channels than a raw BLE link can carry & simultaneous channel count & $\geq 5$ (min); 32 (target) \\
 T2  & Sample fast enough to capture the spike band without aliasing & per-channel sample rate & $\geq 12$~kS/s; 30~kS/s design point \\
 T3  & Digitization keeps pace with every channel at once & aggregate conversion rate & $\geq$ channels $\times$ per-channel rate \\
-T4  & Resolve spike amplitudes above the noise floor & ADC resolution / SNR & 16-bit; SNR $\geq$ [TBD] \\
+T4  & Resolve spike amplitudes above the noise floor & ADC resolution; input-referred noise & 16-bit; $\leq 5~\mu$Vrms \\
 T5  & Deliver the digitized stream to the processor without loss & ADC$\to$processor link throughput & $\geq$ channels $\times$ rate $\times$ bits \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{F2 --- Detect}} \\
 \addlinespace[2pt]
 T6  & Separate spikes from the local field potential & high-pass corner frequency & $\sim$300~Hz \\
-T7  & Detect true spikes without over-triggering on noise & detection TPR / FPR vs.\ Kilosort & TPR $\geq$ [TBD]; FPR $\leq$ [TBD] \\
+T7  & Detect true spikes without over-triggering on noise & detection TPR / precision vs.\ Kilosort & TPR $\geq 90\%$; precision $\geq 90\%$ \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{F3 --- Log}} \\
 \addlinespace[2pt]
@@ -236,7 +250,7 @@ T8  & Record when each detected spike occurs & timestamps per spike & one per de
 \multicolumn{4}{@{}l}{\textbf{F4 --- Classify}} \\
 \addlinespace[2pt]
 T9  & Assign each detected spike a unit identity & unit label per spike & one of $K$ units \\
-T10 & Classify better than chance & classification accuracy vs.\ Kilosort & $> 1/K$ (chance); target [TBD] \\
+T10 & Classify better than chance & classification accuracy vs.\ Kilosort & $> 1/K$ (chance); aspirational 85--99\% \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{F5 --- Transmit}} \\
 \addlinespace[2pt]
@@ -249,7 +263,7 @@ T11 & Transmit only the spike identity and its time, not the waveform & per-spik
 % ======= Jusification of Technical Requirements and Specifications ======= %
 \subsection{Justification of Technical Requirements and Specifications}
 \emph{Acquisition (F1)} imposes T1--T5. As established in the problem statement, Bluetooth
-Low Energy cannot carry raw data beyond two channels. Recording from at least three
+Low Energy cannot carry raw data beyond four channels. Recording from at least five
 channels (T1) is therefore the minimum that exceeds this baseline. Extracellular spike
 energy occupies approximately 300~Hz--6~kHz~[22], so by the Nyquist--Shannon sampling
 theorem faithful capture requires a per-channel rate of at least $\sim$12~kS/s~[A3]; the
@@ -258,7 +272,7 @@ non-perfections of the bandpass filter. The digitization must keep pace with eve
 at once, so the aggregate conversion throughput must be at least the product of channel
 count and per-channel rate (T3). Spike amplitudes of tens to hundreds of microvolts must be
 resolved above a microvolt-scale noise floor, for which the industry-standard 16-bit
-converter~[7, 8] provides sufficient dynamic range (T4). Finally, the digitized stream must
+converter~[7, 8] supplies dynamic range; an input-referred noise below $\sim$5~$\mu$Vrms~[21] holds electronic noise well beneath spike amplitudes~[22], a bar commercial front ends meet at $\sim$2.4~$\mu$Vrms~[8] (T4). Finally, the digitized stream must
 reach the processor without loss, so the link throughput must meet or exceed the aggregate
 data rate (T5); the same investigation identified link throughput as the binding constraint
 on channel count, as the serial interfaces of commercial BLE SoCs span roughly 8--32~Mbps
@@ -269,11 +283,11 @@ which occupies frequencies below $\sim$300~Hz~[22]; a high-pass corner near 300~
 therefore isolates the spike band (T6). Detection must then recover a useful fraction of
 true spikes without over-triggering on noise, benchmarked against the established Kilosort
 sorter as ground truth~[24] (T7); fabricated on-chip sorters report detection accuracies
-above 97\%~[15, 16], setting the reference against which the detection target is calibrated.
+above 97\%~[15, 16], and Gagnon-Turcotte et al.\ report up to 100\% detection~[14]; a floor of 90\% sensitivity and 90\% precision at a $\pm 1$~ms match tolerance is therefore a conservative yet meaningful bar.
 
 \emph{Timekeeping (F3)} imposes T8. Because the proposed solution preserves
 spatiotemporal spike information, each detected spike must carry a timestamp referenced to
-the acquisition clock, whcih is one per event being the minimal sufficient encoding (T8).
+the acquisition clock, which is one per event being the minimal sufficient encoding (T8).
 
 \emph{Classification (F4)} imposes T9--T10. Each spike is assigned to one of $K$ resolved
 units (T9). As a minimum viable criterion, on-device assignment must exceed chance relative 
