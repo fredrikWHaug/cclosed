@@ -17,7 +17,7 @@
 
 \title{{\large ES100 Project Proposal}\\[0.5em]
 On-Device Classification of Neural Action Potentials\\
-for Wireless Transmission over Bluetooth Low Energy}
+for Wireless Unit Transmission over Bluetooth Low Energy}
 \author{Fredrik Willumsen Haug \\[0.3em]
 {\normalsize Bioengineering} \\[0.6em]
 {\normalsize Advised by Dr.\ Saehyuck Oh and Professor Gage Hills}}
@@ -39,7 +39,7 @@ for Wireless Transmission over Bluetooth Low Energy}
 This thesis proposal addresses a bandwidth bottleneck in wireless neural recording. Bluetooth
 Low Energy 6.0 (BLE), the leading low-power off-the-shelf wireless communication protocol, has a theoretical
 data rate ceiling of 2~Mbps. Neural action potentials, also called spikes, contain frequencies
-from 300~Hz to 6~kHz. Raw extracellular electrophysiology data in is therefore sampled at 30~kHz
+from 300~Hz to 6~kHz. Raw extracellular neural electrophysiology data is therefore sampled at 30~kHz
 to preserve signal integrity for offline identification of individual
 neurons appearing on overlapping recording channels. With a 16-bit resolution, each channel generates 480~kbps, imposing a
 theoretical four-channel recording ceiling for wireless transmission. Modern high-density recording
@@ -171,12 +171,12 @@ front end on which the remaining functional requirements will be built.
 
 % ======= 3.1 Description and Functional Requirements ======= % 
 \subsection{Description and Functional Requirements}
-This section decomposes the problem statement into the behaviors any valid solution must 
-exhibit (functional requirements) and the measurable qualities those behaviors must 
-satisfy (technical requirements). Furthermore, the specific values for the technical 
-requirements (technical specifications) are asserted. Requirements and specifications are 
-stated independently of any particular design; the design approaches that could realize 
-them will be considered in-depth for checkpoint 1.
+This section decomposes the problem statement into the behaviors any valid solution must
+exhibit (the functional requirements) and the qualitative conditions each behavior must
+satisfy (the technical requirements). Each technical requirement is then made concrete as
+a technical specification: a measurable parameter paired with a target value. These
+requirements and specifications are stated independently of any particular design; the
+design approaches that could realize them will be considered in-depth for checkpoint 1.
 
 Compressing continuous neural data without fidelity loss of spatiotemporal spike
 information requires isolating and preserving exactly the neural spike events at the
@@ -212,9 +212,9 @@ F5 & \emph{Transmit} each unit identity coupled with its timestamp over a wirele
 
 % ======= 3.2 Technical Requirements and Specifications ======= %
 \subsection{Technical Requirements and Specifications}
-Each functional requirement generally further imposes one or more technical requirements. 
-Each technical requirement follows from one of three sources: a first-principles calculation, 
-a value established in the prior-art literature, or preliminary testing conducted for this
+Each functional requirement imposes one or more technical requirements. 
+Each requirement's specification draws its value from one of three sources: a first-principles calculation,
+the prior-art literature, or preliminary testing conducted for this
 project. The technical requirements are summarized as T1 through T11 grouped by functional
 requirement in Table~\ref{tab:techreq}, with accompanying justifications following the table.
 
