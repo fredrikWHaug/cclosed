@@ -262,45 +262,31 @@ T11 & Transmit only the spike identity and its time, not the waveform & per-spik
 
 % ======= Jusification of Technical Requirements and Specifications ======= %
 \subsection{Justification of Technical Requirements and Specifications}
-\emph{Acquisition (F1)} imposes T1--T5. As established in the problem statement, Bluetooth
-Low Energy cannot carry raw data beyond four channels. Recording from at least five
-channels (T1) is therefore the minimum that exceeds this baseline. Extracellular spike
-energy occupies approximately 300~Hz--6~kHz~[22], so by the Nyquist--Shannon sampling
-theorem faithful capture requires a per-channel rate of at least $\sim$12~kS/s~[A3]; the
-30~kS/s field standard~[7, 8] (T2) adds $\sim$3$\times$ oversampling margin accounting for
-non-perfections of the bandpass filter. The digitization must keep pace with every channel
-at once, so the aggregate conversion throughput must be at least the product of channel
-count and per-channel rate (T3). Spike amplitudes of tens to hundreds of microvolts must be
-resolved above a microvolt-scale noise floor, for which the industry-standard 16-bit
-converter~[7, 8] supplies dynamic range; an input-referred noise below $\sim$5~$\mu$Vrms~[21] holds electronic noise well beneath spike amplitudes~[22], a bar commercial front ends meet at $\sim$2.4~$\mu$Vrms~[8] (T4). Finally, the digitized stream must
-reach the processor without loss, so the link throughput must meet or exceed the aggregate
-data rate (T5); the same investigation identified link throughput as the binding constraint
-on channel count, as the serial interfaces of commercial BLE SoCs span roughly 8--32~Mbps
-depending on the instance used~[23].
+\textbf{Acquisition (F1).} Recording from at least five channels (T1) is the minimum that
+beats the four-channel raw-BLE ceiling. Extracellular spikes occupy 300~Hz--6~kHz~[22], so
+Nyquist sets a $\geq$12~kS/s per-channel floor~[A3]; the field-standard 30~kS/s~[7, 8] adds
+oversampling margin (T2). The digitizer must convert every channel each sampling cycle (T3),
+and the ADC-to-processor link must carry the resulting stream (T5), within the 8--32~Mbps
+span of commodity BLE-SoC serial interfaces~[23]. A 16-bit converter with input-referred
+noise under $\sim$5~$\mu$Vrms~[21] resolves the tens-to-hundreds-of-microvolt spikes clear of
+the noise floor (T4).
 
-\emph{Detection (F2)} imposes T6--T7. Spikes are superimposed on the local field potential,
-which occupies frequencies below $\sim$300~Hz~[22]; a high-pass corner near 300~Hz
-therefore isolates the spike band (T6). Detection must then recover a useful fraction of
-true spikes without over-triggering on noise, benchmarked against the established Kilosort
-sorter as ground truth~[24] (T7); fabricated on-chip sorters report detection accuracies
-above 97\%~[15, 16], and Gagnon-Turcotte et al.\ report up to 100\% detection~[14]; a floor of 90\% sensitivity and 90\% precision at a $\pm 1$~ms match tolerance is therefore a conservative yet meaningful bar.
+\textbf{Detection (F2).} A high-pass corner near 300~Hz separates spikes from the sub-300~Hz
+local field potential~[22] (T6). Detection is scored against Kilosort~[24]: since on-chip and
+commodity detectors report 97--100\%~[14, 15, 16], a floor of 90\% sensitivity and 90\%
+precision, matched within $\pm$1~ms, is conservative yet meaningful (T7).
 
-\emph{Timekeeping (F3)} imposes T8. Because the proposed solution preserves
-spatiotemporal spike information, each detected spike must carry a timestamp referenced to
-the acquisition clock, which is one per event being the minimal sufficient encoding (T8).
+\textbf{Timekeeping (F3).} Preserving spatiotemporal information requires one timestamp per
+detected spike, referenced to the acquisition clock (T8).
 
-\emph{Classification (F4)} imposes T9--T10. Each spike is assigned to one of $K$ resolved
-units (T9). As a minimum viable criterion, on-device assignment must exceed chance relative 
-to offline Kilosort labels~[24] (T10). This floor is deliberately conservative: comparable 
-on-chip sorters achieve classification accuracies of roughly 85--99\%~[15, 16, 17], which 
-sets the aspirational reference, while exceeding chance is the falsifiable bar that proves 
-the pipeline classifies rather than guesses.
+\textbf{Classification (F4).} Each spike is assigned to one of $K$ units (T9). On-device
+accuracy need only beat chance ($1/K$) against Kilosort labels~[24] to prove the pipeline
+classifies rather than guesses; comparable on-chip sorters reach 85--99\%~[15, 16, 17], the
+aspirational reference (T10).
 
-\emph{Transmission (F5)} imposes T11. The compression the proposed solution demands is 
-realized by transmitting only a unit identity and a timestamp per spike rather than the 
-raw waveform: a one-byte identity together with a four-byte timestamp, total five bytes 
-per event, against the roughly eighty bytes a raw forty-sample snippet would require~[A4] 
-(T11).
+\textbf{Transmission (F5).} Transmitting only a one-byte unit identity and a four-byte
+timestamp per spike, five bytes, replaces the $\sim$80~bytes of a raw 40-sample snippet~[A4],
+achieving the compression the solution depends on (T11).
 
 % ======= 4. Plan for Measuring Technical Specifications ======= %
 \section{Plan for Measuring Technical Specifications}
