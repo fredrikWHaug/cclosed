@@ -7,6 +7,7 @@
 \usepackage{tabularx}
 \usepackage{float}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{graphicx}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
 \linespread{1.15}
@@ -104,26 +105,31 @@ suggests.~[11, 12].
 
 % ======= 1.2 Stakeholders, Client, and End Used of the Solution ======= %
 \subsection{Stakeholders, Client, and End User of the Solution}
-The end users of the proposed system are systems neuroscientists. The central experimental 
-paradigm in systems neuroscience  relates neural activity with animal behavior, which benefits 
-from animals moving and behaving freely. Present high-density recordings, however, tethers the 
-animal to an acquisition system by a cable that carries the raw data stream. This constrains 
-natural movement and precludes social experiments. Systems neuroscientists would directly 
-benefit from a recording head stage that transmits the neural information relevant to 
-their analysis wirelessly, as it would imrove data quality and allow for a wider range of 
-experimental designs.
+Several groups have a stake in the project (Figure~\ref{fig:stakeholders}). The animals
+that carry the device benefit most directly, because a wireless headstage frees them from
+the recording cable and the stress it causes. Neuroscience as a field, and the agencies
+that fund it, gain because recording more channels wirelessly allows experiments that are
+impractical today. Preclinical drug research has an interest too, since studies of the
+central nervous system often depend on recordings from animals that move freely.
 
-The client is the systems neuroscience laboratory that would acquire and deploy the
-headstage in its own experiments, from individual academic research groups to institutional
-core facilities. Because it is built on off-the-shelf hardware, it offers such laboratories a
-turnkey tool they can adopt without custom-silicon expertise.
+The client is the neuroscience laboratory that would buy the device and use it in its own
+work. These range from single academic groups to shared institutional facilities. Because
+the design uses off-the-shelf parts, a lab can adopt it without building custom hardware.
 
-More broadly, stakeholders include the neuroscience research community and the agencies that
-fund it, who gain from the experiments higher-channel wireless recording makes feasible, and
-preclinical neuropharmacology programs, where recording from freely-behaving animals supports
-central-nervous-system drug development. Replacing the tether also serves animal welfare,
-reducing the stress a physical connection imposes and advancing the refinement principle of
-humane research.
+The end users are systems neuroscientists. They study how neural activity relates to
+behavior, which works best when the animal can move freely. Standard high-density recording
+ties the animal to a cable that carries the raw data. This limits movement and rules out
+experiments such as social interaction. A headstage that transmits wirelessly removes that
+limit and lets researchers run a wider range of experiments.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/stakeholder_map.png}
+\caption{Stakeholder map. Proximity to the center encodes directness of stake, from the
+headstage at the core to its direct stakeholders (inner ring) and the broader stakeholders
+(outer ring).}
+\label{fig:stakeholders}
+\end{figure}
 
 % ======= 1.3 Problem Statement ======= %
 \subsection{Problem Statement}
@@ -142,24 +148,34 @@ simultaneously, and data from thousands of channels is available.
 
 % ======= 2.1 Existing Solutions ======= %
 \subsection{Existing Solutions}
-Existing approaches to the bandwidth problem fall into three groups: transmitting raw or
-lightly-processed data for offline sorting, classifying spikes on-device on hardware
-incompatible with wireless deployment, and calibrating templates offline to classify 
-on-device in simulation only. The dominant paradigm transmits raw or lightly processed 
-data and sorts offline. Headstages with off-the-shelf components either stream the raw 
-signal and sort entirely offline~[13] or detect and wavelet-compress spikes on-device yet 
-still cluster them at the receiver~[14]. In both, the wireless link carries waveforms, not 
-neural identities. On-device classification exists, but on hardware not suited to achieve 
-this goal. Fabricated custom-silicon application-specific integrated circuits (ASICs) 
-reach 85--99\% on-chip accuracy~[15, 16, 17] but are inaccessible parts validated only on
-replayed data with no radio. While the closest commodity systems sort on programmable logic
-and run real-time template matching on an Intan-plus-FPGA headstage in a freely-moving
-primate~[18], Wu et al.~[19] run unsupervised OSort on an FPGA yet the former logs to an SD
-card and neither integrates a wireless link. Finally, the two-stage scheme of calibrating
-templates offline and classifying on-device so that only identities transmitted was
-shown feasible only in simulation~[20]. No prior system, to my knowledge, performs
-on-device single-unit classification and wirelessly transmits the resulting spike
-identities on an off-the-shelf Bluetooth Low Energy SoC.
+Two lines of work come close to this project without meeting: wireless headstages built
+from commodity parts, and systems that classify spikes on the device. Each covers one half
+of the problem. On the wireless side, headstages made from off-the-shelf parts already
+record from freely-moving animals. The simplest stream the raw signal and do everything
+offline; Tasneem et al.~[13] send raw data from a moving rat and detect and sort it
+afterward. Gagnon-Turcotte et al.~[14] go a step further, pairing an Intan front end with a
+Nordic radio to detect and compress spikes on the device, though the sorting into units
+still happens at the receiver. In both, the link carries waveforms rather than neural
+identities, so the bandwidth saving is modest.
+
+On the other side, on-device classification has been taken furthest in custom silicon.
+Fabricated spike-sorting chips reach 85--99\% classification accuracy on the device
+itself~[15, 16, 17], which shows the algorithm fits a tight power and area budget. They
+remain custom parts, though, tested only on replayed recordings and built with no radio, so
+a neuroscience laboratory cannot simply obtain and use one.
+
+The same on-device sorting also runs on commodity, programmable hardware. Luan et al.~[18]
+perform real-time template matching on an Intan-plus-FPGA headstage in a freely-moving
+primate, but log the result to an SD card. Wu et al.~[19] run an unsupervised sorter on an
+FPGA at microsecond latency, again with no wireless link. These prove the classification
+step is feasible off custom silicon, yet neither closes the wireless half.
+
+The idea of splitting the work is not new either. Navajas and Quiroga~[20] showed in
+simulation that templates can be built offline and each new spike matched on the device, so
+that only the sorted identities travel over the link. What remains undone is to combine
+these threads. No published system, to my knowledge, classifies single units on the device
+and transmits their identities over a commodity Bluetooth Low Energy link, which is the
+combination this project builds.
 
 % ======= 2.2 Proposed Solution =======% 
 \subsection{Proposed Solution}
@@ -171,12 +187,20 @@ permits while preserving the spatiotemporal spike information that neuroscientif
 
 % ======= 2.3 Previous Work ======= %
 \subsection{Previous Work}
-Work completed so far consists of a single printed circuit board (PCB). A custom PCB
-for testing the signal path, carrying a bonded Intan RHD2164 analog front end
-interfaced to an nRF54LM20B SoC over SPI. The board has been brought up and used to
-validate end-to-end single-channel acquisition. A known analog input was digitized by 
-the Intan and relayed over the SoC's Bluetooth Low Energy link, establishing the acquisition 
-front end on which the remaining functional requirements will be built.
+Only one part of the system has been built so far: a custom circuit board for testing the
+signal path (Figure~\ref{fig:pcb}). It carries an Intan RHD2164 front end wired to an
+nRF54LM20B over SPI. The board has been brought up and used to record a single channel from
+end to end, with a known input passing through the Intan, across the SoC's Bluetooth Low
+Energy link, and out to a laptop. This confirms the acquisition front end that the rest of
+the system will build on.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{figures/pcb.png}
+\caption{Three-dimensional view of the custom signal-path test board, carrying the Intan
+RHD2164 analog front end (BGA soldered on post fabrication).}
+\label{fig:pcb}
+\end{figure}
 
 % ======= 3. Design Requirements and Technical Specifications ======= %
 \section{Design Requirements and Technical Specifications}
@@ -227,8 +251,9 @@ F5 & \emph{Transmit} each unit identity coupled with its timestamp over a wirele
 Each functional requirement imposes one or more technical requirements. 
 Each requirement's specification draws its value from one of three sources: a first-principles calculation,
 the prior-art literature, or preliminary testing conducted for this
-project. The technical requirements are summarized as T1 through T11 grouped by functional
-requirement in Table~\ref{tab:techreq}, with accompanying justifications following the table.
+project. The technical requirements are summarized in Table~\ref{tab:techreq}: T1 through T11
+grouped by the functional requirement each serves, and T12 a system-level power constraint.
+Justifications follow the table.
 
 % ======= Table 2 ======= %
 \begin{table}[H]
@@ -267,6 +292,10 @@ T10 & Classify better than chance & classification accuracy vs.\ Kilosort & $> 1
 \multicolumn{4}{@{}l}{\textbf{F5 --- Transmit}} \\
 \addlinespace[2pt]
 T11 & Transmit only the spike identity and its time, not the waveform & per-spike packet content & 5~B (1~B ID $+$ 4~B ts) \\
+\midrule
+\multicolumn{4}{@{}l}{\textbf{System-level}} \\
+\addlinespace[2pt]
+T12 & Run on a head-mounted battery for a useful session & average power draw & $\lesssim 100$~mW (target); $\geq 1$~h on a $<$1.5~g battery \\
 \bottomrule
 \end{tabularx}
 }
@@ -300,12 +329,94 @@ aspirational reference (T10).
 timestamp per spike, five bytes, replaces the $\sim$80~bytes of a raw 40-sample snippet~[A4],
 achieving the compression the solution depends on (T11).
 
+\textbf{System-level (T12).} A head stage on a freely-moving animal must run on a small
+onboard battery, not wall power or a data tether, so its power draw fixes the battery mass
+and the length of a recording session. Transmitting only spike identities rather than raw
+waveforms cuts the radio's airtime, so the compression that saves bandwidth also saves
+transmission energy; both are quantified in the measurement plan.
+
 % ======= 4. Plan for Measuring Technical Specifications ======= %
 \section{Plan for Measuring Technical Specifications}
 
-% ======= 4.1 Pass ======= %
-\subsection{Pass}
-Pass
+Every specification is verified on replayed or synthetic neural signals rather than live
+animals, consistent with the scope of this project. The central instrument is a ground-truth
+comparison. The same signal that reaches the nRF54 is split and fed in parallel to a tethered
+reference recorder, so the two systems see an identical input. The reference recording is
+sorted offline with Kilosort~4.0 to produce ground-truth spike times and unit labels, and the
+on-device output is aligned to it through a shared synchronization marker and matched within a
+$\pm$1~ms window. When the source is a synthetic recording built from a known file, its labels
+serve as the ground truth directly. This split-signal setup is what makes detection (T7) and
+classification (T10) measurable against truth rather than against the device's own output, and
+it is the same architecture a later live-animal study would reuse.
+
+Because the head stage rides a freely-moving animal, it must run on a small onboard battery; a
+wall supply or a data tether would defeat the wireless purpose of the project. Power draw, and
+the radio's share of it in particular, therefore sets the battery mass and the length of a
+recording session. Power is measured as supply current times voltage under sustained
+operation, with the transmission contribution isolated using a current profiler triggered on
+the radio's activity, then converted into battery life for a candidate cell. Transmitting only
+spike identities rather than raw waveforms cuts the radio's airtime by orders of magnitude, so
+the same on-device classification that saves bandwidth is expected to save transmission energy;
+measuring power with and without on-device classification quantifies that saving (T12).
+
+The remaining specifications are characterized at the bench. Acquisition (T1--T5) uses a
+function or arbitrary-waveform generator as the signal source, a logic analyzer on the SPI
+bus, and firmware counters: channel count is read from the acquired stream, the per-channel
+rate is confirmed by the spectrum of a known replayed tone and by the sampling-timer period,
+aggregate throughput and link loss are counted as sustained conversions and dropped samples,
+and front-end resolution and noise are measured from a shorted input and a known-amplitude
+input. The filter corner and detection (T6--T7) come from a frequency sweep and from the
+$\pm$1~ms match to Kilosort. Timekeeping, classification, and transmission (T8--T11) are read
+from the received stream in software: one timestamp per event and its jitter against the sync
+marker, a confusion matrix of unit assignments against Kilosort labels on held-out data, and
+the five-byte content of each packet. Table~\ref{tab:measplan} pairs every specification with
+its measurement method.
+
+% ======= Table 3: specifications with measurement methods ======= %
+\begin{table}[H]
+\centering
+\caption{Technical specifications paired with their measurement methods}
+\label{tab:measplan}
+{\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}l L L L L@{}}
+\toprule
+Label & Requirement & Specification & Quantitative value & Measurement method \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{F1 --- Acquire}} \\
+\addlinespace[2pt]
+T1  & More channels than raw BLE carries & channel count & $\geq 5$; target 32 & count channels in the acquired stream \\
+T2  & Sample fast enough for the band & per-channel sample rate & $\geq 12$~kS/s; 30~kS/s & FFT of a known replayed tone; timer period \\
+T3  & Digitization keeps up & aggregate conversion rate & $\geq$ ch $\times$ rate & sustained and missed conversion counts \\
+T4  & Resolve spikes above noise & resolution; noise & 16-bit; $\leq 5~\mu$Vrms & noise on a shorted input; SNR on a known input \\
+T5  & Link carries the stream & ADC$\to$processor throughput & $\geq$ ch $\times$ rate $\times$ bits & sustained SPI rate; dropped-sample count \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{F2 --- Detect}} \\
+\addlinespace[2pt]
+T6  & Spikes separated from the LFP & high-pass corner & $\sim$300~Hz & filter response from a frequency sweep \\
+T7  & Detect spikes reliably & TPR / precision vs.\ Kilosort & $\geq 90\%$ each & match to Kilosort truth, $\pm$1~ms window \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{F3 --- Log}} \\
+\addlinespace[2pt]
+T8  & A timestamp per detected spike & timestamp; jitter & one per spike & inspect stream; jitter vs.\ sync marker \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{F4 --- Classify}} \\
+\addlinespace[2pt]
+T9  & A unit identity per spike & unit label & one of $K$ & inspect output \\
+T10 & Classify better than chance & accuracy vs.\ Kilosort & $> 1/K$; 85--99\% asp. & confusion matrix vs.\ Kilosort, held-out data \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{F5 --- Transmit}} \\
+\addlinespace[2pt]
+T11 & Packet carries identity and time & packet content & 5~B (1~B ID $+$ 4~B ts) & inspect received packets \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{System-level}} \\
+\addlinespace[2pt]
+T12 & Run on a head-mounted battery & power; radio share & $\lesssim 100$~mW; $\geq 1$~h on $<$1.5~g & current $\times$ voltage under load; profile radio; battery life \\
+\bottomrule
+\end{tabularx}
+}
+\end{table}
 
 
 % ======= Appendix ======= %

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 680">
+  <title>Stakeholder map</title>
+  <rect x="0" y="0" width="960" height="680" fill="#FFFFFF"/>
+  <g font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+
+    <!-- ============ tier rings ============ -->
+    <circle cx="480" cy="340" r="135" fill="none" stroke="#6C8AA6" stroke-width="1.25" opacity="0.55"/>
+    <circle cx="480" cy="340" r="250" fill="none" stroke="#A7B0A0" stroke-width="1.25" opacity="0.65"/>
+
+    <!-- ============ radial connectors ============ -->
+    <g stroke="#2E3338" stroke-width="1" opacity="0.16">
+      <line x1="396" y1="340" x2="352" y2="340"/>
+      <line x1="564" y1="340" x2="608" y2="340"/>
+      <line x1="480" y1="256" x2="480" y2="212"/>
+      <line x1="407.2" y1="381.9" x2="268.2" y2="462"/>
+      <line x1="552.8" y1="381.9" x2="691.8" y2="462"/>
+    </g>
+
+    <!-- ============ centre solution disc ============ -->
+    <circle cx="480" cy="340" r="84" fill="#ECE9E1" stroke="#2E3338" stroke-width="1" stroke-opacity="0.10"/>
+
+    <!-- ============ faint tier labels riding the rings ============ -->
+    <rect x="448" y="468" width="64" height="16" fill="#FFFFFF"/>
+    <text x="480" y="480" text-anchor="middle" font-size="10.5" letter-spacing="2" fill="#2E3338" fill-opacity="0.5">DIRECT</text>
+    <rect x="442" y="583" width="76" height="16" fill="#FFFFFF"/>
+    <text x="480" y="595" text-anchor="middle" font-size="10.5" letter-spacing="2" fill="#2E3338" fill-opacity="0.5">BROADER</text>
+
+    <!-- ============ node dots ============ -->
+    <g stroke="#F5F3EE" stroke-width="2">
+      <circle cx="345" cy="340" r="5" fill="#6C8AA6"/>
+      <circle cx="615" cy="340" r="5" fill="#6C8AA6"/>
+      <circle cx="480" cy="205" r="5" fill="#6C8AA6"/>
+      <circle cx="263" cy="465" r="5" fill="#A7B0A0"/>
+      <circle cx="697" cy="465" r="5" fill="#A7B0A0"/>
+    </g>
+
+    <!-- ============ node labels ============ -->
+    <!-- inner / direct -->
+    <text x="331" y="337" text-anchor="end" font-size="14" font-weight="500" fill="#2E3338">Systems neuroscientists</text>
+    <text x="331" y="354" text-anchor="end" font-size="11" fill="#7A8085">End users &#183; operate it</text>
+
+    <text x="629" y="337" text-anchor="start" font-size="14" font-weight="500" fill="#2E3338">Neuroscience laboratories</text>
+    <text x="629" y="354" text-anchor="start" font-size="11" fill="#7A8085">Client &#183; acquire &amp; deploy</text>
+
+    <!-- outer / broader -->
+    <text x="480" y="180" text-anchor="middle" font-size="14" font-weight="500" fill="#2E3338">Animal welfare</text>
+    <text x="480" y="196" text-anchor="middle" font-size="11" fill="#7A8085">Untethering &amp; refinement</text>
+
+    <text x="263" y="489" text-anchor="middle" font-size="14" font-weight="500" fill="#2E3338">Preclinical neuropharmacology</text>
+    <text x="263" y="506" text-anchor="middle" font-size="11" fill="#7A8085">CNS drug development</text>
+
+    <text x="697" y="489" text-anchor="middle" font-size="14" font-weight="500" fill="#2E3338">Research community</text>
+    <text x="697" y="506" text-anchor="middle" font-size="14" font-weight="500" fill="#2E3338">&amp; funders</text>
+
+    <!-- ============ centre text ============ -->
+    <text x="480" y="333" text-anchor="middle" font-size="16" font-weight="600" fill="#2E3338">On-device wireless</text>
+    <text x="480" y="353" text-anchor="middle" font-size="16" font-weight="600" fill="#2E3338">neural headstage</text>
+    <text x="480" y="371" text-anchor="middle" font-size="10" fill="#7A8085">spike IDs</text>
+  </g>
+</svg>
