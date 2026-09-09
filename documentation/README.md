@@ -1,22 +1,24 @@
-# Wireless Ephys on nRF54LM20B — Documentation
+# On-Device Classification of Neural Action Potentials for Wireless Unit Transmission over Bluetooth Low Energy
 
-The engineering problem at hand is optimizing fidelity as a function of compression: 
-how far can neural data for systems neuroscience be compressed on the headstage of a 
+# NB! Just started editind this but it's just a bunch of AI SLOP anyways so frankly, start over and build this shit the real way. I'm boutta start that right now.
+
+The engineering problem at hand is optimizing fidelity as a function of compression:
+how far can neural data for systems neuroscience be compressed on the headstage of a
 rodent before it stops being scientifically useful.
 
-This file contains the complete documentation reference for the project. It can also be found at website/documentation. 
+This file contains the complete documentation reference for the project. It can also be found at website/documentation.
 
 ## Table of Contents
 
-1. [System Architecture](#1-system-architecture) — current hardware, the active firmware, the real signal path, and the two measured throughput ceilings. **Start here.**
-2. [Intan RHD Reference](#2-intan-rhd-reference) — the Intan front-end distilled from the datasheets (page-cited): sampling, SPI protocol, register map, the 64-channel DDR constraint, power.
+1. [System Architecture](#1-system-architecture) — current hardware, the active firmware, the real signal path, and the two measured throughput ceilings.
+2. [Intan RHD Reference](#2-intan-rhd-reference) — the Intan front-end distilled from the datasheets: sampling, SPI protocol, register map, the 64-channel DDR constraint, power.
 3. [Project Log and Roadmap](#3-project-log-and-roadmap) — the living status and roadmap: the hardware bring-up story, what's done, what's next.
-- [Ideation & Planning](#ideation--planning) — deferred/forward-looking notes (classifier ladder, benchmark plan, PCB package, SPI scaling, research background).
-- [Isolated Source Files](#isolated-source-files) — how the standalone files map to these sections.
+
+- [Ideation and Planning](#ideation--planning) — deferred/forward-looking notes (classifier ladder, benchmark plan, PCB package, SPI scaling, research background).
 
 ## Status at a Glance
 
-- **Real Intan RHD2164**: bonded, powered, SPI-verified alive (ROM reads `"INTAN"`).
+- **Intan RHD2164**: bonded, powered, SPI-verified alive (ROM reads `"INTAN"`).
 - **Real signal path, one channel**: validated end-to-end — function-generator
   sine → real Intan → SPI → nRF54 → BLE → laptop, cross-checked two independent ways.
 - **BLE ceiling**: ~1.05 Mbps / ~65,500 samples/s, actually found (not just
@@ -43,12 +45,12 @@ This file contains the complete documentation reference for the project. It can 
 
 ### Current hardware
 
-| Component | Detail |
-|-----------|--------|
-| **MCU** | nRF54LM20B — 128 MHz Cortex-M33, 2 MB NVM, 512 KB RAM, BLE |
-| **Dev kit** | nRF54LM20 DK (PCA10184), target `nrf54lm20dk/nrf54lm20b/cpuapp` |
-| **Analog frontend** | A real, bonded **Intan RHD2164** (64-ch, BGA) on a custom board — bring-up complete, SPI-verified alive (ROM reads `"INTAN"`) |
-| **Toolchain** | nRF Connect SDK v3.3.1 (Zephyr), VS Code extension, J-Link |
+| Component                 | Detail                                                                                                                                |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **MCU**             | nRF54LM20B — 128 MHz Cortex-M33, 2 MB NVM, 512 KB RAM, BLE                                                                           |
+| **Dev kit**         | nRF54LM20 DK (PCA10184), target`nrf54lm20dk/nrf54lm20b/cpuapp`                                                                      |
+| **Analog frontend** | A real, bonded**Intan RHD2164** (64-ch, BGA) on a custom board — bring-up complete, SPI-verified alive (ROM reads `"INTAN"`) |
+| **Toolchain**       | nRF Connect SDK v3.3.1 (Zephyr), VS Code extension, J-Link                                                                            |
 
 The RHD2164 is real silicon now, not an emulation — getting it powered, wired,
 and talking took a genuinely hard bring-up (BGA reflow, LVDS_en mode select,
@@ -57,11 +59,11 @@ grounding both `in0` and the reference input). See the
 
 ### What's actually running (3 firmware projects, `firmware/`)
 
-| Dir | What it does |
-|-----|---------------|
-| `board-bring-up/` | Minimal SPI ROM read — proves the Intan is powered and talking. No BLE, no config writes. |
-| `signal-path-intan/master/` | Configures the real Intan (10 Hz–10 kHz band, amps on, calibrated), samples **channel 0 at a fixed rate**, streams over BLE. `receiver.py` plots it live on the laptop. **Currently one channel, validated end-to-end with a real function-generator sine** — cross-checked two independent ways (raw SPI print vs. BLE-relayed plot; both agree on amplitude and cycle timing). |
-| `ble-rate/` | Pure BLE throughput characterization (master/slave/central), independent of the Intan — where the two ceilings below were measured. |
+| Dir                           | What it does                                                                                                                                                                                                                                                                                                                                                                                    |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `board-bring-up/`           | Minimal SPI ROM read — proves the Intan is powered and talking. No BLE, no config writes.                                                                                                                                                                                                                                                                                                      |
+| `signal-path-intan/master/` | Configures the real Intan (10 Hz–10 kHz band, amps on, calibrated), samples**channel 0 at a fixed rate**, streams over BLE. `receiver.py` plots it live on the laptop. **Currently one channel, validated end-to-end with a real function-generator sine** — cross-checked two independent ways (raw SPI print vs. BLE-relayed plot; both agree on amplitude and cycle timing). |
+| `ble-rate/`                 | Pure BLE throughput characterization (master/slave/central), independent of the Intan — where the two ceilings below were measured.                                                                                                                                                                                                                                                            |
 
 Everything else that used to live here — spike classifiers, the on-chip
 detect/classify pipeline, the two-DK Intan emulation, cross-day generalization —
@@ -144,6 +146,7 @@ signal path is solid enough to feed it real, not emulated, data.
 > re-derive it from the PDFs. Every non-obvious claim cites a page.
 >
 > **Sources** (local PDFs, not in the repo):
+>
 > - `Intan_RHD2000_series_datasheet.pdf` — the general part (RHD2216/2132). Cited **[DS p_N_]**.
 > - `Intan_RHD2164_datasheet.pdf` — the 64-channel variant. Cited **[2164 p_N_]**.
 >
@@ -164,11 +167,11 @@ signal path is solid enough to feed it real, not emulated, data.
 
 ### 1. The family
 
-| Device | Amps | Inputs | Package | Chip ID (Reg 63) |
-|--------|------|--------|---------|------------------|
-| RHD2216 | 16 | 16 × differential (bipolar) | 8×8 mm 56-QFN | 2 |
-| RHD2132 | 32 | 32 unipolar + 1 common ref | 8×8 mm 56-QFN | 1 |
-| **RHD2164** | **64** | 64 unipolar + 1 common ref | 9×7 mm 104-BGA | **4** |
+| Device            | Amps         | Inputs                       | Package         | Chip ID (Reg 63) |
+| ----------------- | ------------ | ---------------------------- | --------------- | ---------------- |
+| RHD2216           | 16           | 16 × differential (bipolar) | 8×8 mm 56-QFN  | 2                |
+| RHD2132           | 32           | 32 unipolar + 1 common ref   | 8×8 mm 56-QFN  | 1                |
+| **RHD2164** | **64** | 64 unipolar + 1 common ref   | 9×7 mm 104-BGA | **4**      |
 
 [DS p2; 2164 p2, p14]. The real chip now bonded and bring-up-verified on the bench is a **RHD2164** — see §6 for why 64 channels is a genuinely harder problem than 32.
 
@@ -218,13 +221,13 @@ The datasheet is blunt about this, twice:
 
 **Command words** (bit 15 = MSB) [DS p16–18]:
 
-| Command | Encoding (16 bits) | Result |
-|---------|--------------------|--------|
-| `CONVERT(C)` | `00 C[5:0] 0000000 H` | ADC result of channel C (2 cmds later). `H`=1 resets that channel's DSP HP. |
-| `CALIBRATE` | `0101010100000000` | Must be followed by **9 dummy commands**; run once after config. |
-| `CLEAR` | `0110101000000000` | Clears ADC calibration (rarely needed). |
-| `WRITE(R,D)` | `10 R[5:0] D[7:0]` | Upper byte all 1s, lower byte echoes D. |
-| `READ(R)` | `11 R[5:0] 00000000` | Lower byte = register contents. |
+| Command        | Encoding (16 bits)      | Result                                                                       |
+| -------------- | ----------------------- | ---------------------------------------------------------------------------- |
+| `CONVERT(C)` | `00 C[5:0] 0000000 H` | ADC result of channel C (2 cmds later).`H`=1 resets that channel's DSP HP. |
+| `CALIBRATE`  | `0101010100000000`    | Must be followed by**9 dummy commands**; run once after config.        |
+| `CLEAR`      | `0110101000000000`    | Clears ADC calibration (rarely needed).                                      |
+| `WRITE(R,D)` | `10 R[5:0] D[7:0]`    | Upper byte all 1s, lower byte echoes D.                                      |
+| `READ(R)`    | `11 R[5:0] 00000000`  | Lower byte = register contents.                                              |
 
 - Channels **0–31** are amplifiers; **32–34** aux inputs; **48** supply sensor; **49** temp sensor. `CONVERT(63)` **auto-increments** the MUX to the next channel. [DS p16, p20]
 - 18 RAM registers (0–17) on RHD2132/2216; RHD2164 adds **18–21** (amp power for ch 32–63). ROM registers 40–44 spell "INTAN"; 60–63 = die rev / unipolar flag / #amps / chip ID. [DS p19, p23; 2164 p13–14]
@@ -240,6 +243,7 @@ The two 16-bit results are merged onto one MISO line by a **double-data-rate (DD
 **Implication for the nRF54:** a standard SPI peripheral samples one edge only → you capture **one module = 32 of the 64 channels** (this is exactly the "standard SPI only covers the first 32 channels" from the advisor meeting). SCLK max 24 MHz. [2164 p10–11]
 
 **The design fork for the 64-channel rig:**
+
 1. **RHD2164 + solve DDR** — capture both SCLK edges on the nRF (non-trivial: needs a both-edge sampling trick, a small CPLD/logic shim, or a clever peripheral use). One chip, tightest footprint.
 2. **2 × RHD2132** — 32 ch each, plain single-edge SPI, one MISO line per chip, both driven by the same commands. Sidesteps DDR entirely; costs a second chip + a second MISO line. [DS p13–14]
 
@@ -253,20 +257,20 @@ The two 16-bit results are merged onto one MISO line by a **double-data-rate (DD
 
 ### 8. Register cheat-sheet
 
-| Reg | Field(s) | Purpose | Page |
-|-----|----------|---------|------|
-| 0 | ADC ref BW(=3), amp fast settle, amp Vref en, ADC comparator bias(=3)/select(=2) | ADC config + fast-settle | [DS p19] |
-| 1 | VDD sense en, **ADC buffer bias[5:0]** | must match sample rate | [DS p19, p27] |
-| 2 | **MUX bias[5:0]** | must match sample rate | [DS p20, p27] |
-| 3 | MUX load(=0), tempS2/S1, tempen, digout HiZ, digout | temp sensor + aux digital out | [DS p20] |
-| 4 | weak MISO, twoscomp, absmode, **DSPen**, DSP cutoff[3:0] | output format + on-chip HP filter | [DS p20, p33] |
-| 5–7 | Zcheck… | electrode impedance test | [DS p21] |
-| 8–11 | RH1/RH2 DACs | **upper bandwidth f_H** | [DS p22, p25] |
-| 12–13 | RL DACs | **lower bandwidth f_L** | [DS p22, p26] |
-| 14–17 | apwr[0:31] | per-amp power (ch 0–31) | [DS p22] |
-| 18–21 | apwr[32:63] | per-amp power (ch 32–63, **RHD2164 only**) | [2164 p13] |
-| 40–44 | "INTAN" | ROM, SPI-integrity check | [DS p23] |
-| 60–63 | die rev / unipolar / #amps / **chip ID** | ROM identity | [DS p23; 2164 p14] |
+| Reg    | Field(s)                                                                         | Purpose                                          | Page               |
+| ------ | -------------------------------------------------------------------------------- | ------------------------------------------------ | ------------------ |
+| 0      | ADC ref BW(=3), amp fast settle, amp Vref en, ADC comparator bias(=3)/select(=2) | ADC config + fast-settle                         | [DS p19]           |
+| 1      | VDD sense en,**ADC buffer bias[5:0]**                                      | must match sample rate                           | [DS p19, p27]      |
+| 2      | **MUX bias[5:0]**                                                          | must match sample rate                           | [DS p20, p27]      |
+| 3      | MUX load(=0), tempS2/S1, tempen, digout HiZ, digout                              | temp sensor + aux digital out                    | [DS p20]           |
+| 4      | weak MISO, twoscomp, absmode,**DSPen**, DSP cutoff[3:0]                    | output format + on-chip HP filter                | [DS p20, p33]      |
+| 5–7   | Zcheck…                                                                         | electrode impedance test                         | [DS p21]           |
+| 8–11  | RH1/RH2 DACs                                                                     | **upper bandwidth f_H**                    | [DS p22, p25]      |
+| 12–13 | RL DACs                                                                          | **lower bandwidth f_L**                    | [DS p22, p26]      |
+| 14–17 | apwr[0:31]                                                                       | per-amp power (ch 0–31)                         | [DS p22]           |
+| 18–21 | apwr[32:63]                                                                      | per-amp power (ch 32–63,**RHD2164 only**) | [2164 p13]         |
+| 40–44 | "INTAN"                                                                          | ROM, SPI-integrity check                         | [DS p23]           |
+| 60–63 | die rev / unipolar /#amps / **chip ID**                                    | ROM identity                                     | [DS p23; 2164 p14] |
 
 ### 9. Canonical init sequence (32 ch @ 30 kS/s, from [DS p36])
 
@@ -293,23 +297,23 @@ For 30 kHz neural work you'd typically enable the DSP HP (`WRITE(4, 0x9C)` regio
 
 ### 10. Power (implant budget)
 
-| Config | Total | Page |
-|--------|-------|------|
-| RHD2132, 32 ch @ 30 kS/s, f_H = 10 kHz (wideband max) | 11.3 mA → **37.3 mW** | [DS p34] |
-| RHD2164, 64 ch @ 30 kS/s, f_H = 10 kHz | 16.1 mA → **53.1 mW** | [2164 p15] |
-| RHD2164, 64 ch @ 20 kS/s, f_H = 7.5 kHz | 13.3 mA → 43.9 mW | [2164 p15] |
-| RHD2132, ECoG 32 ch @ 2 kS/s, f_H = 1 kHz | 1.33 mA → 4.4 mW | [DS p34] |
+| Config                                                | Total                       | Page       |
+| ----------------------------------------------------- | --------------------------- | ---------- |
+| RHD2132, 32 ch @ 30 kS/s, f_H = 10 kHz (wideband max) | 11.3 mA →**37.3 mW** | [DS p34]   |
+| RHD2164, 64 ch @ 30 kS/s, f_H = 10 kHz                | 16.1 mA →**53.1 mW** | [2164 p15] |
+| RHD2164, 64 ch @ 20 kS/s, f_H = 7.5 kHz               | 13.3 mA → 43.9 mW          | [2164 p15] |
+| RHD2132, ECoG 32 ch @ 2 kS/s, f_H = 1 kHz             | 1.33 mA → 4.4 mW           | [DS p34]   |
 
 Levers: lower sample rate, lower f_H (7.6 µA/kHz per amp), power down unused channels, turn off temp/impedance/LVDS.
 
 ### 11. Data rate → why compression is mandatory
 
-| Source | Raw rate |
-|--------|----------|
-| 1 amplifier @ 30 kS/s × 16 bit | 480 kbit/s |
-| 32 ch (RHD2132) | 15.4 Mbit/s |
-| **64 ch (RHD2164)** | **30.7 Mbit/s** |
-| single-chip ADC max (1.05 MS/s × 16) | 16.8 Mbit/s [DS p11] |
+| Source                                   | Raw rate               |
+| ---------------------------------------- | ---------------------- |
+| 1 amplifier @ 30 kS/s × 16 bit          | 480 kbit/s             |
+| 32 ch (RHD2132)                          | 15.4 Mbit/s            |
+| **64 ch (RHD2164)**                | **30.7 Mbit/s**  |
+| single-chip ADC max (1.05 MS/s × 16)    | 16.8 Mbit/s [DS p11]   |
 | **— our measured BLE ceiling —** | **~1.05 Mbit/s** |
 
 The gap between ~30 Mbit/s in and ~1 Mbit/s out is **~30×**. That is exactly the on-chip compression / spike-detection problem this project characterizes. See [System Architecture → The Two Measured Ceilings](#the-two-measured-ceilings-2026-07-31-ble-rate) for the measured transmit ceiling.
@@ -338,13 +342,13 @@ _Last updated: 2026-08-13._
 
 ### Status at a Glance
 
-| Area | State | Detail |
-|------|-------|--------|
-| **Real Intan RHD2164** | **bonded, powered, SPI-verified alive** | ROM reads `"INTAN"` |
-| **Real signal path, one channel** | **validated end-to-end** | FG sine → real Intan → SPI → nRF54 → BLE → laptop, cross-checked two ways |
-| BLE breaking point | actually found | ~1.05 Mbps / ~65,500 samples/s, proven by forcing real drops, not just observing 0 |
-| SPI ingestion ceiling | measured | 24 Mbit/s single-edge (Intan's 24 MHz cap) — see [System Architecture](#the-two-measured-ceilings-2026-07-31-ble-rate) |
-| On-chip classifier / compression pipeline | ⬜ removed from repo, deferred | see the 2026-08-13 repo-strip entry below |
+| Area                                      | State                                         | Detail                                                                                                                |
+| ----------------------------------------- | --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Real Intan RHD2164**              | **bonded, powered, SPI-verified alive** | ROM reads`"INTAN"`                                                                                                  |
+| **Real signal path, one channel**   | **validated end-to-end**                | FG sine → real Intan → SPI → nRF54 → BLE → laptop, cross-checked two ways                                        |
+| BLE breaking point                        | actually found                                | ~1.05 Mbps / ~65,500 samples/s, proven by forcing real drops, not just observing 0                                    |
+| SPI ingestion ceiling                     | measured                                      | 24 Mbit/s single-edge (Intan's 24 MHz cap) — see[System Architecture](#the-two-measured-ceilings-2026-07-31-ble-rate) |
+| On-chip classifier / compression pipeline | ⬜ removed from repo, deferred                | see the 2026-08-13 repo-strip entry below                                                                             |
 
 ### Log
 
@@ -412,6 +416,7 @@ almost exactly) and backing off to find the 0-drop knee.
 Documented in
 [System Architecture → The Two Measured Ceilings](#the-two-measured-ceilings-2026-07-31-ble-rate).
 Headlines:
+
 - **BLE egress ceiling = ~1.05 Mbps**, proven. BLE back-pressures, it does not
   drop — "0 drops" never meant "at the max" until the fix above.
 - **SPI ingestion is the tighter wall.** SPI clock ≈ bit rate; Intan caps SCLK
