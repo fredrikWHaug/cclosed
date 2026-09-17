@@ -1,34 +1,43 @@
+/*
+ * Theo -- streaming proof of concept
+ *
+ * Sample Intan ch0 at exactly 30 kS/s and stream every sample to the laptop
+ * over BLE. Bench check: a 1 kHz sine at in0 should show ~30 points/period
+ * in stream_plot.py.
+ *
+ * SPI is the bench-validated SPIM00 path (21.33 MHz, hardware CSN, RXDELAY 5
+ * -- see ratetest_main.c.keep and ideas/SPI_bringup_plan.md for the story).
+ * Intan register init and the BLE plumbing are lifted from the proven
+ * legacy classification-pilot. Sampling is paced by absolute GRTC deadlines
+ * (k_timer ticks are too coarse for 33.3 us).
+ */
+
 #include <zephyr/kernel.h>
 #include <zephyr/sys/printk.h>
+#include <zephyr/bluetooth/bluetooth.h>
+#include <zephyr/bluetooth/gatt.h>
+#include <zephyr/bluetooth/conn.h>
 #include <nrfx_spim.h>
-#include <hal/nrf_spim.h>
-#include <hal/nrf_timer.h>
-#include <hal/nrf_dppi.h>
 #include <hal/nrf_gpio.h>
 
-#define SCLK_HZ      21333333u  
-                                 
-#define CSNDUR_TICKS 20u        
-#define MEASURE_SEC  2u         
-#define DPPI_CH      0u
+#define RATE_HZ      20000u  /* safe margin under the ~26-28k S/s BLE ceiling macOS grants (15 ms conn interval) */
+#define PKT_SAMPLES  120                       /* 2 + 240 B = 242 <= 244 ATT */
+#define RING_SAMPLES 8192
 
-#define PIN_SCK   NRF_GPIO_PIN_MAP(2, 1)
+#define PIN_SCK   NRF_GPIO_PIN_MAP(2, 1)       /* SPIM00 dedicated pads */
 #define PIN_MOSI  NRF_GPIO_PIN_MAP(2, 2)
 #define PIN_MISO  NRF_GPIO_PIN_MAP(2, 4)
 #define PIN_CSN   NRF_GPIO_PIN_MAP(2, 5)
 
-/* Intan command words (16-bit, MSB first) */
-#define CONVERT(ch) ((uint16_t)(((ch) & 0x3F) << 8))
-#define READ(reg)   ((uint16_t)(0xC000 | (((reg) & 0x3F) << 8)))
+#define CONVERT(ch)  ((uint16_t)(((ch) & 0x3F) << 8))
+#define READ(r)      ((uint16_t)(0xC000 | (((r) & 0x3F) << 8)))
+#define WRITE(r, d)  ((uint16_t)(0x8000 | (((r) & 0x3F) << 8) | ((d) & 0xFF)))
+#define CALIBRATE    ((uint16_t)0x5500)
 
 static nrfx_spim_t spim = NRFX_SPIM_INSTANCE(NRF_SPIM00);
+static uint8_t tx_buf[2], rx_buf[2];
 
-/* Static = in RAM = reachable by EasyDMA. */
-static uint8_t tx_buf[2];
-static uint8_t rx_buf[2];
-
-/* One blocking 16-bit word via the driver. Hardware CSN pulses around it. */
-static uint16_t intan_transceive_word(uint16_t cmd)
+static uint16_t xfer(uint16_t cmd)
 {
 	tx_buf[0] = (uint8_t)(cmd >> 8);
 	tx_buf[1] = (uint8_t)cmd;
@@ -37,122 +46,195 @@ static uint16_t intan_transceive_word(uint16_t cmd)
 	return (uint16_t)((rx_buf[0] << 8) | rx_buf[1]);
 }
 
-/* Soft-CS variant: drive CSN as a plain GPIO around the word, like the
- * known-good P3 bring-up did (Intan requires CS to pulse high per word). */
-static uint16_t intan_transceive_word_softcs(uint16_t cmd)
-{
-	nrf_gpio_pin_clear(PIN_CSN);
-	k_busy_wait(1);
-	uint16_t r = intan_transceive_word(cmd);
-	k_busy_wait(1);
-	nrf_gpio_pin_set(PIN_CSN);
-	return r;
-}
+/* Register init from the legacy pilot: 10 Hz - 10 kHz band, all amps on. */
+static const uint16_t init_seq[] = {
+	WRITE(0, 0xDE), WRITE(1, 32), WRITE(2, 40), WRITE(3, 0x00), WRITE(4, 0x00),
+	WRITE(5, 0x00), WRITE(6, 0x00), WRITE(7, 0x00),
+	WRITE(8, 17), WRITE(9, 0), WRITE(10, 16), WRITE(11, 0),
+	WRITE(12, 5), WRITE(13, 1),
+	WRITE(14, 0xFF), WRITE(15, 0xFF), WRITE(16, 0xFF), WRITE(17, 0xFF),
+};
 
-/* Keep the nrfx driver's hands off SPIM+0xC80 so each pass controls it. */
-static void errata_flag_off(void)
+static void intan_init(void)
 {
-#if NRF_ERRATA_STATIC_CHECK(54L, 55) || NRF_ERRATA_STATIC_CHECK(54L, 69)
-	spim.cb.apply_nrf54l_errata_55_69 = 0;
-#endif
-}
-
-/* One ROM read pass (regs 40-44, two-word pipeline lag), raw + ascii. */
-static void rom_pass(const char *label, bool softcs)
-{
-	uint16_t (*xfer)(uint16_t) = softcs ? intan_transceive_word_softcs
-					    : intan_transceive_word;
-	xfer(READ(40));
-	xfer(READ(41));
-	uint16_t raw[5];
+	xfer(READ(40)); xfer(READ(41));
 	char id[6] = { 0 };
-	raw[0] = xfer(READ(42));
-	raw[1] = xfer(READ(43));
-	raw[2] = xfer(READ(44));
-	raw[3] = xfer(READ(63));
-	raw[4] = xfer(READ(63));
-	for (int i = 0; i < 5; i++) {
-		id[i] = (char)raw[i];
+	id[0] = (char)xfer(READ(42));
+	id[1] = (char)xfer(READ(43));
+	id[2] = (char)xfer(READ(44));
+	id[3] = (char)xfer(READ(63));
+	id[4] = (char)xfer(READ(63));
+	printk("ROM 40-44 = \"%s\"  (expect INTAN)\n", id);
+
+	for (int i = 0; i < ARRAY_SIZE(init_seq); i++) {
+		xfer(init_seq[i]);
 	}
-	printk("%s: %04x %04x %04x %04x %04x  \"%s\"%s\n",
-	       label, raw[0], raw[1], raw[2], raw[3], raw[4], id,
-	       (raw[0] == 0x49 && raw[1] == 0x4e && raw[2] == 0x54) ? "  <<<< MATCH" : "");
+	xfer(CALIBRATE);
+	for (int i = 0; i < 9; i++) {
+		xfer(READ(63));
+	}
+	printk("Intan configured (10 Hz - 10 kHz, amps on, calibrated)\n");
 }
+
+/* ---- BLE (UUIDs shared with the legacy receiver scripts) ---- */
+#define SVC_UUID BT_UUID_128_ENCODE(0x12345678, 0x1234, 0x5678, 0x1234, 0x56789abcdef0)
+#define CHR_UUID BT_UUID_128_ENCODE(0x12345678, 0x1234, 0x5678, 0x1234, 0x56789abcdef1)
+static struct bt_uuid_128 svc_uuid = BT_UUID_INIT_128(SVC_UUID);
+static struct bt_uuid_128 chr_uuid = BT_UUID_INIT_128(CHR_UUID);
+static volatile bool notify_enabled;
+
+static void ccc_changed(const struct bt_gatt_attr *attr, uint16_t value)
+{
+	notify_enabled = (value == BT_GATT_CCC_NOTIFY);
+}
+
+BT_GATT_SERVICE_DEFINE(stream_svc,
+	BT_GATT_PRIMARY_SERVICE(&svc_uuid),
+	BT_GATT_CHARACTERISTIC(&chr_uuid.uuid, BT_GATT_CHRC_NOTIFY,
+			       BT_GATT_PERM_NONE, NULL, NULL, NULL),
+	BT_GATT_CCC(ccc_changed, BT_GATT_PERM_READ | BT_GATT_PERM_WRITE),
+);
+
+static const struct bt_data ad[] = {
+	BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
+	BT_DATA(BT_DATA_NAME_COMPLETE, CONFIG_BT_DEVICE_NAME,
+		sizeof(CONFIG_BT_DEVICE_NAME) - 1),
+};
+
+static void connected(struct bt_conn *conn, uint8_t err)
+{
+	if (!err) {
+		/* Default connection interval is far too slow to drain 250
+		 * pkts/s (30 kS/s / 120 samples). Ask for the fastest legal
+		 * interval; whether the central honors it is another matter
+		 * (see the printed connection-parameter log line). */
+		static const struct bt_le_conn_param fast_params =
+			BT_LE_CONN_PARAM_INIT(6, 12, 0, 400); /* 7.5-15 ms */
+		bt_conn_le_param_update(conn, &fast_params);
+		bt_conn_le_phy_update(conn, BT_CONN_LE_PHY_PARAM_2M);
+	}
+}
+static void disconnected(struct bt_conn *conn, uint8_t reason)
+{
+	notify_enabled = false;
+}
+static void param_updated(struct bt_conn *conn, uint16_t interval,
+			   uint16_t latency, uint16_t timeout)
+{
+	/* interval is in 1.25 ms units. At 120 samples/pkt, 30 kS/s needs a
+	 * packet every 4 ms -> interval must be well under ~3.2 units (4 ms)
+	 * to have room for one notification per connection event. */
+	printk("conn interval now %u.%02u ms (need <~4 ms for 30 kS/s)\n",
+	       (interval * 125u) / 100u, (interval * 125u) % 100u);
+}
+BT_CONN_CB_DEFINE(conn_cbs) = {
+	.connected = connected,
+	.disconnected = disconnected,
+	.le_param_updated = param_updated,
+};
+
+/* ---- 30 kS/s sampler: absolute deadlines on the system cycle counter ---- */
+static uint16_t ring[RING_SAMPLES];
+static volatile uint32_t w_idx, r_idx, ring_drops;
+
+static void sampler_thread(void *a, void *b, void *c)
+{
+	while (1) {
+		while (!notify_enabled) {
+			k_msleep(10);
+		}
+		xfer(CONVERT(0)); xfer(CONVERT(0));   /* prime the 2-deep pipeline */
+		w_idx = r_idx = ring_drops = 0;
+
+		uint32_t start = k_cycle_get_32();
+		uint64_t n = 0;
+
+		while (notify_enabled) {
+			uint32_t target = start + (uint32_t)((++n *
+				(uint64_t)CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC) / RATE_HZ);
+			while ((int32_t)(k_cycle_get_32() - target) < 0) {
+				k_yield();
+			}
+			uint16_t s = xfer(CONVERT(0));
+			uint32_t nw = (w_idx + 1) % RING_SAMPLES;
+			if (nw != r_idx) {
+				ring[w_idx] = s;
+				w_idx = nw;
+			} else {
+				ring_drops++;
+			}
+		}
+	}
+}
+K_THREAD_DEFINE(sampler_id, 2048, sampler_thread, NULL, NULL, NULL,
+		K_PRIO_PREEMPT(0), 0, 0);
 
 int main(void)
 {
-	/* --- bring SPIM00 up: pins, 21.33 MHz, mode 0, hardware CSN --- */
 	nrfx_spim_config_t cfg =
 		NRFX_SPIM_DEFAULT_CONFIG(PIN_SCK, PIN_MOSI, PIN_MISO, PIN_CSN);
-	cfg.frequency   = SCLK_HZ;
-	cfg.mode        = NRF_SPIM_MODE_0;             
+	cfg.frequency   = 21333333u;              /* 128 MHz / 6 */
+	cfg.mode        = NRF_SPIM_MODE_0;
 	cfg.bit_order   = NRF_SPIM_BIT_ORDER_MSB_FIRST;
-	cfg.use_hw_ss   = true;                     
-	cfg.ss_duration = CSNDUR_TICKS;
+	cfg.use_hw_ss   = true;
+	cfg.ss_duration = 20;                     /* CSN high >= 156 ns */
+	cfg.rx_delay    = 5;                      /* the bench-found sampling fix */
 
-	int err = nrfx_spim_init(&spim, &cfg, NULL, NULL);
-	if (err != 0) {
-		printk("spim init failed: %d (-EINVAL would mean bad SCLK_HZ)\n", err);
+	if (nrfx_spim_init(&spim, &cfg, NULL, NULL) != 0) {
+		printk("spim init failed\n");
 		return 0;
 	}
+	intan_init();
 
-	errata_flag_off();
-
-	/* P2 is the extra-high-drive port; stiffen the outputs for 21 MHz edges. */
-#if defined(GPIO_PIN_CNF_DRIVE0_E0) || defined(GPIO_PIN_CNF_DRIVE_E0E1)
-	nrf_gpio_cfg(PIN_SCK,  NRF_GPIO_PIN_DIR_OUTPUT, NRF_GPIO_PIN_INPUT_DISCONNECT,
-		     NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_E0E1, NRF_GPIO_PIN_NOSENSE);
-	nrf_gpio_cfg(PIN_MOSI, NRF_GPIO_PIN_DIR_OUTPUT, NRF_GPIO_PIN_INPUT_DISCONNECT,
-		     NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_E0E1, NRF_GPIO_PIN_NOSENSE);
-	nrf_gpio_cfg(PIN_CSN,  NRF_GPIO_PIN_DIR_OUTPUT, NRF_GPIO_PIN_INPUT_DISCONNECT,
-		     NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_E0E1, NRF_GPIO_PIN_NOSENSE);
-#endif
-
-	/* Margin map at full speed: which RXDELAY values read clean at 21.33 MHz. */
-	for (uint32_t d = 0; d <= 7; d++) {
-		*(volatile uint32_t *)((uintptr_t)NRF_SPIM00 + 0x5AC) = d;
-		char lbl[24];
-		snprintk(lbl, sizeof(lbl), "21MHz RXDELAY=%u   ", (unsigned)d);
-		rom_pass(lbl, false);
+	if (bt_enable(NULL) != 0 ||
+	    bt_le_adv_start(BT_LE_ADV_PARAM(BT_LE_ADV_OPT_CONN,
+					    BT_GAP_ADV_FAST_INT_MIN_2,
+					    BT_GAP_ADV_FAST_INT_MAX_2, NULL),
+			    ad, ARRAY_SIZE(ad), NULL, 0) != 0) {
+		printk("BLE init failed\n");
+		return 0;
 	}
+	printk("advertising as '%s' - run stream_plot.py\n", CONFIG_BT_DEVICE_NAME);
 
-	/* Chosen operating point: RXDELAY 5 (39 ns after the sampling edge,
-	 * centered in the measured-valid window; chip+switch round trip is
-	 * ~25-30 ns, next bit arrives ~77 ns after the edge at 21.33 MHz). */
-	*(volatile uint32_t *)((uintptr_t)NRF_SPIM00 + 0x5AC) = 5;
-	rom_pass("run RXDELAY=5     ", false);
+	static uint8_t pkt[2 + 2 * PKT_SAMPLES];
+	uint16_t seq = 0;
 
-	/* --- TIMER00 as a pure hardware event counter --- */
-	nrf_timer_mode_set(NRF_TIMER00, NRF_TIMER_MODE_COUNTER);
-	nrf_timer_bit_width_set(NRF_TIMER00, NRF_TIMER_BIT_WIDTH_32);
-	nrf_timer_task_trigger(NRF_TIMER00, NRF_TIMER_TASK_CLEAR);
-	nrf_timer_task_trigger(NRF_TIMER00, NRF_TIMER_TASK_START);
-	nrf_spim_publish_set(NRF_SPIM00, NRF_SPIM_EVENT_END, DPPI_CH);
-	nrf_timer_subscribe_set(NRF_TIMER00, NRF_TIMER_TASK_COUNT, DPPI_CH);
-	nrf_dppi_channels_enable(NRF_DPPIC00, BIT(DPPI_CH));
+	while (1) {
+		while (!notify_enabled) {
+			k_msleep(20);
+		}
+		printk("subscribed - streaming ch0 at %u S/s\n", RATE_HZ);
+		seq = 0;
 
-	/* --- free-run: one CONVERT(0) per transaction --- */
-	tx_buf[0] = (uint8_t)(CONVERT(0) >> 8);
-	tx_buf[1] = (uint8_t)CONVERT(0);
-	nrf_spim_tx_buffer_set(NRF_SPIM00, tx_buf, 2);
-	nrf_spim_rx_buffer_set(NRF_SPIM00, rx_buf, 2);
-	nrf_spim_event_clear(NRF_SPIM00, NRF_SPIM_EVENT_END);
-	nrf_spim_enable(NRF_SPIM00);
-	nrf_spim_shorts_enable(NRF_SPIM00, NRF_SPIM_SHORT_END_START_MASK);
-	nrf_spim_task_trigger(NRF_SPIM00, NRF_SPIM_TASK_START);
+		while (notify_enabled) {
+			uint32_t avail = (w_idx + RING_SAMPLES - r_idx) % RING_SAMPLES;
+			if (avail < PKT_SAMPLES) {
+				k_yield();
+				continue;
+			}
+			pkt[0] = (uint8_t)seq;
+			pkt[1] = (uint8_t)(seq >> 8);
+			for (int i = 0; i < PKT_SAMPLES; i++) {
+				uint16_t s = ring[r_idx];
+				r_idx = (r_idx + 1) % RING_SAMPLES;
+				pkt[2 + 2 * i]     = (uint8_t)s;
+				pkt[2 + 2 * i + 1] = (uint8_t)(s >> 8);
+			}
+			int err;
+			do {
+				err = bt_gatt_notify(NULL, &stream_svc.attrs[1],
+						     pkt, sizeof(pkt));
+				if (err) {
+					k_yield();
+				}
+			} while (err && notify_enabled);
+			seq++;
 
-	k_busy_wait(100000);
-	nrf_timer_task_trigger(NRF_TIMER00, NRF_TIMER_TASK_CAPTURE0);
-	uint32_t c0 = nrf_timer_cc_get(NRF_TIMER00, NRF_TIMER_CC_CHANNEL0);
-	k_busy_wait(MEASURE_SEC * 1000000u);
-	nrf_timer_task_trigger(NRF_TIMER00, NRF_TIMER_TASK_CAPTURE1);
-	uint32_t c1 = nrf_timer_cc_get(NRF_TIMER00, NRF_TIMER_CC_CHANNEL1);
-	nrf_spim_shorts_disable(NRF_SPIM00, NRF_SPIM_SHORT_END_START_MASK);
-	k_busy_wait(100);
-	nrf_spim_task_trigger(NRF_SPIM00, NRF_SPIM_TASK_STOP);
-
-	uint32_t wps = (c1 - c0) / MEASURE_SEC;
-	printk("max sampling rate (SCLK %u Hz): %u S/s\n", SCLK_HZ, wps);
-	printk("per-channel at 32 ch: %u S/s\n", wps / 32u);
+			if ((seq % 250) == 0 && ring_drops) {
+				printk("ring drops: %u\n", ring_drops);
+			}
+		}
+		printk("unsubscribed\n");
+	}
 	return 0;
 }
