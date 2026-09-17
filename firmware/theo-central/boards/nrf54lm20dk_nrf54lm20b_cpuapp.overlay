@@ -1,0 +1,6 @@
+/* Stream output on the DK's second VCOM port. Console/printk stays on
+ * uart20 (VCOM0); binary frames go out uart30 (VCOM1) at 921600. */
+&uart30 {
+	status = "okay";
+	current-speed = <921600>;
+};

@@ -1,0 +1,9 @@
+stream capture report: run1.bin
+packets            50464
+samples            6055680
+duration           302.8 s
+lost packets       0 (0 samples)
+achieved rate      20000.3 S/s (host clock)
+expected rate      20000 S/s (device clock)
+difference         +0.0014% (+14 ppm = host-vs-device crystal skew)
+completeness       100.0000%
