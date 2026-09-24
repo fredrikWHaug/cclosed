@@ -1,17 +1,3 @@
-/*
- * Theo -- streaming proof of concept
- *
- * Sample Intan ch0 at exactly 30 kS/s and stream every sample to the laptop
- * over BLE. Bench check: a 1 kHz sine at in0 should show ~30 points/period
- * in stream_plot.py.
- *
- * SPI is the bench-validated SPIM00 path (21.33 MHz, hardware CSN, RXDELAY 5
- * -- see ratetest_main.c.keep and ideas/SPI_bringup_plan.md for the story).
- * Intan register init and the BLE plumbing are lifted from the proven
- * legacy classification-pilot. Sampling is paced by absolute GRTC deadlines
- * (k_timer ticks are too coarse for 33.3 us).
- */
-
 #include <zephyr/kernel.h>
 #include <zephyr/sys/printk.h>
 #include <zephyr/bluetooth/bluetooth.h>
@@ -20,11 +6,11 @@
 #include <nrfx_spim.h>
 #include <hal/nrf_gpio.h>
 
-#define RATE_HZ      20000u  /* safe margin under the ~26-28k S/s BLE ceiling macOS grants (15 ms conn interval) */
-#define PKT_SAMPLES  120                       /* 2 + 240 B = 242 <= 244 ATT */
+#define RATE_HZ      20000u
+#define PKT_SAMPLES  120                      
 #define RING_SAMPLES 8192
 
-#define PIN_SCK   NRF_GPIO_PIN_MAP(2, 1)       /* SPIM00 dedicated pads */
+#define PIN_SCK   NRF_GPIO_PIN_MAP(2, 1)
 #define PIN_MOSI  NRF_GPIO_PIN_MAP(2, 2)
 #define PIN_MISO  NRF_GPIO_PIN_MAP(2, 4)
 #define PIN_CSN   NRF_GPIO_PIN_MAP(2, 5)
@@ -46,7 +32,6 @@ static uint16_t xfer(uint16_t cmd)
 	return (uint16_t)((rx_buf[0] << 8) | rx_buf[1]);
 }
 
-/* Register init from the legacy pilot: 10 Hz - 10 kHz band, all amps on. */
 static const uint16_t init_seq[] = {
 	WRITE(0, 0xDE), WRITE(1, 32), WRITE(2, 40), WRITE(3, 0x00), WRITE(4, 0x00),
 	WRITE(5, 0x00), WRITE(6, 0x00), WRITE(7, 0x00),
@@ -76,7 +61,6 @@ static void intan_init(void)
 	printk("Intan configured (10 Hz - 10 kHz, amps on, calibrated)\n");
 }
 
-/* ---- BLE (UUIDs shared with the legacy receiver scripts) ---- */
 #define SVC_UUID BT_UUID_128_ENCODE(0x12345678, 0x1234, 0x5678, 0x1234, 0x56789abcdef0)
 #define CHR_UUID BT_UUID_128_ENCODE(0x12345678, 0x1234, 0x5678, 0x1234, 0x56789abcdef1)
 static struct bt_uuid_128 svc_uuid = BT_UUID_INIT_128(SVC_UUID);
@@ -104,12 +88,8 @@ static const struct bt_data ad[] = {
 static void connected(struct bt_conn *conn, uint8_t err)
 {
 	if (!err) {
-		/* Default connection interval is far too slow to drain 250
-		 * pkts/s (30 kS/s / 120 samples). Ask for the fastest legal
-		 * interval; whether the central honors it is another matter
-		 * (see the printed connection-parameter log line). */
 		static const struct bt_le_conn_param fast_params =
-			BT_LE_CONN_PARAM_INIT(6, 12, 0, 400); /* 7.5-15 ms */
+			BT_LE_CONN_PARAM_INIT(6, 12, 0, 400);
 		bt_conn_le_param_update(conn, &fast_params);
 		bt_conn_le_phy_update(conn, BT_CONN_LE_PHY_PARAM_2M);
 	}
@@ -121,9 +101,6 @@ static void disconnected(struct bt_conn *conn, uint8_t reason)
 static void param_updated(struct bt_conn *conn, uint16_t interval,
 			   uint16_t latency, uint16_t timeout)
 {
-	/* interval is in 1.25 ms units. At 120 samples/pkt, 30 kS/s needs a
-	 * packet every 4 ms -> interval must be well under ~3.2 units (4 ms)
-	 * to have room for one notification per connection event. */
 	printk("conn interval now %u.%02u ms (need <~4 ms for 30 kS/s)\n",
 	       (interval * 125u) / 100u, (interval * 125u) % 100u);
 }
@@ -133,7 +110,6 @@ BT_CONN_CB_DEFINE(conn_cbs) = {
 	.le_param_updated = param_updated,
 };
 
-/* ---- 30 kS/s sampler: absolute deadlines on the system cycle counter ---- */
 static uint16_t ring[RING_SAMPLES];
 static volatile uint32_t w_idx, r_idx, ring_drops;
 
@@ -143,7 +119,7 @@ static void sampler_thread(void *a, void *b, void *c)
 		while (!notify_enabled) {
 			k_msleep(10);
 		}
-		xfer(CONVERT(0)); xfer(CONVERT(0));   /* prime the 2-deep pipeline */
+		xfer(CONVERT(0)); xfer(CONVERT(0));
 		w_idx = r_idx = ring_drops = 0;
 
 		uint32_t start = k_cycle_get_32();
@@ -173,12 +149,12 @@ int main(void)
 {
 	nrfx_spim_config_t cfg =
 		NRFX_SPIM_DEFAULT_CONFIG(PIN_SCK, PIN_MOSI, PIN_MISO, PIN_CSN);
-	cfg.frequency   = 21333333u;              /* 128 MHz / 6 */
+	cfg.frequency   = 21333333u;             
 	cfg.mode        = NRF_SPIM_MODE_0;
 	cfg.bit_order   = NRF_SPIM_BIT_ORDER_MSB_FIRST;
 	cfg.use_hw_ss   = true;
-	cfg.ss_duration = 20;                     /* CSN high >= 156 ns */
-	cfg.rx_delay    = 5;                      /* the bench-found sampling fix */
+	cfg.ss_duration = 20;                     
+	cfg.rx_delay    = 5;                    
 
 	if (nrfx_spim_init(&spim, &cfg, NULL, NULL) != 0) {
 		printk("spim init failed\n");

@@ -1,0 +1,8 @@
+CSN regularity report: /Volumes/schtick/TEK00000.CSV
+intervals          12800
+nominal            50.00 us (20000 S/s)
+mean               50.00 us  (20000.5 S/s average)
+std dev            23.67 us
+min                6.75 us
+max                325.79 us
+within +/-10% of nominal: 0.7%
