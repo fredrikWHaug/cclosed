@@ -3,6 +3,62 @@
 Parked on 2026-09-24, mid-bench, to pivot to the FB128 signal. Everything
 below is ready to resume without re-derivation.
 
+---
+
+## >>> IMMEDIATE NEXT STEP (do this first, nothing else) <<<
+## Ground-truth the FB128 output by scoping it as well as possible
+
+Context: with the FB128 in TONE 1000 Hz mode (sine, ±70 uV, actually ~763 Hz
+per TDT's own docs), our chain received the tone — the plot's FFT read
+760.0 Hz, TDT's documented quirk frequency, so timing/order/frequency are
+validated end-to-end. But the tone is buried in ~±50–100 uV of scatter.
+Established by logic, not assumption: the conversion math CANNOT cause
+scatter (it is deterministic — same code in, same value out). The scatter is
+either (a) real voltage at the Intan input (EMI pickup on the long
+adapter-board + jumper chain) or (b) marginal SPI read bit-errors at
+21.33 MHz (parked item 1 below). The FB128 signal is 35x smaller than the FG
+sine was — the same absolute bench noise that was invisible at 5 mVpp now
+rivals the signal. This is the real neural amplitude regime.
+
+The session goal: measure what the FB128 ACTUALLY outputs, independently of
+our chain, and localize where the signal gets dirty. All bench, no code:
+
+1. **FB128 → TONE 30 Hz mode** (sine, ±700 uV — 10x bigger, scopeable;
+   the ±70 uV tone is below the scope's own noise floor, which is why the
+   earlier direct-scope attempt showed only "some periodic waveform").
+2. **Scope + averaging at the SOURCE:** probe directly at the FB128 output
+   pin (any channel — all carry the same tone), ground clip to the common
+   ground. Scope: Acquire → **Average, 64 or 128 sweeps** — averaging a
+   periodic signal crushes uncorrelated noise ~sqrt(N). Record amplitude,
+   frequency, shape. This is the ground truth of the box itself.
+3. **Same averaged measurement at the DESTINATION:** probe at the Intan
+   input pin (in0), i.e. after the adapter boards and jumper chain. The
+   difference between (2) and (3) IS the cabling's contribution, isolated.
+4. **Then look at our own plot of the same TONE 30 Hz** (no code changes:
+   the 60-sample window shows a smooth slow arc, ~667 samples/period; the
+   FFT title should read ~30 Hz). At ±700 uV the tone should stand well
+   clear of the noise.
+5. Physical fixes to try while there: shorten the analog path, twist the
+   signal wire with its ground return, route away from the DK/antenna/P2
+   SCLK area.
+6. **Free noise-floor measurement:** disconnect FB128, short in0 to ground,
+   watch the plot for a minute — the residual scatter is the bench noise
+   floor, quantified with zero code.
+
+When the code freeze lifts, the two quantitative finishers:
+- Add FFT **magnitude** readout at the tone peak to stream_plot.py → checks
+  the 0.195 uV/LSB conversion against TDT's ±70/±700 uV spec (the only
+  as-yet-unvalidated quantity is absolute amplitude).
+- The 8 MHz SCLK build (parked item 1) → kills or convicts hypothesis (b).
+
+Note on "transmit the ground truth digitized": there is no better digitizer
+in the room — the scope resolves ~100 uV, the Intan resolves 0.195 uV. Our
+chain IS the precision instrument; validation at this amplitude = agreement
+between scope-averaged source measurement, TDT's published spec, and our
+chain's FFT amplitude.
+
+---
+
 ## Where we stand (all verified today)
 
 - **Hardware-timed acquisition engine works**: TIMER00 (128 MHz/6400) → DPPI
