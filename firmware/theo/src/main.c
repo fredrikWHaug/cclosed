@@ -1,14 +1,46 @@
+/*
+ * Theo -- hardware-timed acquisition (regularity fix)
+ *
+ * The old sampler was a software thread pacing itself against deadlines; the
+ * BLE controller preempted it and the measured spacing was sigma = 23.7 us on
+ * a 50 us period (see measurements/before_sw_paced_20k/). This build removes
+ * the CPU from the timing path entirely -- Dr. Oh's two prescriptions:
+ *
+ *  1. "Use DMA": RX runs in EasyDMA ArrayList mode -- the peripheral advances
+ *     its own write pointer through a large RAM region, one 16-bit result per
+ *     transaction, zero CPU per sample. Software drains lazily in batches.
+ *  2. "Only the intended clock drives the sampling": TIMER00 (crystal-derived,
+ *     same fast domain as SPIM00) fires SPIM00's START task directly over
+ *     DPPI channel 7. Nothing running on the CPU -- threads, interrupts, the
+ *     BLE stack -- can move a sampling instant, because no instruction stream
+ *     is involved in triggering one. (DPPIC00 channels 1 and 3 belong to the
+ *     BLE controller: SDC_DPPIC00_CHANNELS_USED_MASK = 0x0A. Channel 7 is free.)
+ *
+ * SPI settings are the bench-validated set: 21.33 MHz, hardware CSN
+ * (CSNDUR 20 = 156 ns high between words), RXDELAY 5.
+ */
+
 #include <zephyr/kernel.h>
 #include <zephyr/sys/printk.h>
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/gatt.h>
 #include <zephyr/bluetooth/conn.h>
 #include <nrfx_spim.h>
+#include <hal/nrf_spim.h>
+#include <hal/nrf_timer.h>
+#include <hal/nrf_dppi.h>
 #include <hal/nrf_gpio.h>
 
 #define RATE_HZ      20000u
-#define PKT_SAMPLES  120                      
-#define RING_SAMPLES 8192
+#define PKT_SAMPLES  120                 /* 2 + 240 B = 242 <= 244 ATT payload */
+#define DPPI_CH      7u                  /* clear of SDC's channels 1 and 3    */
+
+/* RX DMA region: hardware fills it linearly; we rewind the pointer at a
+ * packet-aligned threshold. Pad past the threshold = stall tolerance: the
+ * drain may lag REWIND_AT by (RX_TOTAL - REWIND_AT) samples = 409 ms at
+ * 20 kS/s before the emergency stop -- orders beyond any BLE stall. */
+#define REWIND_AT    32768u              /* wrap when hw write pos crosses this ( >= test ) */
+#define RX_TOTAL     40960u              /* 80 KB */
 
 #define PIN_SCK   NRF_GPIO_PIN_MAP(2, 1)
 #define PIN_MOSI  NRF_GPIO_PIN_MAP(2, 2)
@@ -21,15 +53,19 @@
 #define CALIBRATE    ((uint16_t)0x5500)
 
 static nrfx_spim_t spim = NRFX_SPIM_INSTANCE(NRF_SPIM00);
-static uint8_t tx_buf[2], rx_buf[2];
+static uint8_t drv_tx[2], drv_rx[2];             /* driver-path buffers (init/ROM) */
 
+static uint16_t rx_region[RX_TOTAL];             /* EasyDMA ArrayList destination  */
+static uint8_t  stream_tx[2];                    /* the one CONVERT(0) command     */
+
+/* Blocking word through the nrfx driver -- used only for chip init/checks. */
 static uint16_t xfer(uint16_t cmd)
 {
-	tx_buf[0] = (uint8_t)(cmd >> 8);
-	tx_buf[1] = (uint8_t)cmd;
-	nrfx_spim_xfer_desc_t x = NRFX_SPIM_XFER_TRX(tx_buf, 2, rx_buf, 2);
+	drv_tx[0] = (uint8_t)(cmd >> 8);
+	drv_tx[1] = (uint8_t)cmd;
+	nrfx_spim_xfer_desc_t x = NRFX_SPIM_XFER_TRX(drv_tx, 2, drv_rx, 2);
 	nrfx_spim_xfer(&spim, &x, 0);
-	return (uint16_t)((rx_buf[0] << 8) | rx_buf[1]);
+	return (uint16_t)((drv_rx[0] << 8) | drv_rx[1]);
 }
 
 static const uint16_t init_seq[] = {
@@ -61,6 +97,7 @@ static void intan_init(void)
 	printk("Intan configured (10 Hz - 10 kHz, amps on, calibrated)\n");
 }
 
+/* ---- BLE (unchanged: same UUIDs, packet format, receiver scripts) ---- */
 #define SVC_UUID BT_UUID_128_ENCODE(0x12345678, 0x1234, 0x5678, 0x1234, 0x56789abcdef0)
 #define CHR_UUID BT_UUID_128_ENCODE(0x12345678, 0x1234, 0x5678, 0x1234, 0x56789abcdef1)
 static struct bt_uuid_128 svc_uuid = BT_UUID_INIT_128(SVC_UUID);
@@ -101,7 +138,7 @@ static void disconnected(struct bt_conn *conn, uint8_t reason)
 static void param_updated(struct bt_conn *conn, uint16_t interval,
 			   uint16_t latency, uint16_t timeout)
 {
-	printk("conn interval now %u.%02u ms (need <~4 ms for 30 kS/s)\n",
+	printk("conn interval now %u.%02u ms\n",
 	       (interval * 125u) / 100u, (interval * 125u) % 100u);
 }
 BT_CONN_CB_DEFINE(conn_cbs) = {
@@ -110,51 +147,139 @@ BT_CONN_CB_DEFINE(conn_cbs) = {
 	.le_param_updated = param_updated,
 };
 
-static uint16_t ring[RING_SAMPLES];
-static volatile uint32_t w_idx, r_idx, ring_drops;
+/* ---- hardware-timed acquisition ---- */
 
-static void sampler_thread(void *a, void *b, void *c)
+/* Samples written so far into rx_region (from the DMA pointer itself). */
+static inline uint32_t acq_pos(void)
 {
-	while (1) {
-		while (!notify_enabled) {
-			k_msleep(10);
-		}
-		xfer(CONVERT(0)); xfer(CONVERT(0));
-		w_idx = r_idx = ring_drops = 0;
+	return (NRF_SPIM00->DMA.RX.PTR - (uint32_t)rx_region) / 2u;
+}
 
-		uint32_t start = k_cycle_get_32();
-		uint64_t n = 0;
+static void acq_start(void)
+{
+	/* Warm the Intan's 2-deep result pipeline through the driver path so
+	 * rx_region[0] onward is pure ch0 data with no discard bookkeeping. */
+	xfer(CONVERT(0));
+	xfer(CONVERT(0));
 
-		while (notify_enabled) {
-			uint32_t target = start + (uint32_t)((++n *
-				(uint64_t)CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC) / RATE_HZ);
-			while ((int32_t)(k_cycle_get_32() - target) < 0) {
-				k_yield();
-			}
-			uint16_t s = xfer(CONVERT(0));
-			uint32_t nw = (w_idx + 1) % RING_SAMPLES;
-			if (nw != r_idx) {
-				ring[w_idx] = s;
-				w_idx = nw;
-			} else {
-				ring_drops++;
-			}
+	/* SPIM: fixed TX command, ArrayList RX walking the big region. */
+	stream_tx[0] = (uint8_t)(CONVERT(0) >> 8);
+	stream_tx[1] = (uint8_t)CONVERT(0);
+	nrf_spim_tx_buffer_set(NRF_SPIM00, stream_tx, 2);
+	nrf_spim_rx_buffer_set(NRF_SPIM00, (uint8_t *)rx_region, 2);
+	nrf_spim_tx_list_disable(NRF_SPIM00);
+	nrf_spim_rx_list_enable(NRF_SPIM00);
+	nrf_spim_event_clear(NRF_SPIM00, NRF_SPIM_EVENT_END);
+	nrf_spim_enable(NRF_SPIM00);
+
+	/* TIMER00 -> DPPI ch 7 -> SPIM00.START: the sampling clock in silicon. */
+	uint32_t base = NRF_TIMER_BASE_FREQUENCY_GET(NRF_TIMER00);
+	uint32_t cc   = base / RATE_HZ;
+	nrf_timer_task_trigger(NRF_TIMER00, NRF_TIMER_TASK_STOP);
+	nrf_timer_task_trigger(NRF_TIMER00, NRF_TIMER_TASK_CLEAR);
+	nrf_timer_mode_set(NRF_TIMER00, NRF_TIMER_MODE_TIMER);
+	nrf_timer_bit_width_set(NRF_TIMER00, NRF_TIMER_BIT_WIDTH_32);
+	nrf_timer_prescaler_set(NRF_TIMER00, 0);
+	nrf_timer_cc_set(NRF_TIMER00, NRF_TIMER_CC_CHANNEL0, cc);
+	nrf_timer_shorts_enable(NRF_TIMER00, NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK);
+	nrf_timer_publish_set(NRF_TIMER00, NRF_TIMER_EVENT_COMPARE0, DPPI_CH);
+	nrf_spim_subscribe_set(NRF_SPIM00, NRF_SPIM_TASK_START, DPPI_CH);
+	nrf_dppi_channels_enable(NRF_DPPIC00, BIT(DPPI_CH));
+	nrf_timer_task_trigger(NRF_TIMER00, NRF_TIMER_TASK_START);
+
+	printk("hw-timed acquisition: timer %u Hz / CC %u -> %u.%03u kS/s\n",
+	       base, cc, (base / cc) / 1000u, (base / cc) % 1000u);
+}
+
+static void acq_stop(void)
+{
+	nrf_timer_task_trigger(NRF_TIMER00, NRF_TIMER_TASK_STOP);
+	nrf_dppi_channels_disable(NRF_DPPIC00, BIT(DPPI_CH));
+	k_busy_wait(100);                       /* let an in-flight word finish */
+	nrf_spim_disable(NRF_SPIM00);
+}
+
+/* Rewind the DMA pointer to the region base.
+ *
+ * Bench finding (2026-09-24): on this DMA engine a plain PTR register write
+ * between transactions does NOT take -- the engine's internal pointer wins
+ * and the write is clobbered. So the rewind tries progressively stronger
+ * state-clearing methods in the ~49 us quiet window after a fresh END, then
+ * VERIFIES the next transaction actually landed at the region base, and
+ * escalates if not. Prints which method this silicon honors.
+ *
+ * Any samples the hardware wrote past REWIND_AT before the rewind are saved
+ * into `carry` and prepended to the outgoing stream, so no data is lost and
+ * ordering is preserved. */
+static uint32_t rewinds;
+static uint16_t carry[8192];             /* = RX_TOTAL - REWIND_AT: max possible backlog */
+static uint32_t carry_len, carry_idx;
+
+static bool rewind_wait_end(void)
+{
+	uint32_t spins = 0;
+	nrf_spim_event_clear(NRF_SPIM00, NRF_SPIM_EVENT_END);
+	while (!nrf_spim_event_check(NRF_SPIM00, NRF_SPIM_EVENT_END)) {
+		if (++spins > 20000000u) {
+			return false;           /* timer not running */
 		}
 	}
+	return true;
 }
-K_THREAD_DEFINE(sampler_id, 2048, sampler_thread, NULL, NULL, NULL,
-		K_PRIO_PREEMPT(0), 0, 0);
+
+static bool acq_rewind(uint32_t from)
+{
+	/* Sync to a fresh END so we act right after a completed transaction. */
+	if (!rewind_wait_end()) {
+		return false;
+	}
+
+	/* PAUSE THE SAMPLING CLOCK. The previous rewind attempt reconfigured
+	 * the DMA engine while the timer kept firing STARTs -- undefined
+	 * engine state, runaway DMA, hard fault. With the timer stopped (not
+	 * cleared: the count freezes mid-period), no START can arrive while
+	 * we touch the engine. Cost: this one interval stretches by the few
+	 * microseconds the reconfig takes, once per REWIND_AT samples. */
+	nrf_timer_task_trigger(NRF_TIMER00, NRF_TIMER_TASK_STOP);
+
+	uint32_t tail_end = acq_pos();
+	carry_len = 0;
+	carry_idx = 0;
+	for (uint32_t i = from; i < tail_end && carry_len < 8192; i++) {
+		carry[carry_len++] = rx_region[i];
+	}
+
+	/* Reset the DMA engine from clean idle and resume the clock. */
+	nrf_spim_disable(NRF_SPIM00);
+	nrf_spim_tx_buffer_set(NRF_SPIM00, stream_tx, 2);
+	nrf_spim_rx_buffer_set(NRF_SPIM00, (uint8_t *)rx_region, 2);
+	nrf_spim_rx_list_enable(NRF_SPIM00);
+	nrf_spim_event_clear(NRF_SPIM00, NRF_SPIM_EVENT_END);
+	nrf_spim_enable(NRF_SPIM00);
+	nrf_timer_task_trigger(NRF_TIMER00, NRF_TIMER_TASK_START);
+
+	/* Verify: the next hardware-fired transaction must land at the base. */
+	if (!rewind_wait_end()) {
+		return false;
+	}
+	uint32_t pos = acq_pos();
+	if (pos >= 1 && pos <= 64) {
+		rewinds++;
+		return true;
+	}
+	return false;
+}
 
 int main(void)
 {
 	nrfx_spim_config_t cfg =
 		NRFX_SPIM_DEFAULT_CONFIG(PIN_SCK, PIN_MOSI, PIN_MISO, PIN_CSN);
-	cfg.frequency   = 21333333u;             
+	cfg.frequency   = 21333333u;            /* 128 MHz / 6, under Intan's 24 MHz cap */
 	cfg.mode        = NRF_SPIM_MODE_0;
 	cfg.bit_order   = NRF_SPIM_BIT_ORDER_MSB_FIRST;
 	cfg.use_hw_ss   = true;
-	cfg.ss_duration = 20;                     
-	cfg.rx_delay    = 5;                    
+	cfg.ss_duration = 20;                   /* CSN high >= 156 ns between words */
+	cfg.rx_delay    = 5;                    /* bench-validated sampling window  */
 
 	if (nrfx_spim_init(&spim, &cfg, NULL, NULL) != 0) {
 		printk("spim init failed\n");
@@ -179,23 +304,69 @@ int main(void)
 		while (!notify_enabled) {
 			k_msleep(20);
 		}
-		printk("subscribed - streaming ch0 at %u S/s\n", RATE_HZ);
+		printk("subscribed - hw-timed streaming ch0 at %u S/s\n", RATE_HZ);
 		seq = 0;
+		rewinds = 0;
+		carry_len = carry_idx = 0;
+		uint32_t r_pos = 0;
+		acq_start();
 
 		while (notify_enabled) {
-			uint32_t avail = (w_idx + RING_SAMPLES - r_idx) % RING_SAMPLES;
+			uint32_t w = acq_pos();
+
+			/* emergency: drain stalled past the pad (should never) */
+			if (w >= RX_TOTAL - 8u) {
+				printk("RX region overrun - restarting acquisition\n");
+				acq_stop();
+				r_pos = 0;
+				carry_len = carry_idx = 0;
+				acq_start();
+				continue;
+			}
+
+			/* Wrap when the HARDWARE write position crosses the
+			 * threshold and last wrap's carry is fully drained.
+			 * Gating on w (not the drain r_pos) means it always
+			 * fires; carrying from r_pos preserves the unsent tail. */
+			if (w >= REWIND_AT && carry_idx == carry_len) {
+				if (acq_rewind(r_pos)) {
+					r_pos = 0;
+				} else {
+					printk("rewind failed - full restart\n");
+					acq_stop();
+					r_pos = 0;
+					carry_len = carry_idx = 0;
+					acq_start();
+				}
+				continue;
+			}
+
+			uint32_t avail = (carry_len - carry_idx) + (w - r_pos);
 			if (avail < PKT_SAMPLES) {
 				k_yield();
 				continue;
 			}
+
 			pkt[0] = (uint8_t)seq;
 			pkt[1] = (uint8_t)(seq >> 8);
-			for (int i = 0; i < PKT_SAMPLES; i++) {
-				uint16_t s = ring[r_idx];
-				r_idx = (r_idx + 1) % RING_SAMPLES;
-				pkt[2 + 2 * i]     = (uint8_t)s;
-				pkt[2 + 2 * i + 1] = (uint8_t)(s >> 8);
+			for (uint32_t k = 0; k < PKT_SAMPLES; k++) {
+				uint16_t s;
+				if (carry_idx < carry_len) {
+					s = carry[carry_idx++];
+				} else {
+					s = rx_region[r_pos++];
+				}
+				/* DMA stores the wire bytes in RX order: first byte
+				 * (Intan MSB) lands in the LOW byte of the native
+				 * little-endian uint16_t -- swap to true value. */
+				s = (uint16_t)((s >> 8) | (s << 8));
+				pkt[2 + 2 * k]     = (uint8_t)s;
+				pkt[2 + 2 * k + 1] = (uint8_t)(s >> 8);
 			}
+			if (carry_idx == carry_len) {
+				carry_len = carry_idx = 0;
+			}
+
 			int err;
 			do {
 				err = bt_gatt_notify(NULL, &stream_svc.attrs[1],
@@ -206,10 +377,11 @@ int main(void)
 			} while (err && notify_enabled);
 			seq++;
 
-			if ((seq % 250) == 0 && ring_drops) {
-				printk("ring drops: %u\n", ring_drops);
+			if ((seq % 1000) == 0) {
+				printk("[acq] pos %u  rewinds %u\n", acq_pos(), rewinds);
 			}
 		}
+		acq_stop();
 		printk("unsubscribed\n");
 	}
 	return 0;
