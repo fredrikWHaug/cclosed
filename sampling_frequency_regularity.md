@@ -20,7 +20,8 @@ Tags: **[bench]** = you at the hardware, **[AI]** = code I write.
 | → 32 ch on one bus | **23.7 kS/s/ch** | 757,741 / 32 |
 | → channels at full 30 kS/s on one bus | **25 ch** | 757,741 / 30,000 |
 | Streaming demo (1 ch → Mac BLE) | 20 kS/s, 5 min, **0 lost** of 50,464 pkts | `run1_report.txt` |
-| **Sampling regularity (current build)** | **BURSTY** — CSN pulses in irregular clusters (gaps ~2–25 µs) while average rate stays perfect | scope on P2.05, 2026-09-18 |
+| Sampling regularity, software-paced (BEFORE) | σ = 23.67 µs, min 6.75 / max 325.8 µs, **0.7%** within ±10% | 12,800 scope-measured CSN intervals, `measurements/before_sw_paced_20k/` |
+| **Sampling regularity, hardware-timed (AFTER, 2026-09-24)** | **σ = 0.38 µs, min 19.0(1 glitch) / max 53.4(1 wrap) µs, 100.0% within ±10%** — 62× better | 12,843 scope-measured CSN intervals, `measurements/after_hw_timed_20k/` |
 | macOS BLE ceiling | ~26–28 kS/s (15 ms interval, non-negotiable) | measured |
 | nRF↔nRF BLE ceiling | ~1.05 Mbps (≈65 kS/s of 16-bit) | ble-rate tests |
 
@@ -37,7 +38,15 @@ design defect to remove. Hence Step 0.
 
 ---
 
-## Step 0 — hardware-timed sampling engine (the fix everything rides on)
+## Step 0 — hardware-timed sampling engine — **DONE (2026-09-24)**
+
+Implemented, debugged (DMA pointer rewind requires pausing the timer; wrap
+gates on the hardware write position; DMA byte order is wire-order, swap on
+read), data-validated (clean 997 Hz sine, 20 dots/period, 0 lost packets),
+and measured: σ = 0.38 µs. Residuals worth knowing: mean read 49.83 µs
+(+0.34%) — the 128 MHz HSFLL timer clock, not crystal-exact; one ~53 µs
+interval per 1.64 s (the wrap's timer pause); one glitch edge in 12,843.
+Original design notes below.
 
 Take the CPU out of the timing path: a hardware timer fires each SPI
 transaction in silicon. The radio can stall a thread or an interrupt; it
