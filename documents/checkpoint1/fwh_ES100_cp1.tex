@@ -1,13 +1,14 @@
 % ======= LaTeX Setup ======= %
 \documentclass[11pt]{article}
 \usepackage[letterpaper, margin=1in]{geometry}
-\usepackage{times}
+\usepackage{newtxtext}
+\usepackage[scaled=.92]{helvet}
 \usepackage{indentfirst}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{float}
 \usepackage{amsmath}
-\usepackage{amssymb}
+\usepackage{newtxmath}
 \usepackage{graphicx}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
 \linespread{1.0}
@@ -53,20 +54,14 @@ checkpoint adds the design approach: the system architecture, consideration of
 alternative designs with quantitative evaluations grounded in this project's bench
 measurements, and the training, timeline, and budget plans.
 
-\vspace*{\fill}
-
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{figures/figure1.png}
+\includegraphics[width=0.78\textwidth]{figures/figure1.png}
 \caption{System overview. A head-mounted device classifies each detected extracellular
 spike to its neuron of origin on-device and transmits only the resulting unit identity and
 timestamp over Bluetooth Low Energy (BLE).}
 \label{fig:overview}
 \end{figure}
-
-\vspace*{\fill}
-
-\clearpage
 
 % ======= 1. Problem Identification ======= %
 \section{Problem Identification}
@@ -87,8 +82,7 @@ fundamentally changing how the brain, both in health and in disease, is understo
 
 The quantity these probes measure is the extracellular action potential, or spike: the
 brief voltage deflection an electrically excitable cell produces when it fires. First
-recorded in 1868 by Julius Bernstein using a differential rheotome of his own
-invention~[2], the action potential remains the basic unit of neural signaling, and the
+recorded in 1868 by Julius Bernstein~[2], the action potential remains the basic unit of neural signaling, and the
 interplay between neurons is studied by measuring the spikes of individual cells~[3].
 Extracellular spikes contain frequencies from roughly 300~Hz to 6~kHz~[22], so the
 industry-standard analog front end digitizes each channel with a 16-bit
@@ -126,20 +120,18 @@ animals that move freely.
 \begin{figure}[H]
 \centering
 \includegraphics{figures/stakeholder_map_v2.pdf}
-\caption{Stakeholder map. Nesting encodes directness of stake: the wireless headstage at
-the core, the stakeholders it touches directly in the inner tier, and the broader
-stakeholders in the outer tier.}
+\caption{Stakeholder map. Nesting encodes directness of stake: the stakeholders the
+device touches directly occupy the inner tier, and the broader stakeholders the outer
+tier.}
 \label{fig:stakeholders}
 \end{figure}
 
 The client is the neuroscientist whose laboratory would buy the device and use it in its
 own work, whether a single academic group or a shared institutional facility.
 
-The end users are systems neuroscientists. They study how neural activity relates to
-behavior, which works best when the animal can move freely. Standard high-density recording
-ties the animal to a cable that carries the raw data. This limits movement and rules out
-experiments such as social interaction. A headstage that transmits wirelessly removes that
-limit and lets researchers run a wider range of experiments.
+The end users are systems neuroscientists, who study how neural activity relates to
+behavior. A wireless headstage removes the cable that limits movement and rules out
+experiments such as social interaction, letting researchers run a wider range of studies.
 
 % ======= 1.3 Problem Statement ======= %
 \subsection{Problem Statement}
@@ -228,37 +220,13 @@ Compressing continuous neural data without fidelity loss of spatiotemporal spike
 information requires isolating and preserving exactly the neural spike events at the
 required resolution. Any solution to the problem statement must therefore
 perform five operations: it must acquire extracellular voltage from multiple
-recording channels, detect spike events within the acquired signal, log the
-time at which each detected spike occurs, classify each detected spike and assign it
-a unit identity, and transmit each unit identity coupled with its timestamp over a
-wireless link. These five behaviors constitute the functional requirements of the system
-summarized in Table~\ref{tab:funcreq}.
+recording channels (F1), detect spike events within the acquired signal (F2), log the time
+at which each detected spike occurs (F3), classify each detected spike and assign it a
+unit identity (F4), and transmit each unit identity coupled with its timestamp over a
+wireless link (F5). These five behaviors constitute the functional requirements of the
+system, and the technical requirements that follow are grouped by the functional
+requirement each serves.
 
-% ======= Table 1 ======= %
-\begin{table}[H]
-\centering
-\caption{Functional requirements}
-\label{tab:funcreq}
-{\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.25}
-\begin{tabularx}{\textwidth}{|l|L|}
-\hline
-Label & Functional requirement \\
-\hline
-F1 & \emph{Acquire} extracellular voltage from multiple recording channels \\
-\hline
-F2 & \emph{Detect} spike events within the acquired signal \\
-\hline
-F3 & \emph{Log} the time at which each detected spike occurs \\
-\hline
-F4 & \emph{Classify} each detected spike and assign it a unit identity \\
-\hline
-F5 & \emph{Transmit} each unit identity coupled with its timestamp over a wireless link \\
-\hline
-\end{tabularx}
-}
-\end{table}
 
 % ======= 3.2 Technical Requirements and Specifications ======= %
 \subsection{Technical Requirements and Specifications}
@@ -268,7 +236,10 @@ prior-art literature, or preliminary testing conducted for this project. Two pri
 govern how the values are set. First, a good specification is set by what the end user
 needs, not by what a chosen part happens to provide: where meaningful, each specification
 therefore states a floor the science demands, a target this project commits to, and an
-aspirational value reflecting what neuroscientists would ask of a mature device. Second,
+aspirational value reflecting what neuroscientists would ask of a mature device. Where a
+specification lists no aspirational value, none meaningfully exists: for instance, sampling beyond
+Nyquist-plus-margin adds no scientific content (T2), and the five-byte packet is already
+minimal (T9). Second,
 quantities fixed by part selection rather than by engineering analysis are treated as
 derived constraints to be verified in testing, not as independent specifications; of this
 kind are the aggregate conversion rate and the ADC-to-processor link throughput, each of
@@ -282,12 +253,12 @@ Justifications follow the table.
 \centering
 \caption{Technical requirements and specifications grouped by functional requirement, with the measurement method for each}
 \label{tab:techreq}
-{\footnotesize
+{\footnotesize\sffamily
 \setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.25}
-\begin{tabularx}{\textwidth}{|l|L|L|L|L|}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|>{\raggedright\arraybackslash}p{95pt}|>{\raggedright\arraybackslash}p{82pt}|>{\raggedright\arraybackslash}p{88pt}|>{\raggedright\arraybackslash}p{105pt}|}
 \hline
-Label & Requirement & Specification & Quantitative value & Measurement method \\
+\textbf{Label} & \textbf{Requirement} & \textbf{Specification} & \textbf{Quantitative value} & \textbf{Measurement method} \\
 \hline
 \multicolumn{5}{|l|}{\textbf{F1 -- Acquire}} \\
 \hline
@@ -301,7 +272,7 @@ T3  & Resolve spikes above noise & resolution; noise & 16-bit; $\leq 5~\mu$Vrms 
 \hline
 T4  & Spikes separated from the LFP & high-pass corner & $\sim$300~Hz & filter response from a frequency sweep \\
 \hline
-T5  & Detect spikes reliably & TPR / precision vs.\ Kilosort & $\geq 90\%$ each & match to Kilosort truth, $\pm$1~ms window \\
+T5  & Detect spikes reliably & TPR / precision vs.\ Kilosort & $\geq 90\%$ each; 97--100\% asp. & match to Kilosort truth, $\pm$1~ms window \\
 \hline
 \multicolumn{5}{|l|}{\textbf{F3 -- Log}} \\
 \hline
@@ -319,9 +290,9 @@ T9  & Packet carries identity and time & packet content & 5~B (1~B ID $+$ 4~B ts
 \hline
 \multicolumn{5}{|l|}{\textbf{System-level}} \\
 \hline
-T10 & Run on a head-mounted battery & power; radio share & $\lesssim 100$~mW; $\geq 1$~h on $<$1.5~g & current $\times$ voltage under load; profile radio; battery life \\
+T10 & Run on a head-mounted battery & power; radio share & $\lesssim 100$~mW; $\geq 1$~h on $<$1.5~g; $\geq$72~h asp. & current $\times$ voltage under load; profile radio; battery life \\
 \hline
-\end{tabularx}
+\end{tabular}
 }
 \end{table}
 
@@ -346,7 +317,8 @@ noise floor (T3): a 50~$\mu$V spike against a 5~$\mu$Vrms floor retains a 10:1 r
 \textbf{Detection (F2).} A high-pass corner near 300~Hz separates spikes from the sub-300~Hz
 local field potential~[22] (T4). Detection is scored against Kilosort~[24]: since on-chip and
 commodity detectors report 97--100\%~[14, 15, 16], a floor of 90\% sensitivity and 90\%
-precision, matched within $\pm$1~ms, is conservative yet meaningful (T5).
+precision, matched within $\pm$1~ms, is conservative yet meaningful, with the
+97--100\% of mature detectors as the aspirational reference (T5).
 
 \textbf{Timekeeping (F3).} Preserving spatiotemporal information requires one timestamp per
 detected spike, referenced to the acquisition clock (T6).
@@ -373,7 +345,10 @@ transmission energy; both are quantified in the measurement plan. Should the tar
 missed, the design holds identified levers, in order of expected saving: lengthening the
 radio's connection interval, idling the processor between samples, and narrowing the
 active channel count; the measurement plan isolates each contribution so the lever is
-chosen from data rather than guesswork.
+chosen from data rather than guesswork. Aspirationally, a multi-day ($\geq$72~h)
+session on the same cell is what chronic-recording studies would want and did not know
+they could have, and the compression architecture is precisely what makes it
+conceivable.
 
 % ======= 4. Plan for Measuring Technical Specifications ======= %
 \section{Plan for Measuring Technical Specifications}
@@ -517,19 +492,20 @@ the nominal rate), which is why regularity was measured at the signal level rath
 inferred from throughput. The hardware-timed engine is the chosen approach; its two
 residuals are understood and bounded (the mean reads $+0.34$\% because the timer runs
 from an uncalibrated on-chip oscillator, and one $\sim$53~$\mu$s interval per 1.64~s is
-the engine's deliberate buffer-rewind pause).
+the engine's deliberate buffer-rewind pause). Figure~\ref{fig:pacinghist} overlays the
+two measured interval distributions on a shared axis.
 
 \begin{table}[H]
 \centering
 \caption{Measured inter-sample interval statistics for the two pacing approaches
 (oscilloscope capture of the chip-select line; 20~kS/s nominal, BLE active).}
 \label{tab:pacing}
-{\footnotesize
-\setlength{\tabcolsep}{5pt}
+{\footnotesize\sffamily
+\setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{|l|c|c|}
 \hline
- & Software-paced & Hardware-timed \\
+\textbf{Statistic} & \textbf{Software-paced} & \textbf{Hardware-timed} \\
 \hline
 intervals measured            & 12{,}800 & 12{,}843 \\
 \hline
@@ -544,6 +520,15 @@ within $\pm$10\% of nominal   & 0.7\%    & \textbf{100.0\%} \\
 \end{tabular}
 }
 \end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics{figures/regularity_hist_one.pdf}
+\caption{Distributions of measured inter-sample intervals for the two pacing approaches
+(20~kS/s nominal, 50~$\mu$s period). Software-paced intervals beyond 120~$\mu$s are
+collected in the rightmost bin.}
+\label{fig:pacinghist}
+\end{figure}
 
 \subsection{Bus Topology: Single versus Dual SPI Bus}
 The acquisition ceiling of one SPI bus was measured directly, using the bench-validated
@@ -583,12 +568,12 @@ with completion status and dates.
 \centering
 \caption{Training required for the project's tools and skills, with status and dates.}
 \label{tab:training}
-{\footnotesize
+{\footnotesize\sffamily
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.2}
-\begin{tabularx}{\textwidth}{|L|l|l|}
+\begin{tabular}{|l|l|l|}
 \hline
-Tool / skill & Status & Date \\
+\textbf{Tool / skill} & \textbf{Status} & \textbf{Date} \\
 \hline
 KiCad schematic/layout and BGA board assembly (test PCB fabricated, brought up) & complete & Aug.\ 2026 \\
 \hline
@@ -606,88 +591,61 @@ Kilosort~4 installation and reference-sorting workflow & pending & Nov.\ 2026 \\
 \hline
 Power profiling with a current-waveform profiler (radio-triggered) & pending & Dec.\ 2026 \\
 \hline
-\end{tabularx}
+\end{tabular}
 }
 \end{table}
 
 % ======= 8. Preliminary Timeline and Budget ======= %
 \section{Preliminary Timeline and Budget}
 Table~\ref{tab:timeline} breaks the remaining work into two-week stages spanning design,
-build, measurement, analysis, and verification, with the course milestones embedded.
-Table~\ref{tab:budget} summarizes spending to date and projected purchases; all parts are
+build, measurement, analysis, and verification, with the course milestones embedded, and
+summarizes spending to date and projected purchases beside the timeline; all parts are
 off the shelf, and the total remains far below typical commercial wireless headstage
 pricing.
 
 \begin{table}[H]
 \centering
-\caption{Preliminary project timeline in two-week increments. Stage labels: D = design,
-B = build, M = measure, A = analyze, V = verify.}
+\caption{Preliminary project timeline in two-week increments (stage labels: D = design,
+B = build, M = measure, A = analyze, V = verify) alongside the preliminary budget.
+Budget amounts are approximate.}
 \label{tab:timeline}
-{\footnotesize
+{\footnotesize\sffamily
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.2}
-\begin{tabularx}{\textwidth}{|l|l|L|}
+\begin{tabular}{|l|l|>{\raggedright\arraybackslash}p{148pt}|>{\raggedright\arraybackslash}p{86pt}|l|l|}
 \hline
-Two-week block & Stage & Milestone \\
+\multicolumn{3}{|c|}{\textbf{Timeline}} & \multicolumn{3}{c|}{\textbf{Budget}} \\
 \hline
-Oct.\ 6 -- Oct.\ 19   & B/M & Ground-truth playback rig online; chain noise floor measured on shorted input \\
+\textbf{Two-week block} & \textbf{Stage} & \textbf{Milestone} & \textbf{Item} & \textbf{Status} & \textbf{Cost} \\
 \hline
-Oct.\ 20 -- Nov.\ 2   & B/M & 32-channel round-robin acquisition at the measured bus ceiling; bus-topology decision finalized \\
+Oct.\ 6 -- Oct.\ 19   & B/M & Ground-truth rig; noise floor      & Signal-path test PCB & spent & \$100 \\
 \hline
-Nov.\ 3 -- Nov.\ 16   & B/M & On-device detection and timestamping; detection scored against known ground truth (T5, T6) \\
+Oct.\ 20 -- Nov.\ 2   & B/M & 32-ch acquisition; bus decision    & Intan RHD2164 front end & spent & \$300 \\
 \hline
-Nov.\ 17 -- Nov.\ 30  & A   & Design Review; Kilosort~4 reference pipeline running on replayed recordings \\
+Nov.\ 3 -- Nov.\ 16   & B/M & Detection + timestamps (T5, T6)    & nRF54 dev.\ kits ($\times$2) & spent & \$120 \\
 \hline
-Dec.\ 1 -- Dec.\ 14   & B/M & Template-matching classifier v1 on-device; first confusion matrix (T7, T8) \\
+Nov.\ 17 -- Nov.\ 30  & A   & Design Review; Kilosort pipeline   & Playback rig (Pi, DAC, microSD) & spent & \$35 \\
 \hline
-Dec.\ 15 -- Jan.\ 11  & D   & Second-revision PCB layout per the chosen bus topology; fabrication ordered (winter break, 4 weeks) \\
+Dec.\ 1 -- Dec.\ 14   & B/M & Classifier v1 + matrix (T7, T8)    & PCB rev.\ 2 (fab $+$ assembly) & projected & \$150 \\
 \hline
-Jan.\ 12 -- Jan.\ 25  & B   & PCB bring-up; classifier integrated with multi-channel acquisition \\
+Dec.\ 15 -- Jan.\ 11  & D   & PCB rev.\ 2 layout; fab ordered    & Battery $+$ profiling board & projected & \$80 \\
 \hline
-Jan.\ 26 -- Feb.\ 8   & M   & End-to-end spike-identity streaming; accuracy and loss measured (CP2) \\
+Jan.\ 12 -- Jan.\ 25  & B   & PCB bring-up; integration          & Contingency & projected & \$50 \\
 \hline
-Feb.\ 9 -- Feb.\ 22   & M   & Power profiled with and without on-device classification; battery life validated (T10) \\
+Jan.\ 26 -- Feb.\ 8   & M   & End-to-end spike IDs (CP2)         & \textbf{Total} & & \textbf{$\approx$\$835} \\
 \hline
-Feb.\ 23 -- Mar.\ 8   & A/B & Iteration on the weakest specification; statistical analysis of all measurements \\
+Feb.\ 9 -- Feb.\ 22   & M   & Power + battery life (T10)         & & & \\
 \hline
-Mar.\ 9 -- Mar.\ 22   & V   & Full-system verification on replayed real recordings against all specifications \\
+Feb.\ 23 -- Mar.\ 8   & A/B & Iterate weakest spec; statistics   & & & \\
 \hline
-Mar.\ 23 -- Apr.\ 5   & --  & Thesis writing and final presentation preparation \\
+Mar.\ 9 -- Mar.\ 22   & V   & Full-system verification           & & & \\
 \hline
-\end{tabularx}
+Mar.\ 23 -- Apr.\ 5   & --  & Thesis + final presentation        & & & \\
+\hline
+\end{tabular}
 }
 \end{table}
 
-\begin{table}[H]
-\centering
-\caption{Preliminary budget: spent to date and projected. Amounts are approximate.}
-\label{tab:budget}
-{\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.2}
-\begin{tabularx}{\textwidth}{|L|l|l|}
-\hline
-Item & Status & Approx.\ cost \\
-\hline
-Custom signal-path test PCB (fabrication + passives) & spent & \$100 \\
-\hline
-Intan RHD2164 analog front end & spent & \$300 \\
-\hline
-nRF54 development kits ($\times$2: device + relay) & spent & \$120 \\
-\hline
-Ground-truth playback rig (Pi Zero~2~W, I2S DAC, microSD) & spent & \$35 \\
-\hline
-Second-revision PCB (fabrication + assembly) & projected & \$150 \\
-\hline
-Battery cells ($<$1.5~g) + power profiling shunt board & projected & \$80 \\
-\hline
-Contingency (connectors, passives, cabling) & projected & \$50 \\
-\hline
-\textbf{Total} & & \textbf{$\approx$\$835} \\
-\hline
-\end{tabularx}
-}
-\end{table}
 
 % ======= References ======= %
 \phantomsection
