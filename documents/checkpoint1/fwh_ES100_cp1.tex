@@ -10,17 +10,19 @@
 \usepackage{amssymb}
 \usepackage{graphicx}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
-\linespread{1.15}
+\linespread{1.0}
 \setcounter{tocdepth}{2}
 \usepackage[hidelinks]{hyperref}
 \usepackage{caption}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
 \captionsetup{font=small, labelfont=bf}
 
 \title{{\large ES100 Checkpoint 1}\\[0.5em]
 On-Device Classification of Neural Action Potentials\\
 for Wireless Unit Transmission over Bluetooth Low Energy}
 \author{Fredrik Willumsen Haug \\[0.3em]
-{\normalsize Bioengineering} \\[0.6em]
+{\normalsize Bioengineering, ECE Track} \\[0.6em]
 {\normalsize Advised by Dr.\ Saehyuck Oh and Professor Gage Hills}}
 \date{}
 
@@ -37,7 +39,7 @@ for Wireless Unit Transmission over Bluetooth Low Energy}
 % ======= 0. Executive Summary ======= %
 \setcounter{section}{-1}
 \section{Executive Summary}
-This thesis proposal addresses a bandwidth bottleneck in wireless neural recording. Bluetooth
+This thesis addresses a bandwidth bottleneck in wireless neural recording. Bluetooth
 Low Energy 6.0 (BLE), the leading low-power off-the-shelf wireless communication protocol, has a theoretical
 data rate ceiling of 2~Mbps. Neural action potentials, also called spikes, contain frequencies
 from 300~Hz to 6~kHz. Raw extracellular neural electrophysiology data is therefore sampled at 30~kHz
@@ -45,10 +47,13 @@ to preserve signal integrity for offline identification of individual
 neurons appearing on overlapping recording channels. With a 16-bit resolution, each channel generates 480~kbps, imposing a
 theoretical four-channel recording ceiling for wireless transmission. Modern high-density recording
 probes, however, carry up to thousands of channels, so transmitting their entire raw data over BLE is
-currently impossible. The proposed project instead performs neural identification on-device
+currently impossible. This system instead performs neural identification on-device
 (Figure~\ref{fig:overview}), yielding an
 off-the-shelf solution for wireless transmission of putatively identified neurons
-compatible with modern rodent neural recording systems.
+compatible with modern rodent neural recording systems. Beyond the proposal, this
+checkpoint adds the design approach: the system architecture, consideration of
+alternative designs with quantitative evaluations grounded in this project's bench
+measurements, and the training, timeline, and budget plans.
 
 \vspace*{\fill}
 
@@ -79,7 +84,7 @@ Neuropixels~1.0 probe, introduced in 2017, records extracellular activity in rod
 capacity to 5120 channels~[4], and a third generation is in development~[6]. These probes
 have already enabled discoveries beyond the reach of single-electrode methods, such as
 mapping how choice and action are encoded across the entire mouse brain~[5]. Furthermore,
-high density extracellular neural recordings employed in model organisms holds promise of
+high-density extracellular neural recordings employed in model organisms hold promise of
 fundamentally changing how the brain, both in health and in disease, is understood.
 
 The quantity these probes measure is the extracellular action potential, or spike: the
@@ -94,7 +99,9 @@ a full Neuropixels~2.0 quad-base recording generates $5120~\text{channels} \time
 30\text{~kS/s} \times 16\text{~bit} \approx 2.46$~Gbps, all of which must leave the
 animal's head to be analyzed. The growth in channel count, and with it in the volume of
 data each probe generates, has far outpaced the bandwidth of the communication hardware
-that must carry that data.
+that must carry that data. Within the full recording chain, from implanted probe through
+head-mounted electronics to the computers where analysis runs, this project resides at
+the head-mounted stage and its outbound data link.
 
 The questions these recordings serve are, moreover, best answered in freely behaving
 animals, and wireless headstages have been demonstrated precisely because they free the
@@ -103,10 +110,10 @@ Bluetooth Low Energy 6.0 (BLE) is a state-of-the-art consumer wireless protocol 
 power budget suitable for a head-mounted device~[9, 10]. However, BLE has a theoretical
 maximum data rate of 2~Mbps~[9], just $2\text{~Mbps} / 2.46\text{~Gbps} \approx 0.08\%$
 of the raw data rate of a
-Neuropixels~2.0 quad-base recording. Fortunately, many questions in neuroscientific inquiry require only the neural
-spike signatures, which constitute a small fraction of the continuous raw signal~[11, 12].
-This project embraces these technical developments and reexamines how neural data is
-handled in systems neuroscience: process the data on the device itself, and transmit
+Neuropixels~2.0 quad-base recording. Fortunately, many questions in neuroscientific inquiry 
+require only the neural spike signatures, which constitute a small fraction of the continuous 
+raw signal~[11, 12]. This project embraces these technical developments and reexamines how neural 
+data is handled in systems neuroscience: process the data on the device itself, and transmit
 only the scientifically relevant part of the signal.
 
 % ======= 1.2 Stakeholders, Client, and End Used of the Solution ======= %
@@ -118,6 +125,15 @@ agencies that fund their work share that gain. Preclinical drug researchers have
 interest too, since studies of the central nervous system often depend on recordings from
 animals that move freely.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.52\textwidth]{figures/stakeholder_map.png}
+\caption{Stakeholder map. Proximity to the center encodes directness of stake, from the
+headstage at the core to its direct stakeholders (inner ring) and the broader
+stakeholders (outer ring).}
+\label{fig:stakeholders}
+\end{figure}
+
 The client is the neuroscientist whose laboratory would buy the device and use it in its
 own work, whether a single academic group or a shared institutional facility.
 
@@ -127,24 +143,17 @@ ties the animal to a cable that carries the raw data. This limits movement and r
 experiments such as social interaction. A headstage that transmits wirelessly removes that
 limit and lets researchers run a wider range of experiments.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.75\textwidth]{figures/stakeholder_map.png}
-\caption{Stakeholder map. Proximity to the center encodes directness of stake, from the
-headstage at the core to its direct stakeholders (inner ring) and the broader stakeholders
-(outer ring).}
-\label{fig:stakeholders}
-\end{figure}
-
 % ======= 1.3 Problem Statement ======= %
 \subsection{Problem Statement}
 Modern recording probes give neuroscientists simultaneous access to thousands of neurons,
 and the questions those recordings serve are best answered while the animal behaves
 naturally. Every recorded sample, however, must leave the animal's head to be analyzed,
 and at thousands of channels the raw stream is measured in gigabits per
-second, roughly a thousand times more than low-power wireless technology can carry. The
-experimenter is therefore forced to choose between recording at scale and letting the
-animal move freely: high-density neural recording remains tethered.
+second, roughly a thousand times more than low-power wireless technology can carry.
+Experimenters are therefore forced to choose between recording at scale and letting the
+animal move freely. A solution must deliver the scientifically necessary content of a
+high-density recording without a cable, within the power budget of a head-mounted
+device.
 
 
 % ======= 2. Existing Solutions and Previous Work ======= %
@@ -199,19 +208,11 @@ without building custom hardware.
 % ======= 2.3 Previous Work ======= %
 \subsection{Previous Work}
 Only one part of the system has been built so far: a custom circuit board for testing the
-signal path (Figure~\ref{fig:pcb}). It carries an Intan RHD2164 front end wired to an
+signal path. It carries an Intan RHD2164 front end wired to an
 nRF54LM20B over SPI. The board has been brought up and used to record a single channel from
 end to end, with a known input passing through the Intan, across the SoC's Bluetooth Low
 Energy link, and out to a laptop. This confirms the acquisition front end that the rest of
 the system will build on.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.6\textwidth]{figures/pcb.png}
-\caption{Three-dimensional view of the custom signal-path test board, carrying the Intan
-RHD2164 analog front end (BGA soldered on post fabrication).}
-\label{fig:pcb}
-\end{figure}
 
 % ======= 3. Design Requirements and Technical Specifications ======= %
 \section{Design Requirements and Technical Specifications}
@@ -223,7 +224,7 @@ exhibit (the functional requirements) and the qualitative conditions each behavi
 satisfy (the technical requirements). Each technical requirement is then made concrete as
 a technical specification: a measurable parameter paired with a target value. These
 requirements and specifications are stated independently of any particular design; the
-design approaches that could realize them are considered later in this document.
+design approaches that could realize them are considered in Sections~\ref{sec:design} and~\ref{sec:quant}.
 
 Compressing continuous neural data without fidelity loss of spatiotemporal spike
 information requires isolating and preserving exactly the neural spike events at the
@@ -449,6 +450,287 @@ T10 & Run on a head-mounted battery & power; radio share & $\lesssim 100$~mW; $\
 }
 \end{table}
 
+% ======= 5. Design Approach ======= %
+\section{Design Approach}\label{sec:design}
+
+% ======= 5.1 System Architecture ======= %
+\subsection{System Architecture}
+Figure~\ref{fig:sysdiag} decomposes the proposed head stage into its subsystems and
+labels every interface with its physical medium and the data rate it must sustain. The
+analog front end amplifies, band-limits, and digitizes the extracellular signal; a
+hardware-timed acquisition engine on the system-on-chip (SoC) transfers each sample over
+SPI without CPU involvement; the on-device pipeline detects, classifies, and packetizes
+spike events; and the radio carries only the resulting five-byte identity-plus-timestamp
+packets to the host. The battery powers the two head-mounted components.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  font=\footnotesize,
+  block/.style={draw, rounded corners=2pt, align=center, inner sep=4pt, minimum height=16mm},
+  flow/.style={-{Stealth[length=2.6mm]}, thick},
+  pwr/.style={-{Stealth[length=2mm]}, densely dashed},
+  elabel/.style={font=\scriptsize, align=center}
+]
+\node[block] (src) {\textbf{Signal source}\\[1pt]
+  \scriptsize extracellular electrodes;\\
+  \scriptsize bench: ground-truth\\
+  \scriptsize waveform generator};
+\node[block, right=11mm of src] (intan) {\textbf{Intan RHD2164}\\[1pt]
+  \scriptsize amplifier array,\\
+  \scriptsize 300~Hz--6~kHz band\\
+  \scriptsize MUX $\to$ 16-bit ADC};
+\node[block, right=13mm of intan] (nrf) {\textbf{nRF54LM20B SoC}\\[1pt]
+  \scriptsize hw-timed acquisition:\\
+  \scriptsize TIMER $\to$ DPPI $\to$ SPIM $+$ DMA\\
+  \scriptsize detect $\to$ classify $\to$ packetize\\
+  \scriptsize BLE stack};
+\node[block, right=13mm of nrf] (host) {\textbf{Host computer}\\[1pt]
+  \scriptsize live plot, logging\\
+  \scriptsize Kilosort~4 reference\\
+  \scriptsize labels (validation)};
+\node[block, below=9mm of intan, xshift=22mm, minimum height=8mm] (bat)
+  {\textbf{Battery} \scriptsize ($<$1.5~g cell, DC rails)};
+
+\draw[flow] (src) -- node[elabel, above=11mm] {analog, differential\\ tens of $\mu$V--mV} (intan);
+\draw[flow] (intan) -- node[elabel, above=11mm] {SPI, 21.33~MHz\\ 757{,}741 words/s\\ (measured ceiling)} (nrf);
+\draw[flow] (nrf) -- node[elabel, above=11mm] {BLE, 2.4~GHz RF\\ 2~Mbps theoretical\\ 5~B per spike} (host);
+\draw[densely dotted, gray] (src.east)++(5.5mm,0) +(0,2mm) -- +(0,9.5mm);
+\draw[densely dotted, gray] (intan.east)++(7.5mm,0) +(0,2mm) -- +(0,9.5mm);
+\draw[densely dotted, gray] (nrf.east)++(7.5mm,0) +(0,2mm) -- +(0,9.5mm);
+\draw[pwr] (bat.west) -| node[elabel, below left=0pt and 2pt] {} (intan.south);
+\draw[pwr] (bat.east) -| (nrf.south);
+\end{tikzpicture}
+\caption{System diagram of the proposed head stage. Solid arrows are signal interfaces,
+labeled with their physical medium and the rate each must sustain; dashed arrows are DC
+power. On-head components (Intan front end, nRF54 SoC, battery) ride the animal; the
+host computer is the wireless receiver. The SPI rate is this project's bench-measured
+single-bus ceiling; all other rates are from the cited specifications.}
+\label{fig:sysdiag}
+\end{figure}
+
+% ======= 5.2 Consideration of Multiple Design Approaches ======= %
+\subsection{Consideration of Multiple Design Approaches}\label{sec:approaches}
+Five design decisions dominate the system. For each, the feasible approaches are
+described with the subsystem interactions they imply and their build and test
+consequences; where two approaches survive this qualitative screen, Section~\ref{sec:quant} evaluates
+them quantitatively.
+
+\textbf{Computation platform.} (a)~A commodity BLE system-on-chip (nRF54 class): the
+classifier and the radio share one chip, the front end connects directly over SPI, and
+firmware is iterated with ordinary embedded tooling; the acquisition path of this
+approach is already built and bench-validated in this project. (b)~An FPGA paired with a
+separate radio module: greater parallel throughput at high channel counts, but the
+pipeline splits across two chips, adding an inter-chip link whose bandwidth and timing
+must themselves be designed and tested, and the build requires an HDL toolchain and a
+board respin per iteration. (c)~A custom spike-sorting ASIC: the literature's best power
+and accuracy figures~[15, 16, 17], but fabrication requires facilities and timescales
+unavailable to a one-year commodity-parts project, and published parts carry no radio.
+(d)~Host-side classification: trivially feasible, but the link must then carry
+waveforms, which is precisely the bandwidth problem this project exists to remove.
+Approach~(a) is the only one simultaneously obtainable, programmable, and
+radio-integrated; it is the chosen platform.
+
+\textbf{Sample pacing.} (a)~Software-paced acquisition: a firmware thread issues each
+SPI conversion against a deadline. It is simple to build, but the sampling thread and
+the BLE controller share the CPU, and the radio's interrupt priority lets it displace
+sampling instants; the interaction is measured, not hypothetical. (b)~Hardware-timed
+acquisition: a timer peripheral triggers each SPI transaction through the SoC's
+event-routing fabric with DMA collecting results, removing the CPU, and therefore the
+radio, from the timing path at the cost of more involved peripheral bring-up. Both were
+built and measured on identical hardware in this project; Section~\ref{sec:quant} reports the
+comparison.
+
+\textbf{Acquisition bus topology.} (a)~A single SPI bus: one front end carries all
+channels on four wires, with the simplest layout and firmware, but every channel shares
+one measured conversion-rate ceiling. (b)~Dual front ends on dual buses: the ceiling
+doubles and the radio-facing pipeline is unchanged (packets merge in memory), at the
+cost of a second front end, doubled routing, and a second DMA engine. The choice gates
+the custom PCB layout; Section~\ref{sec:quant} quantifies both against the T1/T2 targets.
+
+\textbf{Classification algorithm.} All candidates occupy the same place in the pipeline,
+between detection and packetization; they differ in what must be computed per spike on
+the device and what the host must supply beforehand. (a)~Template matching: unit
+templates are built offline from a reference recording and each detected spike is
+assigned to the nearest template on the device~[20]; the per-spike cost is a handful of
+multiply-accumulates per template, well within the SoC's budget, and accuracy is directly
+scorable as a confusion matrix against Kilosort labels. (b)~On-device feature extraction
+with unsupervised clustering~[19]: no offline phase, but higher memory and compute, and
+its evolving cluster identities are harder to validate against fixed ground truth.
+(c)~A small quantized neural network: comparable inference cost to templates but a
+heavier training and deployment pipeline, retrained per session. Template matching is
+the primary approach, matching the offline/online split of the prior art; the network
+remains a documented fallback if template accuracy plateaus below the T8 target.
+
+\textbf{Delivery path for bench validation.} (a)~Direct BLE from the head stage to the
+host laptop: no additional hardware, but the laptop operating system's connection-interval
+floor caps the raw-streaming rate used during validation. (b)~An nRF-to-nRF relay
+(second development kit forwarding to the host over wired serial): adds one
+off-the-shelf board and recovers the radio's full measured throughput. This decision
+affects only the validation bench; the final system's per-spike packets sit orders of
+magnitude below either ceiling.
+
+% ======= 6. Quantitative Evaluation of Design Approaches ======= %
+\section{Quantitative Evaluation of Design Approaches}\label{sec:quant}
+
+\subsection{Sample Pacing: Software-Paced versus Hardware-Timed}
+Both pacing approaches of Section~\ref{sec:approaches} were built in this project and measured with the
+same instrument: an oscilloscope on the front end's chip-select line, where every falling
+edge is one conversion request, so the distribution of edge-to-edge intervals is the
+sampling regularity itself, measured independently of the device under test. Roughly
+12{,}800 consecutive intervals were captured per approach at a 20~kS/s nominal rate
+(50~$\mu$s period) with the BLE link streaming throughout. Table~\ref{tab:pacing}
+summarizes the result: the software-paced sampler, displaced by the radio's
+interrupt-priority work, placed only 0.7\% of samples within $\pm$10\% of the nominal
+period, while the hardware-timed engine placed 100.0\% of them, a 62$\times$ reduction
+in standard deviation. Averages alone would not have distinguished the two (both hold
+the nominal rate), which is why regularity was measured at the signal level rather than
+inferred from throughput. The hardware-timed engine is the chosen approach; its two
+residuals are understood and bounded (the mean reads $+0.34$\% because the timer runs
+from an uncalibrated on-chip oscillator, and one $\sim$53~$\mu$s interval per 1.64~s is
+the engine's deliberate buffer-rewind pause).
+
+\begin{table}[H]
+\centering
+\caption{Measured inter-sample interval statistics for the two pacing approaches
+(oscilloscope capture of the chip-select line; 20~kS/s nominal, BLE active).}
+\label{tab:pacing}
+{\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+ & Software-paced & Hardware-timed \\
+\midrule
+intervals measured            & 12{,}800 & 12{,}843 \\
+mean ($\mu$s)                 & 50.00    & 49.83 \\
+standard deviation ($\mu$s)   & 23.67    & \textbf{0.38} \\
+minimum / maximum ($\mu$s)    & 6.75 / 325.79 & 19.04 / 53.40 \\
+within $\pm$10\% of nominal   & 0.7\%    & \textbf{100.0\%} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsection{Bus Topology: Single versus Dual SPI Bus}
+The acquisition ceiling of one SPI bus was measured directly, using the bench-validated
+settings of a 21.33~MHz clock, hardware chip-select, and 16-bit words: the bus sustains
+757{,}741 conversions per second, i.e.\ one word per 1.32~$\mu$s of bus time. The
+channel arithmetic follows: at the 32-channel target of T1, a single bus offers
+$757{,}741 / 32 \approx 23.7$~kS/s per channel, above the 12~kS/s Nyquist floor of T2
+but 21\% short of the 30~kS/s target; conversely, at full 30~kS/s a single bus carries
+at most 25 channels. A dual-bus topology doubles the measured ceiling to
+$\approx$1.52~M~words/s, which at 32 channels allows 47.4~kS/s per channel, meeting the
+T1 and T2 targets with 58\% margin. The single bus therefore satisfies the
+specification floors and the dual bus the targets; because the choice sets the number of
+front ends and the routing of the custom circuit board, it must be finalized before
+layout, with the dual bus as the default unless the remaining power budget argues
+otherwise.
+
+\subsection{Link Budget: Raw Waveforms versus Spike Identities}
+The core design claim is evaluated analytically. Raw transmission scales with channel
+count and sample rate: $32 \times 30\text{~kS/s} \times 16\text{~bit} = 15.36$~Mbps,
+7.7$\times$ the radio's 2~Mbps theoretical ceiling, which is why raw transmission caps
+at four channels. Spike-identity transmission instead scales with firing rate: at a
+conservatively high sustained rate of 40 spikes per second per channel, $32 \times 40
+\times 5\text{~B} = 51.2$~kbps, a $300\times$ reduction, occupying 2.6\% of the radio's
+ceiling. The crossover at which spike-identity transmission stops winning is a firing
+rate of $480{,}000 / 40 = 12{,}000$ spikes per second per channel, two orders of
+magnitude beyond physiological rates, so the advantage is robust to any realistic spike
+activity. Equivalently, within 2~Mbps the radio can carry the identities of
+$2\text{~Mbps} / 40\text{~bit} = 50{,}000$ spikes per second, which at 40~spikes/s per
+unit is over a thousand units, against four channels of raw waveform.
+
+% ======= 7. Training for Required Tools and Skills ======= %
+\section{Training for Required Tools and Skills}
+Table~\ref{tab:training} lists the tools and skills the build and test phases require,
+with completion status and dates.
+
+\begin{table}[H]
+\centering
+\caption{Training required for the project's tools and skills, with status and dates.}
+\label{tab:training}
+{\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{@{}L l l@{}}
+\toprule
+Tool / skill & Status & Date \\
+\midrule
+KiCad schematic/layout and BGA board assembly (test PCB fabricated, brought up) & complete & Aug.\ 2026 \\
+Zephyr / nRF Connect SDK firmware; DPPI, timer, and DMA peripheral programming & complete & Sep.\ 2026 \\
+Intan RHD2000-series SPI command protocol and register configuration & complete & Sep.\ 2026 \\
+Oscilloscope measurement workflows incl.\ waveform export and scripted analysis & complete & Oct.\ 2026 \\
+Python acquisition/analysis tooling (BLE client, live plotting, statistics) & complete & Sep.\ 2026 \\
+Ground-truth playback rig (single-board computer, I2S DAC; parts ordered) & pending & Oct.\ 2026 \\
+Kilosort~4 installation and reference-sorting workflow & pending & Nov.\ 2026 \\
+Power profiling with a current-waveform profiler (radio-triggered) & pending & Dec.\ 2026 \\
+\bottomrule
+\end{tabularx}
+}
+\end{table}
+
+% ======= 8. Preliminary Timeline and Budget ======= %
+\section{Preliminary Timeline and Budget}
+Table~\ref{tab:timeline} breaks the remaining work into two-week stages spanning design,
+build, measurement, analysis, and verification, with the course milestones embedded.
+Table~\ref{tab:budget} summarizes spending to date and projected purchases; all parts are
+off the shelf, and the total remains far below typical commercial wireless headstage
+pricing.
+
+\begin{table}[H]
+\centering
+\caption{Preliminary project timeline in two-week increments. Stage labels: D = design,
+B = build, M = measure, A = analyze, V = verify.}
+\label{tab:timeline}
+{\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{@{}l l L@{}}
+\toprule
+Two-week block & Stage & Milestone \\
+\midrule
+Oct.\ 6 -- Oct.\ 19   & B/M & Ground-truth playback rig online; chain noise floor measured on shorted input \\
+Oct.\ 20 -- Nov.\ 2   & B/M & 32-channel round-robin acquisition at the measured bus ceiling; bus-topology decision finalized \\
+Nov.\ 3 -- Nov.\ 16   & B/M & On-device detection and timestamping; detection scored against known ground truth (T5, T6) \\
+Nov.\ 17 -- Nov.\ 30  & A   & Design Review; Kilosort~4 reference pipeline running on replayed recordings \\
+Dec.\ 1 -- Dec.\ 14   & B/M & Template-matching classifier v1 on-device; first confusion matrix (T7, T8) \\
+Dec.\ 15 -- Jan.\ 11  & D   & Second-revision PCB layout per the chosen bus topology; fabrication ordered (winter break, 4 weeks) \\
+Jan.\ 12 -- Jan.\ 25  & B   & PCB bring-up; classifier integrated with multi-channel acquisition \\
+Jan.\ 26 -- Feb.\ 8   & M   & End-to-end spike-identity streaming; accuracy and loss measured (CP2) \\
+Feb.\ 9 -- Feb.\ 22   & M   & Power profiled with and without on-device classification; battery life validated (T10) \\
+Feb.\ 23 -- Mar.\ 8   & A/B & Iteration on the weakest specification; statistical analysis of all measurements \\
+Mar.\ 9 -- Mar.\ 22   & V   & Full-system verification on replayed real recordings against all specifications \\
+Mar.\ 23 -- Apr.\ 5   & --  & Thesis writing and final presentation preparation \\
+\bottomrule
+\end{tabularx}
+}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Preliminary budget: spent to date and projected. Amounts are approximate.}
+\label{tab:budget}
+{\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{@{}L l l@{}}
+\toprule
+Item & Status & Approx.\ cost \\
+\midrule
+Custom signal-path test PCB (fabrication + passives) & spent & \$100 \\
+Intan RHD2164 analog front end & spent & \$300 \\
+nRF54 development kits ($\times$2: device + relay) & spent & \$120 \\
+Ground-truth playback rig (Pi Zero~2~W, I2S DAC, microSD) & spent & \$35 \\
+Second-revision PCB (fabrication + assembly) & projected & \$150 \\
+Battery cells ($<$1.5~g) + power profiling shunt board & projected & \$80 \\
+Contingency (connectors, passives, cabling) & projected & \$50 \\
+\midrule
+\textbf{Total} & & \textbf{$\approx$\$835} \\
+\bottomrule
+\end{tabularx}
+}
+\end{table}
 
 % ======= References ======= %
 \phantomsection
