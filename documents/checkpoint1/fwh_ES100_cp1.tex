@@ -50,10 +50,7 @@ probes, however, carry up to thousands of channels, so transmitting their entire
 currently impossible. This system instead performs neural identification on-device
 (Figure~\ref{fig:overview}), yielding an
 off-the-shelf solution for wireless transmission of putatively identified neurons
-compatible with modern rodent neural recording systems. Beyond the proposal, this
-checkpoint adds the design approach: the system architecture, consideration of
-alternative designs with quantitative evaluations grounded in this project's bench
-measurements, and the training, timeline, and budget plans.
+compatible with modern rodent neural recording systems.
 
 \begin{figure}[H]
 \centering
@@ -70,34 +67,33 @@ timestamp over Bluetooth Low Energy (BLE).}
 % ======= 1.1 Background and Motivation ======= %
 \subsection{Background and Motivation}
 Systems neuroscience seeks to explain how the organized interplay of individual neurons
-gives rise to sensation, cognition, and behavior~[1]. Answering such questions requires
-observing many neurons at once, across anatomically defined brain regions. The field
-has therefore invested heavily in high-density intracranial recording probes. The
-Neuropixels~1.0 probe, introduced in 2017, records extracellular activity in rodents on
+gives rise to sensation, cognition, and behavior~[1]. Answering these questions requires
+observing firing activity from multiple neurons across multiple brain regions at once, and studying their relationships.
+The neuroscientific community has thus invested heavily in high-density intracranial recording probes. The
+Neuropixels~1.0 probe, introduced in 2017, records extracellular activity in rodents from
 384 channels simultaneously~[3]. The Neuropixels~2.0 extends recording
-capacity to 5120 channels~[4], and a third generation is in development~[6]. These probes
+capacity to 5120 channels~[4], and Neuropixels 3.0 is currently being developed~[6]. These probes
 have already enabled discoveries beyond the reach of single-electrode methods, such as
-mapping how choice and action are encoded across the entire mouse brain~[5]. Furthermore,
+mapping how choice and action are encoded across the mouse brain~[5]. Furthermore,
 high-density extracellular neural recordings employed in model organisms hold promise of
 fundamentally changing how the brain, both in health and in disease, is understood.
 
-The quantity these probes measure is the extracellular action potential, or spike: the
-brief voltage deflection an electrically excitable cell produces when it fires. First
-recorded in 1868 by Julius Bernstein~[2], the action potential remains the basic unit of neural signaling, and the
-interplay between neurons is studied by measuring the spikes of individual cells~[3].
+The quantity high-density intracranial neural recording probes measure is the extracellular action potential, or spike. An
+extracellular action potential is the brief voltage deflection an electrically excitable 
+cell produces as a function of time when it fires. First
+recorded in 1868 by Julius Bernstein~[2], the action potential is the basic unit of neural signaling,
+and is the unit of measurement currently available with the highest spatiotemporal neural resolution at scale~[3].
 Extracellular spikes contain frequencies from roughly 300~Hz to 6~kHz~[22], so the
 industry-standard analog front end digitizes each channel with a 16-bit
 analog-to-digital converter (ADC) at 30~kHz for roll-off margin~[7, 8]. At these settings
 a full Neuropixels~2.0 quad-base recording generates $5120~\text{channels} \times
 30\text{~kS/s} \times 16\text{~bit} \approx 2.46$~Gbps, all of which must leave the
-animal's head to be analyzed. The growth in channel count, and with it in the volume of
-data each probe generates, has far outpaced the bandwidth of the communication hardware
-that must carry that data. Within the full recording chain, from implanted probe through
-head-mounted electronics to the computers where analysis runs, this project resides at
-the head-mounted stage and its outbound data link.
+recording probe for downstream spike extraction. The growth in electrode channel count
+has far outpaced the wireless bandwidth of low energy communication protocols
+that must transmit and receive the neural data.
 
-The questions these recordings serve are, moreover, best answered in freely behaving
-animals, and wireless headstages have been demonstrated precisely because they free the
+The questions neural recordings serve are best answered in freely behaving
+animals. Wireless headstages have been demonstrated precisely because they free the
 animal from its tether and the stress and behavioral limits a cable imposes~[13].
 Bluetooth Low Energy 6.0 (BLE) is a state-of-the-art consumer wireless protocol with a
 power budget suitable for a head-mounted device~[9, 10]. However, BLE has a theoretical
@@ -105,18 +101,18 @@ maximum data rate of 2~Mbps~[9], just $2\text{~Mbps} / 2.46\text{~Gbps} \approx 
 of the raw data rate of a
 Neuropixels~2.0 quad-base recording. Fortunately, many questions in neuroscientific inquiry 
 require only the neural spike signatures, which constitute a small fraction of the continuous 
-raw signal~[11, 12]. This project embraces these technical developments and reexamines how neural 
-data is handled in systems neuroscience: process the data on the device itself, and transmit
-only the scientifically relevant part of the signal.
+raw signal~[11, 12]. The proposed project embraces this fact and rethinks how neural 
+data is handled in systems neuroscience. By processing the data on-device and transmitting
+only the scientifically relevant part of the signal, wirless full-scale, high-density neural recordings are enabled. 
 
 % ======= 1.2 Stakeholders, Client, and End Used of the Solution ======= %
 \subsection{Stakeholders, Client, and End User of the Solution}
-Several groups have a stake in the project (Figure~\ref{fig:stakeholders}). The animals
-that carry the device benefit most directly. Neuroscientists gain because
-recording more channels wirelessly allows experiments that are impractical today, and the
-agencies that fund their work share that gain. Preclinical drug researchers have an
-interest too, since studies of the central nervous system often depend on recordings from
-animals that move freely.
+Several groups have a stake in the project, with the animals carrying the 
+recording devices being affected most directly (Figure~\ref{fig:stakeholders}). Neuroscientists are also
+stakeholders because recording more channels wirelessly allows experiments that are wanted but impossible today. For instance,
+social experiments where multple mice are involved, or memory experiments with intricate maze configurations, require wireless recordings.
+Furthermore, the agencies that fund neuroscience can be thought of as indirect stakeholders, as well as preclinical drug developers and 
+pharmaceutical companies.
 
 \begin{figure}[H]
 \centering
@@ -126,13 +122,6 @@ device touches directly occupy the inner tier, and the broader stakeholders the 
 tier.}
 \label{fig:stakeholders}
 \end{figure}
-
-The client is the neuroscientist whose laboratory would buy the device and use it in its
-own work, whether a single academic group or a shared institutional facility.
-
-The end users are systems neuroscientists, who study how neural activity relates to
-behavior. A wireless headstage removes the cable that limits movement and rules out
-experiments such as social interaction, letting researchers run a wider range of studies.
 
 % ======= 1.3 Problem Statement ======= %
 \subsection{Problem Statement}
