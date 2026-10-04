@@ -14,8 +14,6 @@
 \setcounter{tocdepth}{2}
 \usepackage[hidelinks]{hyperref}
 \usepackage{caption}
-\usepackage{tikz}
-\usetikzlibrary{positioning,arrows.meta}
 \captionsetup{font=small, labelfont=bf}
 
 \title{{\large ES100 Checkpoint 1}\\[0.5em]
@@ -244,16 +242,20 @@ summarized in Table~\ref{tab:funcreq}.
 {\footnotesize
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.25}
-\begin{tabularx}{\textwidth}{@{}l L@{}}
-\toprule
+\begin{tabularx}{\textwidth}{|l|L|}
+\hline
 Label & Functional requirement \\
-\midrule
+\hline
 F1 & \emph{Acquire} extracellular voltage from multiple recording channels \\
+\hline
 F2 & \emph{Detect} spike events within the acquired signal \\
+\hline
 F3 & \emph{Log} the time at which each detected spike occurs \\
+\hline
 F4 & \emph{Classify} each detected spike and assign it a unit identity \\
+\hline
 F5 & \emph{Transmit} each unit identity coupled with its timestamp over a wireless link \\
-\bottomrule
+\hline
 \end{tabularx}
 }
 \end{table}
@@ -283,38 +285,42 @@ Justifications follow the table.
 {\footnotesize
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.25}
-\begin{tabularx}{\textwidth}{@{}l L L L L@{}}
-\toprule
+\begin{tabularx}{\textwidth}{|l|L|L|L|L|}
+\hline
 Label & Requirement & Specification & Quantitative value & Measurement method \\
-\midrule
-\multicolumn{5}{@{}l}{\textbf{F1 -- Acquire}} \\
-\addlinespace[2pt]
+\hline
+\multicolumn{5}{|l|}{\textbf{F1 -- Acquire}} \\
+\hline
 T1  & Channels at the scales neuroscientists use & channel count & $\geq 5$; 32; 384 asp. & count channels in the acquired stream \\
+\hline
 T2  & Sample fast enough for the band & per-channel sample rate & $\geq 12$~kS/s; 30~kS/s & FFT of a known replayed tone; timer period; sustained/missed conversion and dropped-sample counts for the derived throughput \\
+\hline
 T3  & Resolve spikes above noise & resolution; noise & 16-bit; $\leq 5~\mu$Vrms & noise on a shorted input; SNR on a known input \\
-\midrule
-\multicolumn{5}{@{}l}{\textbf{F2 -- Detect}} \\
-\addlinespace[2pt]
+\hline
+\multicolumn{5}{|l|}{\textbf{F2 -- Detect}} \\
+\hline
 T4  & Spikes separated from the LFP & high-pass corner & $\sim$300~Hz & filter response from a frequency sweep \\
+\hline
 T5  & Detect spikes reliably & TPR / precision vs.\ Kilosort & $\geq 90\%$ each & match to Kilosort truth, $\pm$1~ms window \\
-\midrule
-\multicolumn{5}{@{}l}{\textbf{F3 -- Log}} \\
-\addlinespace[2pt]
+\hline
+\multicolumn{5}{|l|}{\textbf{F3 -- Log}} \\
+\hline
 T6  & A timestamp per detected spike & timestamp; jitter & one per spike & inspect stream; jitter vs.\ sync marker \\
-\midrule
-\multicolumn{5}{@{}l}{\textbf{F4 -- Classify}} \\
-\addlinespace[2pt]
+\hline
+\multicolumn{5}{|l|}{\textbf{F4 -- Classify}} \\
+\hline
 T7  & A unit identity per spike & unit label & one of $K$ & inspect output \\
+\hline
 T8  & Classify better than chance & accuracy vs.\ Kilosort & $> 1/K$; 85--99\% asp. & confusion matrix vs.\ Kilosort, held-out data \\
-\midrule
-\multicolumn{5}{@{}l}{\textbf{F5 -- Transmit}} \\
-\addlinespace[2pt]
+\hline
+\multicolumn{5}{|l|}{\textbf{F5 -- Transmit}} \\
+\hline
 T9  & Packet carries identity and time & packet content & 5~B (1~B ID $+$ 4~B ts) & inspect received packets \\
-\midrule
-\multicolumn{5}{@{}l}{\textbf{System-level}} \\
-\addlinespace[2pt]
+\hline
+\multicolumn{5}{|l|}{\textbf{System-level}} \\
+\hline
 T10 & Run on a head-mounted battery & power; radio share & $\lesssim 100$~mW; $\geq 1$~h on $<$1.5~g & current $\times$ voltage under load; profile radio; battery life \\
-\bottomrule
+\hline
 \end{tabularx}
 }
 \end{table}
@@ -422,47 +428,13 @@ packets to the host. The battery powers the two head-mounted components.
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[
-  font=\footnotesize,
-  block/.style={draw, rounded corners=2pt, align=center, inner sep=4pt, minimum height=16mm},
-  flow/.style={-{Stealth[length=2.6mm]}, thick},
-  pwr/.style={-{Stealth[length=2mm]}, densely dashed},
-  elabel/.style={font=\scriptsize, align=center}
-]
-\node[block] (src) {\textbf{Signal source}\\[1pt]
-  \scriptsize extracellular electrodes;\\
-  \scriptsize bench: ground-truth\\
-  \scriptsize waveform generator};
-\node[block, right=11mm of src] (intan) {\textbf{Intan RHD2164}\\[1pt]
-  \scriptsize amplifier array,\\
-  \scriptsize 300~Hz--6~kHz band\\
-  \scriptsize MUX $\to$ 16-bit ADC};
-\node[block, right=13mm of intan] (nrf) {\textbf{nRF54LM20B SoC}\\[1pt]
-  \scriptsize hw-timed acquisition:\\
-  \scriptsize TIMER $\to$ DPPI $\to$ SPIM $+$ DMA\\
-  \scriptsize detect $\to$ classify $\to$ packetize\\
-  \scriptsize BLE stack};
-\node[block, right=13mm of nrf] (host) {\textbf{Host computer}\\[1pt]
-  \scriptsize live plot, logging\\
-  \scriptsize Kilosort~4 reference\\
-  \scriptsize labels (validation)};
-\node[block, below=9mm of intan, xshift=22mm, minimum height=8mm] (bat)
-  {\textbf{Battery} \scriptsize ($<$1.5~g cell, DC rails)};
-
-\draw[flow] (src) -- node[elabel, above=11mm] {analog, differential\\ tens of $\mu$V--mV} (intan);
-\draw[flow] (intan) -- node[elabel, above=11mm] {SPI, 21.33~MHz\\ 757{,}741 words/s\\ (measured ceiling)} (nrf);
-\draw[flow] (nrf) -- node[elabel, above=11mm] {BLE, 2.4~GHz RF\\ 2~Mbps theoretical\\ 5~B per spike} (host);
-\draw[densely dotted, gray] (src.east)++(5.5mm,0) +(0,2mm) -- +(0,9.5mm);
-\draw[densely dotted, gray] (intan.east)++(7.5mm,0) +(0,2mm) -- +(0,9.5mm);
-\draw[densely dotted, gray] (nrf.east)++(7.5mm,0) +(0,2mm) -- +(0,9.5mm);
-\draw[pwr] (bat.west) -| node[elabel, below left=0pt and 2pt] {} (intan.south);
-\draw[pwr] (bat.east) -| (nrf.south);
-\end{tikzpicture}
-\caption{System diagram of the proposed head stage. Solid arrows are signal interfaces,
-labeled with their physical medium and the rate each must sustain; dashed arrows are DC
-power. On-head components (Intan front end, nRF54 SoC, battery) ride the animal; the
-host computer is the wireless receiver. The SPI rate is this project's bench-measured
-single-bus ceiling; all other rates are from the cited specifications.}
+\includegraphics[width=\textwidth]{figures/sysdiag.pdf}
+\caption{System diagram of the proposed head stage. Signal flows left to right:
+microvolt-scale differential analog voltage into the front end; digitized samples to the
+SoC over SPI at 21.33~MHz (757{,}741 words/s, this project's bench-measured single-bus
+ceiling); five-byte spike-identity packets to the host over 2.4~GHz BLE (2~Mbps
+theoretical). The headstage (solid boundary) is head-mounted and battery-powered;
+the host computer is the wireless receiver.}
 \label{fig:sysdiag}
 \end{figure}
 
@@ -555,16 +527,20 @@ the engine's deliberate buffer-rewind pause).
 {\footnotesize
 \setlength{\tabcolsep}{5pt}
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{@{}lcc@{}}
-\toprule
+\begin{tabular}{|l|c|c|}
+\hline
  & Software-paced & Hardware-timed \\
-\midrule
+\hline
 intervals measured            & 12{,}800 & 12{,}843 \\
+\hline
 mean ($\mu$s)                 & 50.00    & 49.83 \\
+\hline
 standard deviation ($\mu$s)   & 23.67    & \textbf{0.38} \\
+\hline
 minimum / maximum ($\mu$s)    & 6.75 / 325.79 & 19.04 / 53.40 \\
+\hline
 within $\pm$10\% of nominal   & 0.7\%    & \textbf{100.0\%} \\
-\bottomrule
+\hline
 \end{tabular}
 }
 \end{table}
@@ -610,19 +586,26 @@ with completion status and dates.
 {\footnotesize
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.2}
-\begin{tabularx}{\textwidth}{@{}L l l@{}}
-\toprule
+\begin{tabularx}{\textwidth}{|L|l|l|}
+\hline
 Tool / skill & Status & Date \\
-\midrule
+\hline
 KiCad schematic/layout and BGA board assembly (test PCB fabricated, brought up) & complete & Aug.\ 2026 \\
+\hline
 Zephyr / nRF Connect SDK firmware; DPPI, timer, and DMA peripheral programming & complete & Sep.\ 2026 \\
+\hline
 Intan RHD2000-series SPI command protocol and register configuration & complete & Sep.\ 2026 \\
+\hline
 Oscilloscope measurement workflows incl.\ waveform export and scripted analysis & complete & Oct.\ 2026 \\
+\hline
 Python acquisition/analysis tooling (BLE client, live plotting, statistics) & complete & Sep.\ 2026 \\
+\hline
 Ground-truth playback rig (single-board computer, I2S DAC; parts ordered) & pending & Oct.\ 2026 \\
+\hline
 Kilosort~4 installation and reference-sorting workflow & pending & Nov.\ 2026 \\
+\hline
 Power profiling with a current-waveform profiler (radio-triggered) & pending & Dec.\ 2026 \\
-\bottomrule
+\hline
 \end{tabularx}
 }
 \end{table}
@@ -643,23 +626,34 @@ B = build, M = measure, A = analyze, V = verify.}
 {\footnotesize
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.2}
-\begin{tabularx}{\textwidth}{@{}l l L@{}}
-\toprule
+\begin{tabularx}{\textwidth}{|l|l|L|}
+\hline
 Two-week block & Stage & Milestone \\
-\midrule
+\hline
 Oct.\ 6 -- Oct.\ 19   & B/M & Ground-truth playback rig online; chain noise floor measured on shorted input \\
+\hline
 Oct.\ 20 -- Nov.\ 2   & B/M & 32-channel round-robin acquisition at the measured bus ceiling; bus-topology decision finalized \\
+\hline
 Nov.\ 3 -- Nov.\ 16   & B/M & On-device detection and timestamping; detection scored against known ground truth (T5, T6) \\
+\hline
 Nov.\ 17 -- Nov.\ 30  & A   & Design Review; Kilosort~4 reference pipeline running on replayed recordings \\
+\hline
 Dec.\ 1 -- Dec.\ 14   & B/M & Template-matching classifier v1 on-device; first confusion matrix (T7, T8) \\
+\hline
 Dec.\ 15 -- Jan.\ 11  & D   & Second-revision PCB layout per the chosen bus topology; fabrication ordered (winter break, 4 weeks) \\
+\hline
 Jan.\ 12 -- Jan.\ 25  & B   & PCB bring-up; classifier integrated with multi-channel acquisition \\
+\hline
 Jan.\ 26 -- Feb.\ 8   & M   & End-to-end spike-identity streaming; accuracy and loss measured (CP2) \\
+\hline
 Feb.\ 9 -- Feb.\ 22   & M   & Power profiled with and without on-device classification; battery life validated (T10) \\
+\hline
 Feb.\ 23 -- Mar.\ 8   & A/B & Iteration on the weakest specification; statistical analysis of all measurements \\
+\hline
 Mar.\ 9 -- Mar.\ 22   & V   & Full-system verification on replayed real recordings against all specifications \\
+\hline
 Mar.\ 23 -- Apr.\ 5   & --  & Thesis writing and final presentation preparation \\
-\bottomrule
+\hline
 \end{tabularx}
 }
 \end{table}
@@ -671,20 +665,26 @@ Mar.\ 23 -- Apr.\ 5   & --  & Thesis writing and final presentation preparation 
 {\footnotesize
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.2}
-\begin{tabularx}{\textwidth}{@{}L l l@{}}
-\toprule
+\begin{tabularx}{\textwidth}{|L|l|l|}
+\hline
 Item & Status & Approx.\ cost \\
-\midrule
+\hline
 Custom signal-path test PCB (fabrication + passives) & spent & \$100 \\
+\hline
 Intan RHD2164 analog front end & spent & \$300 \\
+\hline
 nRF54 development kits ($\times$2: device + relay) & spent & \$120 \\
+\hline
 Ground-truth playback rig (Pi Zero~2~W, I2S DAC, microSD) & spent & \$35 \\
+\hline
 Second-revision PCB (fabrication + assembly) & projected & \$150 \\
+\hline
 Battery cells ($<$1.5~g) + power profiling shunt board & projected & \$80 \\
+\hline
 Contingency (connectors, passives, cabling) & projected & \$50 \\
-\midrule
+\hline
 \textbf{Total} & & \textbf{$\approx$\$835} \\
-\bottomrule
+\hline
 \end{tabularx}
 }
 \end{table}
