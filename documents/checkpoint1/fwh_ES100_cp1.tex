@@ -275,45 +275,45 @@ requirements are summarized in Table~\ref{tab:techreq}: T1 through T9 grouped by
 functional requirement each serves, and T10 a system-level power constraint.
 Justifications follow the table.
 
-% ======= Table 2 ======= %
+% ======= Table 2: merged specs + measurement methods ======= %
 \begin{table}[H]
 \centering
-\caption{Technical requirements and specifications grouped by functional requirements}
+\caption{Technical requirements and specifications grouped by functional requirement, with the measurement method for each}
 \label{tab:techreq}
 {\footnotesize
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.25}
-\begin{tabularx}{\textwidth}{@{}l L L L@{}}
+\begin{tabularx}{\textwidth}{@{}l L L L L@{}}
 \toprule
-Label & Requirement & Specification & Quantitative value \\
+Label & Requirement & Specification & Quantitative value & Measurement method \\
 \midrule
-\multicolumn{4}{@{}l}{\textbf{F1 -- Acquire}} \\
+\multicolumn{5}{@{}l}{\textbf{F1 -- Acquire}} \\
 \addlinespace[2pt]
-T1  & Acquire from enough channels to serve the scales neuroscientists record at & simultaneous channel count & $\geq 5$ (floor); 32 (target); 384 (aspirational) \\
-T2  & Sample fast enough to capture the spike band without aliasing & per-channel sample rate & $\geq 12$~kS/s (floor); 30~kS/s (target) \\
-T3  & Resolve spike amplitudes above the noise floor & ADC resolution; input-referred noise & 16-bit; $\leq 5~\mu$Vrms \\
+T1  & Channels at the scales neuroscientists use & channel count & $\geq 5$; 32; 384 asp. & count channels in the acquired stream \\
+T2  & Sample fast enough for the band & per-channel sample rate & $\geq 12$~kS/s; 30~kS/s & FFT of a known replayed tone; timer period; sustained/missed conversion and dropped-sample counts for the derived throughput \\
+T3  & Resolve spikes above noise & resolution; noise & 16-bit; $\leq 5~\mu$Vrms & noise on a shorted input; SNR on a known input \\
 \midrule
-\multicolumn{4}{@{}l}{\textbf{F2 -- Detect}} \\
+\multicolumn{5}{@{}l}{\textbf{F2 -- Detect}} \\
 \addlinespace[2pt]
-T4  & Separate spikes from the local field potential & high-pass corner frequency & $\sim$300~Hz \\
-T5  & Detect true spikes without over-triggering on noise & detection TPR / precision vs.\ Kilosort & TPR $\geq 90\%$; precision $\geq 90\%$ \\
+T4  & Spikes separated from the LFP & high-pass corner & $\sim$300~Hz & filter response from a frequency sweep \\
+T5  & Detect spikes reliably & TPR / precision vs.\ Kilosort & $\geq 90\%$ each & match to Kilosort truth, $\pm$1~ms window \\
 \midrule
-\multicolumn{4}{@{}l}{\textbf{F3 -- Log}} \\
+\multicolumn{5}{@{}l}{\textbf{F3 -- Log}} \\
 \addlinespace[2pt]
-T6  & Record when each detected spike occurs & timestamps per spike & one per detected spike \\
+T6  & A timestamp per detected spike & timestamp; jitter & one per spike & inspect stream; jitter vs.\ sync marker \\
 \midrule
-\multicolumn{4}{@{}l}{\textbf{F4 -- Classify}} \\
+\multicolumn{5}{@{}l}{\textbf{F4 -- Classify}} \\
 \addlinespace[2pt]
-T7  & Assign each detected spike a unit identity & unit label per spike & one of $K$ units \\
-T8  & Classify better than chance & classification accuracy vs.\ Kilosort & $> 1/K$ (floor); aspirational 85--99\% \\
+T7  & A unit identity per spike & unit label & one of $K$ & inspect output \\
+T8  & Classify better than chance & accuracy vs.\ Kilosort & $> 1/K$; 85--99\% asp. & confusion matrix vs.\ Kilosort, held-out data \\
 \midrule
-\multicolumn{4}{@{}l}{\textbf{F5 -- Transmit}} \\
+\multicolumn{5}{@{}l}{\textbf{F5 -- Transmit}} \\
 \addlinespace[2pt]
-T9  & Transmit only the spike identity and its time, not the waveform & per-spike packet content & 5~B (1~B ID $+$ 4~B ts) \\
+T9  & Packet carries identity and time & packet content & 5~B (1~B ID $+$ 4~B ts) & inspect received packets \\
 \midrule
-\multicolumn{4}{@{}l}{\textbf{System-level}} \\
+\multicolumn{5}{@{}l}{\textbf{System-level}} \\
 \addlinespace[2pt]
-T10 & Run on a head-mounted battery for a useful session & average power draw & $\lesssim 100$~mW (target); $\geq 1$~h on a $<$1.5~g battery \\
+T10 & Run on a head-mounted battery & power; radio share & $\lesssim 100$~mW; $\geq 1$~h on $<$1.5~g & current $\times$ voltage under load; profile radio; battery life \\
 \bottomrule
 \end{tabularx}
 }
@@ -403,52 +403,9 @@ corner and detection (T4--T5) come from a frequency sweep and from the
 $\pm$1~ms match to Kilosort. Timekeeping, classification, and transmission (T6--T9) are read
 from the received stream in software: one timestamp per event and its jitter against the sync
 marker, a confusion matrix of unit assignments against Kilosort labels on held-out data, and
-the five-byte content of each packet. Table~\ref{tab:measplan} pairs every specification with
-its measurement method.
+the five-byte content of each packet. Table~\ref{tab:techreq} pairs every specification with its
+measurement method alongside its quantitative value.
 
-% ======= Table 3: specifications with measurement methods ======= %
-\begin{table}[H]
-\centering
-\caption{Technical specifications paired with their measurement methods}
-\label{tab:measplan}
-{\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.25}
-\begin{tabularx}{\textwidth}{@{}l L L L L@{}}
-\toprule
-Label & Requirement & Specification & Quantitative value & Measurement method \\
-\midrule
-\multicolumn{5}{@{}l}{\textbf{F1 -- Acquire}} \\
-\addlinespace[2pt]
-T1  & Channels at the scales neuroscientists use & channel count & $\geq 5$; 32; 384 asp. & count channels in the acquired stream \\
-T2  & Sample fast enough for the band & per-channel sample rate & $\geq 12$~kS/s; 30~kS/s & FFT of a known replayed tone; timer period; sustained/missed conversion and dropped-sample counts for the derived throughput \\
-T3  & Resolve spikes above noise & resolution; noise & 16-bit; $\leq 5~\mu$Vrms & noise on a shorted input; SNR on a known input \\
-\midrule
-\multicolumn{5}{@{}l}{\textbf{F2 -- Detect}} \\
-\addlinespace[2pt]
-T4  & Spikes separated from the LFP & high-pass corner & $\sim$300~Hz & filter response from a frequency sweep \\
-T5  & Detect spikes reliably & TPR / precision vs.\ Kilosort & $\geq 90\%$ each & match to Kilosort truth, $\pm$1~ms window \\
-\midrule
-\multicolumn{5}{@{}l}{\textbf{F3 -- Log}} \\
-\addlinespace[2pt]
-T6  & A timestamp per detected spike & timestamp; jitter & one per spike & inspect stream; jitter vs.\ sync marker \\
-\midrule
-\multicolumn{5}{@{}l}{\textbf{F4 -- Classify}} \\
-\addlinespace[2pt]
-T7  & A unit identity per spike & unit label & one of $K$ & inspect output \\
-T8  & Classify better than chance & accuracy vs.\ Kilosort & $> 1/K$; 85--99\% asp. & confusion matrix vs.\ Kilosort, held-out data \\
-\midrule
-\multicolumn{5}{@{}l}{\textbf{F5 -- Transmit}} \\
-\addlinespace[2pt]
-T9  & Packet carries identity and time & packet content & 5~B (1~B ID $+$ 4~B ts) & inspect received packets \\
-\midrule
-\multicolumn{5}{@{}l}{\textbf{System-level}} \\
-\addlinespace[2pt]
-T10 & Run on a head-mounted battery & power; radio share & $\lesssim 100$~mW; $\geq 1$~h on $<$1.5~g & current $\times$ voltage under load; profile radio; battery life \\
-\bottomrule
-\end{tabularx}
-}
-\end{table}
 
 % ======= 5. Design Approach ======= %
 \section{Design Approach}\label{sec:design}
