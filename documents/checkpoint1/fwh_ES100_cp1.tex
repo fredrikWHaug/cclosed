@@ -195,88 +195,79 @@ end that the rest of the system will build on, which was a requirement by my adv
 
 % ======= 3.1 Description and Functional Requirements ======= % 
 \subsection{Description and Functional Requirements}
-This section decomposes the problem statement into the behaviors any valid solution must
-exhibit (the functional requirements) and the qualitative conditions each behavior must
-satisfy (the technical requirements). Each technical requirement is then made concrete as
-a technical specification: a measurable parameter paired with a target value. These
-requirements and specifications are stated independently of any particular design; the
-design approaches that could realize them are considered in Sections~\ref{sec:design} and~\ref{sec:quant}.
+This section states what any valid solution must do, as functional requirements, and the
+conditions each behavior must meet, as technical requirements with quantitative
+specifications, all stated independently of any particular design. The design approaches
+that could realize them are considered in Sections~\ref{sec:design} and~\ref{sec:quant}.
 
-Compressing continuous neural data without fidelity loss of spatiotemporal spike
-information requires isolating and preserving exactly the neural spike events at the
-required resolution. Any solution to the problem statement must therefore
-perform five operations: it must acquire extracellular voltage from multiple
-recording channels (F1), detect spike events within the acquired signal (F2), log the time
-at which each detected spike occurs (F3), classify each detected spike and assign it a
-unit identity (F4), and transmit each unit identity coupled with its timestamp over a
-wireless link (F5). These five behaviors constitute the functional requirements of the
-system, and the technical requirements that follow are grouped by the functional
-requirement each serves.
+Compressing neural data without losing spatiotemporal spike information requires isolating
+and preserving exactly the spike events at the required resolution. Any solution must
+therefore acquire extracellular voltage from multiple channels (F1), detect spike events in
+the acquired signal (F2), log the time of each detected spike (F3), classify each spike and
+assign it a unit identity (F4), and transmit each identity with its timestamp over a wireless
+link (F5). The technical requirements below are grouped by the functional requirement they
+serve.
 
 
 % ======= 3.2 Technical Requirements and Specifications ======= %
 \subsection{Technical Requirements and Specifications}
-Each functional requirement imposes one or more technical requirements, and each
-requirement's specification draws its value from a first-principles calculation, the
-prior-art literature, or preliminary testing conducted for this project. Two principles
-govern how the values are set. First, a good specification is set by what the end user
-needs, not by what a chosen part happens to provide: where meaningful, each specification
-therefore states a floor the science demands, a target this project commits to, and an
-aspirational value reflecting what neuroscientists would ask of a mature device. Where a
-specification lists no aspirational value, none meaningfully exists: for instance, sampling beyond
-Nyquist-plus-margin adds no scientific content (T2), and the five-byte packet is already
-minimal (T9). Second,
-quantities fixed by part selection rather than by engineering analysis are treated as
-derived constraints to be verified in testing, not as independent specifications; of this
-kind are the aggregate conversion rate and the ADC-to-processor link throughput, each of
-which follows arithmetically from the channel count and per-channel rate. The technical
-requirements are summarized in Table~\ref{tab:techreq}: T1 through T9 grouped by the
-functional requirement each serves, and T10 a system-level power constraint.
-Justifications follow the table.
+Each functional requirement imposes one or more technical requirements. Every technical
+requirement is given a specification with a quantitative value, and each value is drawn
+from a first-principles calculation, from the literature, or from preliminary testing in
+this project. The values are set by what neuroscientists need rather than by what a
+chosen part happens to provide. Where it is meaningful, a specification therefore lists a
+floor the science demands, a target this project commits to, and an aspirational value a
+mature device should reach. Some specifications have no meaningful aspirational value.
+Sampling faster than the Nyquist rate plus margin adds no scientific content (T2), and the
+five-byte packet is already minimal (T9). The aggregate conversion rate and the throughput of the
+ADC-to-processor link follow directly from the channel count and the per-channel rate, so
+they are verified in testing as derived constraints rather than treated as
+specifications. Table~\ref{tab:techreq} summarizes the technical requirements, with T1 through T9 grouped
+by the functional requirement they serve and T10 as a system-level power constraint.
 
-% ======= Table 2: merged specs + measurement methods ======= %
+% ======= Table 1: specs + measurement methods ======= %
 \begin{table}[H]
 \centering
-\caption{Technical requirements and specifications grouped by functional requirement, with the measurement method for each}
+\caption{Technical requirements, specifications, and measurement methods}
 \label{tab:techreq}
 {\footnotesize\sffamily
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{|l|>{\raggedright\arraybackslash}p{95pt}|>{\raggedright\arraybackslash}p{82pt}|>{\raggedright\arraybackslash}p{88pt}|>{\raggedright\arraybackslash}p{105pt}|}
+\begin{tabular}{|l|>{\raggedright\arraybackslash}p{106pt}|>{\raggedright\arraybackslash}p{78pt}|>{\raggedright\arraybackslash}p{90pt}|>{\raggedright\arraybackslash}p{112pt}|}
 \hline
-\textbf{Label} & \textbf{Requirement} & \textbf{Specification} & \textbf{Quantitative value} & \textbf{Measurement method} \\
+\textbf{Label} & \textbf{Requirement} & \textbf{Specification} & \textbf{Value} & \textbf{Measurement method} \\
 \hline
 \multicolumn{5}{|l|}{\textbf{F1 -- Acquire}} \\
 \hline
-T1  & Channels at the scales neuroscientists use & channel count & $\geq 5$; 32; 384 asp. & count channels in the acquired stream \\
+T1  & Channels at lab scale & channel count & $\geq 5$; 32; 384 asp. & channels in the stream \\
 \hline
-T2  & Sample fast enough for the band & per-channel sample rate & $\geq 12$~kS/s; 30~kS/s & FFT of a known replayed tone; timer period; sustained/missed conversion and dropped-sample counts for the derived throughput \\
+T2  & Sample the spike band & per-channel rate & $\geq 12$~kS/s; 30~kS/s & FFT, timer, drop counts \\
 \hline
-T3  & Resolve spikes above noise & resolution; noise & 16-bit; $\leq 5~\mu$Vrms & noise on a shorted input; SNR on a known input \\
+T3  & Spikes above noise floor & resolution; noise & 16-bit; $\leq 5~\mu$Vrms & noise on shorted input \\
 \hline
 \multicolumn{5}{|l|}{\textbf{F2 -- Detect}} \\
 \hline
-T4  & Spikes separated from the LFP & high-pass corner & $\sim$300~Hz & filter response from a frequency sweep \\
+T4  & Separate spikes from LFP & high-pass corner & $\sim$300~Hz & frequency sweep \\
 \hline
-T5  & Detect spikes reliably & TPR / precision vs.\ Kilosort & $\geq 90\%$ each; 97--100\% asp. & match to Kilosort truth, $\pm$1~ms window \\
+T5  & Detect spikes reliably & TPR, precision & $\geq 90\%$; 97--100\% asp. & vs.\ Kilosort, $\pm$1~ms \\
 \hline
 \multicolumn{5}{|l|}{\textbf{F3 -- Log}} \\
 \hline
-T6  & A timestamp per detected spike & timestamp; jitter & one per spike & inspect stream; jitter vs.\ sync marker \\
+T6  & Timestamp each spike & timestamp; jitter & one per spike & jitter vs.\ sync marker \\
 \hline
 \multicolumn{5}{|l|}{\textbf{F4 -- Classify}} \\
 \hline
-T7  & A unit identity per spike & unit label & one of $K$ & inspect output \\
+T7  & Unit identity per spike & unit label & one of $K$ & inspect output \\
 \hline
-T8  & Classify better than chance & accuracy vs.\ Kilosort & $> 1/K$; 85--99\% asp. & confusion matrix vs.\ Kilosort, held-out data \\
+T8  & Classify above chance & accuracy & $> 1/K$; 85--99\% asp. & confusion vs.\ Kilosort \\
 \hline
 \multicolumn{5}{|l|}{\textbf{F5 -- Transmit}} \\
 \hline
-T9  & Packet carries identity and time & packet content & 5~B (1~B ID $+$ 4~B ts) & inspect received packets \\
+T9  & Send only identity, time & packet content & 5~B (1 ID $+$ 4 ts) & inspect packets \\
 \hline
 \multicolumn{5}{|l|}{\textbf{System-level}} \\
 \hline
-T10 & Run on a head-mounted battery & power; radio share & $\lesssim 100$~mW; $\geq 1$~h on $<$1.5~g; $\geq$72~h asp. & current $\times$ voltage under load; profile radio; battery life \\
+T10 & Run on a head battery & power; radio share & $\lesssim 100$~mW; $\geq 1$~h, $<$1.5~g; $\geq$72~h asp. & current $\times$ voltage; profile radio \\
 \hline
 \end{tabular}
 }
@@ -346,8 +337,7 @@ sorted offline with Kilosort~4.0 to produce ground-truth spike times and unit la
 on-device output is aligned to it through a shared synchronization marker and matched within a
 $\pm$1~ms window. When the source is a synthetic recording built from a known file, its labels
 serve as the ground truth directly. This split-signal setup is what makes detection (T5) and
-classification (T8) measurable against truth rather than against the device's own output, and
-it is the same architecture a later live-animal study would reuse.
+classification (T8) measurable against truth rather than against the device's own output.
 
 Because the head stage rides a freely-moving animal, it must run on a small onboard battery; a
 wall supply or a data tether would defeat the wireless purpose of the project. Power draw, and
@@ -385,7 +375,7 @@ analog front end amplifies, band-limits, and digitizes the extracellular signal;
 hardware-timed acquisition engine on the system-on-chip (SoC) transfers each sample over
 SPI without CPU involvement; the on-device pipeline detects, classifies, and packetizes
 spike events; and the radio carries only the resulting five-byte identity-plus-timestamp
-packets to the host. The battery powers the two head-mounted components.
+packets to the host.
 
 \begin{figure}[H]
 \centering
@@ -438,19 +428,29 @@ doubles and the radio-facing pipeline is unchanged (packets merge in memory), at
 cost of a second front end, doubled routing, and a second DMA engine. The choice gates
 the custom PCB layout; Section~\ref{sec:quant} quantifies both against the T1/T2 targets.
 
-\textbf{Classification algorithm.} All candidates occupy the same place in the pipeline,
-between detection and packetization; they differ in what must be computed per spike on
-the device and what the host must supply beforehand. (a)~Template matching: unit
-templates are built offline from a reference recording and each detected spike is
-assigned to the nearest template on the device~[20]; the per-spike cost is a handful of
-multiply-accumulates per template, well within the SoC's budget, and accuracy is directly
-scorable as a confusion matrix against Kilosort labels. (b)~On-device feature extraction
-with unsupervised clustering~[19]: no offline phase, but higher memory and compute, and
-its evolving cluster identities are harder to validate against fixed ground truth.
-(c)~A small quantized neural network: comparable inference cost to templates but a
-heavier training and deployment pipeline, retrained per session. Template matching is
-the primary approach, matching the offline/online split of the prior art; the network
-remains a documented fallback if template accuracy plateaus below the T8 target.
+\textbf{Classification algorithm.} This decision defines the system, and the two approaches
+differ in where the knowledge about the neurons comes from. (a)~Offline-supervised
+template matching. A tethered reference recording is sorted offline with Kilosort, one
+template is built per unit, and the templates are quantized and flashed to the device. Each
+detected spike is then assigned to the nearest template by Euclidean distance~[20]. The host
+supplies the model and the device never changes it, so unit identities stay fixed and the
+confusion matrix against Kilosort labels measures T8 directly. The cost is a per-subject
+offline phase before every wireless session, and templates that go stale as the electrode
+drifts. (b)~Online unsupervised sorting with OSort~[25]. The device starts with no model.
+Each spike is compared with the running mean of every existing cluster, joins the nearest
+one and updates its mean if the distance is below a noise-derived threshold, and otherwise
+opens a new cluster. Clusters that come closer than the threshold are merged. There is no
+offline phase and the sorter follows electrode drift, which is why the fabricated on-chip
+sorters~[15, 16] and the FPGA sorter of Wu et al.~[19] all build on it. The price is paid
+elsewhere in the system. Cluster identities are assigned on the device, so the radio
+protocol must also carry cluster creation and merge events, and validation requires
+matching device clusters to Kilosort units after the fact instead of reading a confusion
+matrix off fixed labels. The per-spike arithmetic is the same nearest-template distance in
+both approaches, so the device compute budget does not decide between them. Template
+matching is the primary approach for this project because its accuracy can be measured
+cleanly against ground truth, which is what T8 requires. OSort is the alternative the
+design keeps open, and it is the natural path to the multi-day sessions of the T10
+aspiration, where drift would defeat a static template.
 
 \textbf{Delivery path for bench validation.} (a)~Direct BLE from the head stage to the
 host laptop: no additional hardware, but the laptop operating system's connection-interval
@@ -464,27 +464,25 @@ magnitude below either ceiling.
 \section{Quantitative Evaluation of Design Approaches}\label{sec:quant}
 
 \subsection{Sample Pacing: Software-Paced versus Hardware-Timed}
-Both pacing approaches of Section~\ref{sec:approaches} were built in this project and measured with the
-same instrument: an oscilloscope on the front end's chip-select line, where every falling
-edge is one conversion request, so the distribution of edge-to-edge intervals is the
-sampling regularity itself, measured independently of the device under test. Roughly
-12{,}800 consecutive intervals were captured per approach at a 20~kS/s nominal rate
-(50~$\mu$s period) with the BLE link streaming throughout. Table~\ref{tab:pacing}
-summarizes the result: the software-paced sampler, displaced by the radio's
+Both pacing approaches of Section~\ref{sec:approaches} were built and measured with the same
+instrument, an oscilloscope on the front end's chip-select line. Every falling edge is one
+conversion request, so the distribution of edge-to-edge intervals is the sampling regularity
+itself, measured independently of the device under test. About
+12{,}800 intervals were captured per approach at 20~kS/s nominal (50~$\mu$s period) with
+the BLE link streaming. Table~\ref{tab:pacing}
+summarizes the result. The software-paced sampler, displaced by the radio's
 interrupt-priority work, placed only 0.7\% of samples within $\pm$10\% of the nominal
 period, while the hardware-timed engine placed 100.0\% of them, a 62$\times$ reduction
-in standard deviation. Averages alone would not have distinguished the two (both hold
-the nominal rate), which is why regularity was measured at the signal level rather than
-inferred from throughput. The hardware-timed engine is the chosen approach; its two
-residuals are understood and bounded (the mean reads $+0.34$\% because the timer runs
-from an uncalibrated on-chip oscillator, and one $\sim$53~$\mu$s interval per 1.64~s is
-the engine's deliberate buffer-rewind pause). Figure~\ref{fig:pacinghist} overlays the
+in standard deviation. Averages alone would not have distinguished the two, so regularity was measured at the
+signal level rather than inferred from throughput. The hardware-timed engine is the chosen
+approach. Its two residuals are understood. The mean reads $+0.34$\% because the timer runs
+from an uncalibrated on-chip oscillator, and the one $\sim$53~$\mu$s interval per 1.64~s is
+the deliberate buffer-rewind pause. Figure~\ref{fig:pacinghist} overlays the
 two measured interval distributions on a shared axis.
 
 \begin{table}[H]
 \centering
-\caption{Measured inter-sample interval statistics for the two pacing approaches
-(oscilloscope capture of the chip-select line; 20~kS/s nominal, BLE active).}
+\caption{Measured inter-sample interval statistics for the two pacing approaches.}
 \label{tab:pacing}
 {\footnotesize\sffamily
 \setlength{\tabcolsep}{4pt}
@@ -518,37 +516,44 @@ collected in the rightmost bin.}
 
 \subsection{Bus Topology: Single versus Dual SPI Bus}
 The acquisition ceiling of one SPI bus was measured directly, using the bench-validated
-settings of a 21.33~MHz clock, hardware chip-select, and 16-bit words: the bus sustains
-757{,}741 conversions per second, i.e.\ one word per 1.32~$\mu$s of bus time. The
-channel arithmetic follows: at the 32-channel target of T1, a single bus offers
+settings of a 21.33~MHz clock, hardware chip-select, and 16-bit words. The bus sustains
+757{,}741 conversions per second, one word per 1.32~$\mu$s of bus time. At the
+32-channel target of T1, a single bus offers
 $757{,}741 / 32 \approx 23.7$~kS/s per channel, above the 12~kS/s Nyquist floor of T2
 but 21\% short of the 30~kS/s target; conversely, at full 30~kS/s a single bus carries
-at most 25 channels. A dual-bus topology doubles the measured ceiling to
-$\approx$1.52~M~words/s, which at 32 channels allows 47.4~kS/s per channel, meeting the
-T1 and T2 targets with 58\% margin. The single bus therefore satisfies the
-specification floors and the dual bus the targets; because the choice sets the number of
-front ends and the routing of the custom circuit board, it must be finalized before
-layout, with the dual bus as the default unless the remaining power budget argues
-otherwise.
+at most 25 channels. A dual bus doubles the ceiling to $\approx$1.52~M~words/s,
+47.4~kS/s per channel at 32 channels, meeting the T1 and T2 targets with 58\% margin. The single bus therefore meets the floors and
+the dual bus the targets. Because the choice sets the number of front ends and the board
+routing, it must be finalized before layout, with the dual bus as the default unless the
+power budget argues otherwise.
 
-\subsection{Link Budget: Raw Waveforms versus Spike Identities}
-The core design claim is evaluated analytically. Raw transmission scales with channel
-count and sample rate: $32 \times 30\text{~kS/s} \times 16\text{~bit} = 15.36$~Mbps,
-7.7$\times$ the radio's 2~Mbps theoretical ceiling, which is why raw transmission caps
-at four channels. Spike-identity transmission instead scales with firing rate: at a
-conservatively high sustained rate of 40 spikes per second per channel, $32 \times 40
-\times 5\text{~B} = 51.2$~kbps, a $300\times$ reduction, occupying 2.6\% of the radio's
-ceiling. The crossover at which spike-identity transmission stops winning is a firing
-rate of $480{,}000 / 40 = 12{,}000$ spikes per second per channel, two orders of
-magnitude beyond physiological rates, so the advantage is robust to any realistic spike
-activity. Equivalently, within 2~Mbps the radio can carry the identities of
-$2\text{~Mbps} / 40\text{~bit} = 50{,}000$ spikes per second, which at 40~spikes/s per
-unit is over a thousand units, against four channels of raw waveform.
+\subsection{Classification: Offline Templates versus Online OSort}
+Both classification approaches of Section~\ref{sec:approaches} reduce to the same per-spike
+operation, a nearest-template distance over $K$ stored waveforms of $N$ samples, so their
+cost on the device can be computed directly. With $N = 40$ and $K = 8$, one spike costs
+320 multiply-accumulates. At 32 channels and 40 spikes per second per channel, about
+1{,}300 spikes per second, that is 0.4 million multiply-accumulates per second against the
+nRF54's 128~MHz Cortex-M33 core, under one percent of its capacity. Static templates occupy $K \times N \times 2$ bytes, 640~bytes per channel, and the FPGA OSort of
+Wu et al.\ runs in 256~bytes per channel~[19]. Compute and memory therefore do not
+separate the two approaches.
 
+Accuracy does, and it is bounded differently for each. Two static templates separated by a
+Euclidean distance $d$ under per-sample noise $\sigma$ are confused with probability
+$\Phi(-d/2\sigma)$. With the 5~$\mu$Vrms of T3 and templates that differ by only 5~$\mu$V
+per sample over 40 samples, $d \approx 32~\mu$V and the error is about 0.1\%. Template matching is
+therefore limited by electrode drift and overlapping spikes, which a template fitted
+offline cannot follow, rather than by noise. Online sorting follows drift by construction
+but is bounded by cluster stability, and the published figures reflect that. The adaptive on-chip sorters report
+72 to 98\% depending on the dataset~[15], 85 to 94\%~[16], and 80 to 96\% with an in-vivo
+average of 79.8\%~[19]. No quantity available today separates the two approaches
+decisively, so the choice rests on T8, which requires accuracy measured against fixed
+Kilosort labels and favors the offline templates. OSort remains the path for sessions long
+enough for drift to matter, the T10 aspiration, and the decisive comparison on this
+project's own signals is scheduled in Table~\ref{tab:timeline} with the same
+confusion-matrix method for both.
 % ======= 7. Training for Required Tools and Skills ======= %
 \section{Training for Required Tools and Skills}
-Table~\ref{tab:training} lists the tools and skills the build and test phases require,
-with completion status and dates.
+Table~\ref{tab:training} lists the required training with status and dates.
 
 \begin{table}[H]
 \centering
@@ -561,11 +566,13 @@ with completion status and dates.
 \hline
 \textbf{Tool / skill} & \textbf{Status} & \textbf{Date} \\
 \hline
-KiCad schematic/layout and BGA board assembly (test PCB fabricated, brought up) & complete & Aug.\ 2026 \\
+KiCad schematic/layout and BGA board assembly (test PCB fabricated, brought up) & complete & Jul.\ 2026 \\
 \hline
-Zephyr / nRF Connect SDK firmware; DPPI, timer, and DMA peripheral programming & complete & Sep.\ 2026 \\
+Zephyr / nRF Connect SDK firmware; DPPI, timer, and DMA peripheral programming & complete & Aug.\ 2026 \\
 \hline
-Intan RHD2000-series SPI command protocol and register configuration & complete & Sep.\ 2026 \\
+Intan RHD2000-series SPI command protocol and register configuration & complete & Aug.\ 2026 \\
+\hline
+Reflow soldering (EE shop training) & complete & Sep.\ 2026 \\
 \hline
 Oscilloscope measurement workflows incl.\ waveform export and scripted analysis & complete & Oct.\ 2026 \\
 \hline
@@ -604,23 +611,23 @@ Budget amounts are approximate.}
 \hline
 \textbf{Two-week block} & \textbf{Stage} & \textbf{Milestone} & \textbf{Item} & \textbf{Status} & \textbf{Cost} \\
 \hline
-Oct.\ 6 -- Oct.\ 19   & B/M & Ground-truth rig; noise floor      & Signal-path test PCB & spent & \$100 \\
+Oct.\ 6 -- Oct.\ 19   & B/M & Ground-truth rig; noise floor      & Signal-path test PCB (lab grant)& spent & \$300 \\
 \hline
-Oct.\ 20 -- Nov.\ 2   & B/M & 32-ch acquisition; bus decision    & Intan RHD2164 front end & spent & \$300 \\
+Oct.\ 20 -- Nov.\ 2   & B/M & 32-ch acquisition; bus decision    & Intan RHD2164 front end (lab grant)& spent & \$500 \\
 \hline
-Nov.\ 3 -- Nov.\ 16   & B/M & Detection + timestamps (T5, T6)    & nRF54 dev.\ kits ($\times$2) & spent & \$120 \\
+Nov.\ 3 -- Nov.\ 16   & B/M & Detection + timestamps (T5, T6)    & nRF54 dev.\ kits ($\times$4) (lab grant) & spent & \$200 \\
 \hline
-Nov.\ 17 -- Nov.\ 30  & A   & Design Review; Kilosort pipeline   & Playback rig (Pi, DAC, microSD) & spent & \$35 \\
+Nov.\ 17 -- Nov.\ 30  & A   & Design Review; Kilosort pipeline   & Connector boards (lab grant) & spent & \$200 \\
 \hline
-Dec.\ 1 -- Dec.\ 14   & B/M & Classifier v1 + matrix (T7, T8)    & PCB rev.\ 2 (fab $+$ assembly) & projected & \$150 \\
+Dec.\ 1 -- Dec.\ 14   & B/M & Classifier v1 + matrix (T7, T8)    & FB128 Function Generator (lab grant) & spent & \$1000 \\
 \hline
-Dec.\ 15 -- Jan.\ 11  & D   & PCB rev.\ 2 layout; fab ordered    & Battery $+$ profiling board & projected & \$80 \\
+Dec.\ 15 -- Jan.\ 11  & D   & PCB rev.\ 2 layout; fab ordered    & Playback rig (Pi, DAC, microSD) & spent & \$45 \\
 \hline
-Jan.\ 12 -- Jan.\ 25  & B   & PCB bring-up; integration          & Contingency & projected & \$50 \\
+Jan.\ 12 -- Jan.\ 25  & B   & PCB bring-up; integration          & PCB rev.\ 2 (fab $+$ assembly) & projected & \$150 \\
 \hline
-Jan.\ 26 -- Feb.\ 8   & M   & End-to-end spike IDs (CP2)         & \textbf{Total} & & \textbf{$\approx$\$835} \\
+Jan.\ 26 -- Feb.\ 8   & M   & End-to-end spike IDs (CP2)         & Battery $+$ profiling board & projected & \$150 \\
 \hline
-Feb.\ 9 -- Feb.\ 22   & M   & Power + battery life (T10)         & \cellcolor[gray]{0.82} & \cellcolor[gray]{0.82} & \cellcolor[gray]{0.82} \\
+Feb.\ 9 -- Feb.\ 22   & M   & Power + battery life (T10)         & \textbf{Total (ES100 share \$345)} & & \textbf{$\approx$\$2545} \\
 \hline
 Feb.\ 23 -- Mar.\ 8   & A/B & Iterate weakest spec; statistics   & \cellcolor[gray]{0.82} & \cellcolor[gray]{0.82} & \cellcolor[gray]{0.82} \\
 \hline
@@ -636,7 +643,7 @@ Mar.\ 23 -- Apr.\ 5   & --  & Thesis + final presentation        & \cellcolor[gr
 % ======= References ======= %
 \phantomsection
 \addcontentsline{toc}{section}{References}
-\begin{thebibliography}{24}
+\begin{thebibliography}{25}
 
 \bibitem{ref1} E. R. Kandel, J. D. Koester, S. H. Mack, and S. A. Siegelbaum, \emph{Principles of Neural Science}, 6th ed. New York, NY, USA: McGraw-Hill, 2021.
 
@@ -685,6 +692,8 @@ Mar.\ 23 -- Apr.\ 5   & --  & Thesis + final presentation        & \cellcolor[gr
 \bibitem{ref23} Nordic Semiconductor, ``nRF54LM20B objective product specification,'' Trondheim, Norway, 2024.
 
 \bibitem{ref24} M. Pachitariu, S. Sridhar, J. Pennington, and C. Stringer, ``Spike sorting with Kilosort4,'' \emph{Nat. Methods}, vol. 21, no. 5, pp. 914--921, May 2024.
+
+\bibitem{ref25} U. Rutishauser, E. M. Schuman, and A. N. Mamelak, ``Online detection and sorting of extracellularly recorded action potentials in human medial temporal lobe recordings, in vivo,'' \emph{J. Neurosci. Methods}, vol. 154, no. 1--2, pp. 204--224, Jun. 2006.
 
 \end{thebibliography}
 
