@@ -184,12 +184,11 @@ without building custom hardware.
 
 % ======= 2.3 Previous Work ======= %
 \subsection{Previous Work}
-Only one part of the system has been built so far: a custom circuit board for testing the
-signal path. It carries an Intan RHD2164 front end wired to an
-nRF54LM20B over SPI. The board has been brought up and used to record a single channel from
-end to end, with a known input passing through the Intan, across the SoC's Bluetooth Low
-Energy link, and out to a laptop. This confirms the acquisition front end that the rest of
-the system will build on.
+A custom printed circuit board (PCB) for testing the signal path was designed and built during the summer preceding ES100.
+The PCB carries an Intan RHD2164 front end, channel inputs, and SPI communication lines. The board was brought up and used 
+to record a single channel from end to end. A pure sine input was passed through the Intan to the nRF54 (SOC) over SPI, 
+and across the SoC's Bluetooth Low Energy link to a laptop to prove the signal path. This confirmed the acquisition front 
+end that the rest of the system will build on, which was a requirement by my advisor before staring my ES100 project. 
 
 % ======= 3. Design Requirements and Technical Specifications ======= %
 \section{Design Requirements and Technical Specifications}
