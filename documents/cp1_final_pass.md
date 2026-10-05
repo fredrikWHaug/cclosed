@@ -33,3 +33,13 @@ visually. Revisit only if Coughlin flags it at the design review.
 ## 5. Formatting orders (2026-10-04)
 - [x] Merge timeline + budget into ONE numbered table (same point: L1)
 - [x] Bold all column-heading rows in all tables
+
+## 6. Design-approach coherence (2026-10-04, user-driven)
+- [x] Sec 5.2 classifier decision rewritten as the real fork: offline-supervised
+      templates (Approach A) vs online unsupervised OSort (Approach B, ref [25]);
+      NN option dropped. Source: ideas/two-phase-architecture.md, ideas/classification_options.md
+- [x] Sec 6.3 link budget swapped for a hypothetical/literature evaluation of A vs B
+      (compute+memory model, Gaussian confusion bound, published OSort-family accuracies);
+      decisive measurement scheduled in Table 4
+- [x] Training table: reflow soldering (EE shop, Sep 2026) added; rows 1-3 dated Jul/Aug/Aug
+- [x] Zero page gaps after reflow (all body pages <= 44pt trailing space)
