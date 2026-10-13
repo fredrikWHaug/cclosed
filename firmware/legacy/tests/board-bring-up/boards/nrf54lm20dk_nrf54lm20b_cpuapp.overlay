@@ -1,29 +1,15 @@
-&pinctrl {
-	spi22_default_alt: spi22_default_alt {
-		group1 {
-			psels = <NRF_PSEL(SPIM_SCK, 3, 3)>,
-				<NRF_PSEL(SPIM_MISO, 3, 1)>,
-				<NRF_PSEL(SPIM_MOSI, 3, 0)>;
-		};
-	};
-
-	spi22_sleep_alt: spi22_sleep_alt {
-		group1 {
-			psels = <NRF_PSEL(SPIM_SCK, 3, 3)>,
-				<NRF_PSEL(SPIM_MISO, 3, 1)>,
-				<NRF_PSEL(SPIM_MOSI, 3, 0)>;
-			low-power-enable;
-		};
-	};
+/* SPI00 on the DK's default pins: SCK P2.01, MOSI P2.02, MISO P2.04.
+ * CS driven manually as a plain GPIO (P2.05) in main.c - the Intan
+ * requires CS to pulse high between every 16-bit word. */
+&spi00 {
+	status = "okay";
+	/* RHD2164 MISO is DDR: ch0-31 data is valid on SCLK falling edges.
+	 * Delay the sampling point into that window: at 16 MHz the window is
+	 * 31-62 ns after the rising edge; 6 ticks of 7.8 ns = 47 ns.
+	 * (Same alignment alper gets from nrfx rx_delay=5 at 21.33 MHz.) */
+	rx-delay = <6>;
 };
 
-&spi22 {
-	status = "okay";
-	pinctrl-0 = <&spi22_default_alt>;
-	pinctrl-1 = <&spi22_sleep_alt>;
-	pinctrl-names = "default", "sleep";
-	overrun-character = <0x00>;
-	/* CS driven manually as a plain GPIO (P3.02) in main.c - the Intan
-	 * requires CS to pulse high between every 16-bit word. */
-	zephyr,pm-device-runtime-auto;
+&mx25r64 {
+	status = "disabled";
 };
