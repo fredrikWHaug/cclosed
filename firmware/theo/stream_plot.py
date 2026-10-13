@@ -2,7 +2,7 @@
 
 pip install bleak matplotlib numpy
 """
-import asyncio, threading, collections, sys, glob
+import asyncio, threading, collections, sys, glob, os
 import numpy as np
 from bleak import BleakClient, BleakScanner
 import matplotlib.pyplot as plt
@@ -101,13 +101,13 @@ def on_key(ev):
         paused[0] = not paused[0]
         fig.canvas.manager.set_window_title("PAUSED (space to resume)" if paused[0] else "live")
 fig.canvas.mpl_connect("key_press_event", on_key)
-(line,) = ax.plot([], [], linestyle="none", marker=".", ms=6)
+(line,) = ax.plot([], [], "-", lw=1)
 ax.set_xlabel("sample"); ax.set_ylabel("uV")
 
 def update(_):
     if paused[0]:
         return (line,)
-    y = np.array(buf)[-60:]                   # ~3 periods: countable dots
+    y = np.array(buf)[-5000:]                   # ~3 periods: countable dots
     if len(y) < 10:
         return (line,)
     line.set_data(np.arange(len(y)), y)
@@ -120,9 +120,19 @@ def update(_):
         f = np.fft.rfftfreq(len(full), d=1.0 / RATE)
         fpk = f[int(np.argmax(spec))]
         if fpk > 0:
-            ax.set_title(f"{RATE / fpk:.2f} samples/period  "
-                         f"(input {fpk:.1f} Hz at {RATE} S/s)")
+            ax.set_title(f"Spikes")
     return (line,)
 
 ani = animation.FuncAnimation(fig, update, interval=200, blit=False, cache_frame_data=False)
-plt.tight_layout(); plt.show()
+try:
+    plt.tight_layout()
+    plt.show()
+except KeyboardInterrupt:
+    pass
+finally:
+    # flush the log before the hard exit below, which skips interpreter teardown
+    if log_fh is not None:
+        log_fh.flush()
+        log_fh.close()
+    plt.close("all")
+    os._exit(0)

@@ -1,0 +1,720 @@
+% ======= LaTeX Setup ======= %
+\documentclass[11pt]{article}
+\usepackage[letterpaper, margin=1in]{geometry}
+\usepackage{newtxtext}
+\usepackage[scaled=.92]{helvet}
+\usepackage{indentfirst}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{newtxmath}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\linespread{1.0}
+\setcounter{tocdepth}{2}
+\usepackage[hidelinks]{hyperref}
+\usepackage{caption}
+\captionsetup{font=small, labelfont=bf}
+
+\title{{\large ES100 Checkpoint 1}\\[0.5em]
+On-Device Classification of Neural Action Potentials\\
+for Wireless Unit Transmission over Bluetooth Low Energy}
+\author{Fredrik Willumsen Haug \\[0.3em]
+{\normalsize Bioengineering, ECE Track} \\[0.6em]
+{\normalsize Advised by Dr.\ Saehyuck Oh and Professor Gage Hills}}
+\date{}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\clearpage
+\setcounter{page}{1}
+
+\tableofcontents
+\clearpage
+
+% ======= 0. Executive Summary ======= %
+\setcounter{section}{-1}
+\section{Executive Summary}
+This thesis addresses a bandwidth bottleneck in wireless neural recording. Bluetooth
+Low Energy 6.0 (BLE), the leading low-power off-the-shelf wireless communication protocol, has a theoretical
+data rate ceiling of 2~Mbps. Neural action potentials, also called spikes, contain frequencies
+from 300~Hz to 6~kHz. Raw extracellular neural electrophysiology data is therefore sampled at 30~kHz
+to preserve signal integrity for offline identification of individual
+neurons appearing on overlapping recording channels. With a 16-bit resolution, each channel generates 480~kbps, imposing a
+theoretical four-channel recording ceiling for wireless transmission. Modern high-density recording
+probes, however, carry up to thousands of channels, so transmitting their entire raw data over BLE is
+currently impossible. This system instead performs neural identification on-device
+(Figure~\ref{fig:overview}), yielding an
+off-the-shelf solution for wireless transmission of putatively identified neurons
+compatible with modern rodent neural recording systems.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\textwidth]{figures/figure1.png}
+\caption{System overview. A head-mounted device classifies each detected extracellular
+spike to its neuron of origin on-device and transmits only the resulting unit identity and
+timestamp over Bluetooth Low Energy (BLE).}
+\label{fig:overview}
+\end{figure}
+
+% ======= 1. Problem Identification ======= %
+\section{Problem Identification}
+
+% ======= 1.1 Background and Motivation ======= %
+\subsection{Background and Motivation}
+Systems neuroscience seeks to explain how the organized interplay of individual neurons
+gives rise to sensation, cognition, and behavior~[1]. Answering these questions requires
+observing firing activity from multiple neurons across multiple brain regions at once, and studying their relationships.
+The neuroscientific community has thus invested heavily in high-density intracranial recording probes. The
+Neuropixels~1.0 probe, introduced in 2017, records extracellular activity in rodents from
+384 channels simultaneously~[2]. The Neuropixels~2.0 extends recording
+capacity to 5120 channels~[3], and Neuropixels 3.0 is currently being developed~[4]. These probes
+have already enabled discoveries beyond the reach of single-electrode methods, such as
+mapping how choice and action are encoded across the mouse brain~[5]. Furthermore,
+high-density extracellular neural recordings employed in model organisms hold promise of
+fundamentally changing how the brain, both in health and in disease, is understood.
+
+The quantity high-density intracranial neural recording probes measure is the extracellular action potential, or spike. An
+extracellular action potential is the brief voltage deflection an electrically excitable 
+cell produces as a function of time when it fires. First
+recorded in 1868 by Julius Bernstein~[6], the action potential is the basic unit of neural signaling,
+and is the unit of measurement currently available with the highest spatiotemporal neural resolution at scale~[2].
+Extracellular spikes contain frequencies from roughly 300~Hz to 6~kHz~[7], so the
+industry-standard analog front end digitizes each channel with a 16-bit
+analog-to-digital converter (ADC) at 30~kHz for roll-off margin~[8, 9]. At these settings
+a full Neuropixels~2.0 quad-base recording generates $5120~\text{channels} \times
+30\text{~kS/s} \times 16\text{~bit} \approx 2.46$~Gbps, all of which must leave the
+recording probe for downstream spike extraction. The growth in electrode channel count
+has far outpaced the wireless bandwidth of low energy communication protocols
+that must transmit and receive the neural data.
+
+The questions neural recordings serve are best answered in freely behaving
+animals. Wireless headstages have been demonstrated precisely because they free the
+animal from its tether and the stress and behavioral limits a cable imposes~[10].
+Bluetooth Low Energy 6.0 (BLE) is a state-of-the-art consumer wireless protocol with a
+power budget suitable for a head-mounted device~[11, 12]. However, BLE has a theoretical
+maximum data rate of 2~Mbps~[11], just $2\text{~Mbps} / 2.46\text{~Gbps} \approx 0.08\%$
+of the raw data rate of a
+Neuropixels~2.0 quad-base recording. Fortunately, many questions in neuroscientific inquiry 
+require only the neural spike signatures, which constitute a small fraction of the continuous 
+raw signal~[13, 14]. The proposed project embraces this fact and rethinks how neural 
+data is handled in systems neuroscience. By processing the data on-device and transmitting
+only the scientifically relevant part of the signal, wirless full-scale, high-density neural recordings are enabled. 
+
+% ======= 1.2 Stakeholders, Client, and End Used of the Solution ======= %
+\subsection{Stakeholders, Client, and End User of the Solution}
+Several groups have a stake in the project, with the animals carrying the 
+recording devices being affected most directly (Figure~\ref{fig:stakeholders}). Neuroscientists are also
+stakeholders because recording more channels wirelessly allows experiments that are wanted but impossible today. For instance,
+social experiments where multple mice are involved, or memory experiments with intricate maze configurations, require wireless recordings.
+Furthermore, the agencies that fund neuroscience can be thought of as indirect stakeholders, as well as preclinical drug developers and 
+pharmaceutical companies.
+
+\begin{figure}[H]
+\centering
+\includegraphics{figures/stakeholder_map_v2.pdf}
+\caption{Stakeholder map. Nesting encodes directness of stake. The stakeholders the
+device touches directly occupy the inner tier, and the broader stakeholders occupy the
+outer tier.}
+\label{fig:stakeholders}
+\end{figure}
+
+% ======= 1.3 Problem Statement ======= %
+\subsection{Problem Statement}
+Modern neural recording probes give neuroscientists simultaneous access to thousands of neurons in live animals.
+The scientific experiments these recordings facilitate would ideally be performed with freely behaving animals. 
+Restricting the animals through tethered recordings confounds measurement results, and it strictly limits the possible 
+range of experimental paradigms. With thousands of recording channels follows a raw data stream on the order of gigabits
+per second, which is three orders of magnitude more data than low-power wireless communication can carry. Thus,
+the complete raw data generated by high-density extracellular neural recordings cannot be obtained from freely moving animals.
+
+
+% ======= 2. Existing Solutions and Previous Work ======= %
+\section{Existing Solutions and Previous Work}
+
+% ======= 2.1 Existing Solutions ======= %
+\subsection{Existing Solutions}
+Two lines of work come close to this project without meeting. One builds wireless
+headstages from commodity parts, and the other classifies spikes on the device. Each
+addresses only one half of the problem. On the wireless side, headstages made from off-the-shelf parts
+already record from freely-moving animals. The simplest stream the raw signal and defer
+all detection and sorting to a tethered workstation after the experiment. Tasneem et
+al.~[10] send raw data from a moving rat and detect and sort it afterward.
+Gagnon-Turcotte et al.~[15] go a step further, pairing an Intan front end with a
+Nordic radio to detect and compress spikes on the device, though the sorting into units
+still happens at the receiver. In both, the link carries waveforms rather than neural
+identities, an approach that still falls orders of magnitude short of the data rates of
+state-of-the-art recording probes.
+
+On the other side, on-device classification has been taken furthest in custom silicon.
+Fabricated spike-sorting chips reach 85--98\% classification accuracy on the device
+itself~[16, 17, 18], which shows the algorithm fits a tight power and area budget. They
+are custom parts, however, tested only on replayed recordings and built with no radio,
+and producing them requires specialized fabrication facilities not available to typical
+neuroscience laboratories.
+
+The same on-device sorting also runs on commodity, programmable hardware. Luan et al.~[19]
+perform real-time template matching on an Intan-plus-FPGA headstage in freely behaving
+animals, but log the result to an SD card. Wu et al.~[20] run an unsupervised sorter on an
+FPGA at microsecond latency, again with no wireless link. These prove the classification
+step is feasible off custom silicon, yet neither closes the wireless half.
+
+The idea of splitting the sorting pipeline between offline training and on-device
+classification is not new either. Navajas and Quiroga~[21] showed in simulation that
+templates can be built offline and each new spike matched on the device, so that only the
+sorted identities travel over the link. What remains undone is to combine these threads.
+No published system, to my knowledge, classifies single units on the device and transmits
+their identities over a commodity Bluetooth Low Energy link. Combining both halves would
+provide neuroscientists with a novel, all-in-one device that allows brain function to be
+interrogated with unprecedented spatial and temporal resolution.
+
+% ======= 2.2 Proposed Solution =======% 
+\subsection{Proposed Solution}
+This project proposes a recording head stage that detects spikes and classifies each to a
+single unit on-device, transmitting only a unit identity and timestamp per spike
+rather than the raw waveform. This design reduces the amount of data per spike by orders
+of magnitude, allowing far more channels to be streamed wirelessly than raw transmission
+permits while preserving the spatiotemporal spike information that neuroscientific analysis
+depends on. Because the design uses only off-the-shelf parts, a laboratory can adopt it
+without building custom hardware.
+
+% ======= 2.3 Previous Work ======= %
+\subsection{Previous Work}
+A custom printed circuit board (PCB) for testing the signal path was designed and built during the summer preceding ES100.
+The PCB carries an Intan RHD2164 front end, channel inputs, and SPI communication lines. The board was brought up and used 
+to record a single channel from end to end. A pure sine input was passed through the Intan to the nRF54 (SOC) over SPI, 
+and across the SoC's Bluetooth Low Energy link to a laptop to prove the signal path. This confirmed the acquisition front 
+end that the rest of the system will build on, which was a requirement by my advisor before staring my ES100 project. 
+
+% ======= 3. Design Requirements and Technical Specifications ======= %
+\section{Design Requirements and Technical Specifications}
+
+% ======= 3.1 Description and Functional Requirements ======= % 
+\subsection{Description and Functional Requirements}
+This section states what any valid solution must do, as functional requirements, and the
+conditions each behavior must meet, as technical requirements with quantitative
+specifications, all stated independently of any particular design. The design approaches
+that could realize them are considered in Sections~\ref{sec:design} and~\ref{sec:quant}.
+
+Compressing neural data without losing spatiotemporal spike information requires isolating
+and preserving exactly the spike events at the required resolution. Any solution must
+therefore acquire extracellular voltage from multiple channels (F1), detect spike events in
+the acquired signal (F2), log the time of each detected spike (F3), classify each spike and
+assign it a unit identity (F4), and transmit each identity with its timestamp over a wireless
+link (F5). The technical requirements below are grouped by the functional requirement they
+serve.
+
+
+% ======= 3.2 Technical Requirements and Specifications ======= %
+\subsection{Technical Requirements and Specifications}
+Each functional requirement imposes one or more technical requirements. Every technical
+requirement is given a specification with a quantitative value, and each value is drawn
+from a first-principles calculation, from the literature, or from preliminary testing in
+this project. The values are set by what neuroscientists need rather than by what a
+chosen part happens to provide. Where it is meaningful, a specification therefore lists a
+floor the science demands, a target this project commits to, and an aspirational value a
+mature device should reach. Some specifications have no meaningful aspirational value.
+Sampling faster than the Nyquist rate plus margin adds no scientific content (T2), and the
+five-byte packet is already minimal (T9). The aggregate conversion rate and the throughput of the
+ADC-to-processor link follow directly from the channel count and the per-channel rate, so
+they are verified in testing as derived constraints rather than treated as
+specifications. Table~\ref{tab:techreq} summarizes the technical requirements, with T1 through T9 grouped
+by the functional requirement they serve and T10 as a system-level power constraint.
+
+% ======= Table 1: specs + measurement methods ======= %
+\begin{table}[H]
+\centering
+\caption{Technical requirements, specifications, and measurement methods}
+\label{tab:techreq}
+{\footnotesize\sffamily
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|>{\raggedright\arraybackslash}p{106pt}|>{\raggedright\arraybackslash}p{78pt}|>{\raggedright\arraybackslash}p{90pt}|>{\raggedright\arraybackslash}p{112pt}|}
+\hline
+\textbf{Label} & \textbf{Requirement} & \textbf{Specification} & \textbf{Value} & \textbf{Measurement method} \\
+\hline
+\multicolumn{5}{|l|}{\textbf{F1 -- Acquire}} \\
+\hline
+T1  & Channels at lab scale & channel count & $\geq 5$, 32, 384 asp. & channels in the stream \\
+\hline
+T2  & Sample the spike band & per-channel rate & $\geq 12$~kS/s, 30~kS/s & FFT, timer, drop counts \\
+\hline
+T3  & Spikes above noise floor & resolution, noise & 16-bit, $\leq 5~\mu$Vrms & noise on shorted input \\
+\hline
+\multicolumn{5}{|l|}{\textbf{F2 -- Detect}} \\
+\hline
+T4  & Separate spikes from LFP & high-pass corner & $\sim$300~Hz & frequency sweep \\
+\hline
+T5  & Detect spikes reliably & TPR, precision & $\geq 90\%$, 97--100\% asp. & vs.\ Kilosort, $\pm$1~ms \\
+\hline
+\multicolumn{5}{|l|}{\textbf{F3 -- Log}} \\
+\hline
+T6  & Timestamp each spike & timestamp, jitter & one per spike & jitter vs.\ sync marker \\
+\hline
+\multicolumn{5}{|l|}{\textbf{F4 -- Classify}} \\
+\hline
+T7  & Unit identity per spike & unit label & one of $K$ & inspect output \\
+\hline
+T8  & Classify above chance & accuracy & $> 1/K$, 85--98\% asp. & confusion vs.\ Kilosort \\
+\hline
+\multicolumn{5}{|l|}{\textbf{F5 -- Transmit}} \\
+\hline
+T9  & Send only identity, time & packet content & 5~B (1 ID $+$ 4 ts) & inspect packets \\
+\hline
+\multicolumn{5}{|l|}{\textbf{System-level}} \\
+\hline
+T10 & Run on a head battery & power, radio share & $\lesssim 100$~mW, $\geq 1$~h, $<$1.5~g, $\geq$72~h asp. & current $\times$ voltage, profile radio \\
+\hline
+\end{tabular}
+}
+\end{table}
+
+% ======= Jusification of Technical Requirements and Specifications ======= %
+\subsection{Justification of Technical Requirements and Specifications}
+\textbf{Acquisition (F1).} The channel-count values (T1) are set by what neuroscientists
+record with, not by any part. Five channels is the floor at which compression demonstrably
+does work a raw link cannot. The 32-channel target matches the tetrode microdrives common
+in freely-moving rodent studies, and the 384-channel aspiration is one full
+Neuropixels~1.0 shank~[2], the scale at which the device would give neuroscientists both
+what they want and what they did not know they could have. Extracellular spikes occupy
+300~Hz--6~kHz~[7], so the Nyquist--Shannon theorem sets a per-channel floor of
+$f_s \geq 2 \times 6\text{~kHz} = 12$~kS/s, and the field-standard
+30~kS/s~[8, 9] adds oversampling margin (T2). The resulting aggregate conversion rate and
+ADC-to-processor throughput are derived constraints, channels $\times$ rate and channels
+$\times$ rate $\times$ bits. They follow arithmetically from T1 and T2, are dictated by
+part selection rather than iterated by analysis, and are therefore verified in testing
+rather than specified. A 16-bit converter with input-referred noise under
+$\sim$5~$\mu$Vrms~[22] resolves the tens-to-hundreds-of-microvolt spikes clear of the
+noise floor (T3). A 50~$\mu$V spike against a 5~$\mu$Vrms floor retains a ten-to-one ratio.
+
+\textbf{Detection (F2).} A high-pass corner near 300~Hz separates spikes from the sub-300~Hz
+local field potential~[7] (T4). Detection is scored against Kilosort~[23]. On-chip and
+commodity detectors report 97--100\%~[15], so a floor of 90\% sensitivity and 90\%
+precision, matched within $\pm$1~ms, is conservative yet meaningful, with the
+97--100\% of mature detectors as the aspirational reference (T5).
+
+\textbf{Timekeeping (F3).} Preserving spatiotemporal information requires one timestamp per
+detected spike, referenced to the acquisition clock (T6).
+
+\textbf{Classification (F4).} Each spike is assigned to one of $K$ units (T7). On-device
+accuracy need only beat chance ($1/K$) against Kilosort labels~[23] to prove the pipeline
+classifies rather than guesses. Comparable on-chip sorters reach 85--98\%~[16, 17, 18], the
+aspirational reference (T8). Both the detection and classification accuracies are genuine
+specifications of this design rather than properties inherited from a part. The algorithms
+are implemented and iterated on a general-purpose processor as part of this project, not
+adopted from an existing spike-sorting chip, so meeting T5 and T8 depends on this
+project's own engineering analysis.
+
+\textbf{Transmission (F5).} Transmitting only a one-byte unit identity and a four-byte
+timestamp per spike, five bytes, replaces the $40 \times 16\text{~bit} = 80$~bytes of a
+raw 40-sample snippet, achieving the
+compression the solution depends on (T9).
+
+\textbf{System-level (T10).} A head stage on a freely-moving animal must run on a small
+onboard battery, not wall power or a data tether, so its power draw fixes the battery mass
+and the length of a recording session. Transmitting only spike identities rather than raw
+waveforms cuts the radio's airtime, so the compression that saves bandwidth also saves
+transmission energy, and both are quantified in the measurement plan. Should the target be
+missed, the design holds three levers, in order of expected saving. They are lengthening the
+radio's connection interval, idling the processor between samples, and narrowing the
+active channel count, and the measurement plan isolates each contribution so the lever is
+chosen from data rather than guesswork. Aspirationally, a multi-day ($\geq$72~h)
+session on the same cell is what chronic-recording studies would want and did not know
+they could have, and the compression architecture is precisely what makes it
+conceivable.
+
+% ======= 4. Plan for Measuring Technical Specifications ======= %
+\section{Plan for Measuring Technical Specifications}
+
+The central instrument of the measurement plan is a ground-truth comparison. The same
+signal that reaches the nRF54 is split and fed in parallel to a tethered
+reference recorder, so the two systems see an identical input. The reference recording is
+sorted offline with Kilosort~4.0 to produce ground-truth spike times and unit labels, and the
+on-device output is aligned to it through a shared synchronization marker and matched within a
+$\pm$1~ms window. When the source is a synthetic recording built from a known file, its labels
+serve as the ground truth directly. This split-signal setup is what makes detection (T5) and
+classification (T8) measurable against truth rather than against the device's own output.
+
+Because the head stage rides a freely-moving animal, it must run on a small onboard battery, because a
+wall supply or a data tether would defeat the wireless purpose of the project. Power draw, and
+the radio's share of it in particular, therefore sets the battery mass and the length of a
+recording session. Power is measured as supply current times voltage under sustained
+operation, with the transmission contribution isolated using a current profiler triggered on
+the radio's activity, then converted into battery life for a candidate cell. Transmitting only
+spike identities rather than raw waveforms cuts the radio's airtime by orders of magnitude, so
+the same on-device classification that saves bandwidth is expected to save transmission energy.
+Measuring power with and without on-device classification quantifies that saving (T10).
+
+The remaining specifications are characterized at the bench. Acquisition (T1--T3) uses a
+function or arbitrary-waveform generator as the signal source, a logic analyzer on the SPI
+bus, and firmware counters. Channel count is read from the acquired stream, the per-channel
+rate is confirmed by the spectrum of a known replayed tone and by the sampling-timer period,
+and front-end resolution and noise are measured from a shorted input and a known-amplitude
+input. The derived throughput constraints are checked alongside by counting sustained and missed
+conversions and dropped samples across the ADC-to-processor link. The filter
+corner and detection (T4--T5) come from a frequency sweep and from the
+$\pm$1~ms match to Kilosort. Timekeeping, classification, and transmission (T6--T9) are read
+from the received stream in software. These are one timestamp per event and its jitter against
+the sync marker, a confusion matrix of unit assignments against Kilosort labels on held-out
+data, and the five-byte content of each packet. Table~\ref{tab:techreq} pairs every specification with its
+measurement method alongside its quantitative value.
+
+
+% ======= 5. Design Approach ======= %
+\section{Design Approach}\label{sec:design}
+
+% ======= 5.1 System Architecture ======= %
+\subsection{System Architecture}
+Figure~\ref{fig:sysdiag} decomposes the proposed head stage into its subsystems and interfaces
+The analog front end amplifies, band-limits, and digitizes the extracellular signal. A
+hardware-timed acquisition engine on the system-on-chip (SoC) transfers each sample over
+SPI without CPU involvement. The on-device pipeline detects, classifies, and packetizes
+spike events, and the radio carries only the resulting five-byte identity-plus-timestamp
+packets to the host.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/sysdiag.pdf}
+\caption{System diagram of the proposed head stage. Signal flows left to right.
+Microvolt-scale differential analog voltage enters the front end, digitized samples reach
+the SoC over SPI at 21.33~MHz (757{,}741 words/s, this project's bench-measured single-bus
+ceiling), and five-byte spike-identity packets reach the host over 2.4~GHz BLE (2~Mbps
+theoretical). The headstage (solid boundary) is head-mounted and battery-powered, and the
+host computer is the wireless receiver.}
+\label{fig:sysdiag}
+\end{figure}
+
+Figure~\ref{fig:swarch} shows the software on each part of the system, the offline
+workstation phase that produces the model, the real-time firmware that consumes it, and
+the host that scores the output.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/swarch.pdf}
+\caption{Software architecture. The offline phase produces the quantized template model
+loaded by the classify stage, the firmware runs the real-time pipeline, and the host
+receives, logs, and scores the output. Arrow labels name the data crossing each interface.}
+\label{fig:swarch}
+\end{figure}
+
+% ======= 5.2 Consideration of Multiple Design Approaches ======= %
+\subsection{Consideration of Multiple Design Approaches}\label{sec:approaches}
+Four design decisions dominate the system. For each, the feasible approaches are
+described with the subsystem interactions they imply and their build and test
+consequences. Where two approaches survive this qualitative screen, Section~\ref{sec:quant} evaluates
+them quantitatively.
+
+\textbf{Computation platform.} (a)~A commodity BLE system-on-chip of the nRF54 class. The
+classifier and the radio share one chip, the front end connects directly over SPI, and
+firmware is iterated with ordinary embedded tooling. The acquisition path of this approach
+is already built and bench-validated in this project. (b)~An FPGA paired with a separate
+radio module. It offers greater parallel throughput at high channel counts, but the pipeline
+splits across two chips, adding an inter-chip link whose bandwidth and timing must
+themselves be designed and tested, and the build requires an HDL toolchain and a board
+respin per iteration. (c)~A custom spike-sorting ASIC. It holds the literature's best power
+and accuracy figures~[16, 17, 18], but fabrication requires facilities and timescales
+unavailable to a one-year commodity-parts project, and published parts carry no radio.
+(d)~Host-side classification. It is trivially feasible, but the link must then carry
+waveforms, which is precisely the bandwidth problem this project exists to remove.
+Approach~(a) is the only one simultaneously obtainable, programmable, and
+radio-integrated, and it is the chosen platform.
+
+\textbf{Sample pacing.} (a)~Software-paced acquisition. A firmware thread issues each
+SPI conversion against a deadline. It is simple to build, but the sampling thread and
+the BLE controller share the CPU, and the radio's interrupt priority lets it displace
+sampling instants. The interaction is measured, not hypothetical. (b)~Hardware-timed
+acquisition. A timer peripheral triggers each SPI transaction through the SoC's
+event-routing fabric with DMA collecting results, removing the CPU, and therefore the
+radio, from the timing path at the cost of more involved peripheral bring-up. Both were
+built and measured on identical hardware in this project, and Section~\ref{sec:quant} reports the
+comparison.
+
+\textbf{Acquisition bus topology.} (a)~A single SPI bus. One front end carries all
+channels on four wires, with the simplest layout and firmware, but every channel shares
+one measured conversion-rate ceiling. (b)~Dual front ends on dual buses. The ceiling
+doubles and the radio-facing pipeline is unchanged (packets merge in memory), at the
+cost of a second front end, doubled routing, and a second DMA engine. The choice gates
+the custom PCB layout, and Section~\ref{sec:quant} quantifies both against the T1/T2 targets.
+
+\textbf{Classification algorithm.} This decision defines the system, and the two approaches
+differ in where the knowledge about the neurons comes from. (a)~Offline-supervised
+template matching. A tethered reference recording is sorted offline with Kilosort, one
+template is built per unit, and the templates are quantized and flashed to the device. Each
+detected spike is then assigned to the nearest template by Euclidean distance~[21]. The host
+supplies the model and the device never changes it, so unit identities stay fixed and the
+confusion matrix against Kilosort labels measures T8 directly. The cost is a per-subject
+offline phase before every wireless session, and templates that go stale as the electrode
+drifts. (b)~Online unsupervised sorting with OSort~[24]. The device starts with no model.
+Each spike is compared with the running mean of every existing cluster, joins the nearest
+one and updates its mean if the distance is below a noise-derived threshold, and otherwise
+opens a new cluster. Clusters that come closer than the threshold are merged. There is no
+offline phase and the sorter follows electrode drift, which is why the fabricated on-chip
+sorters~[16, 17] and the FPGA sorter of Wu et al.~[20] all build on it. The price is paid
+elsewhere in the system. Cluster identities are assigned on the device, so the radio
+protocol must also carry cluster creation and merge events, and validation requires
+matching device clusters to Kilosort units after the fact instead of reading a confusion
+matrix off fixed labels. The per-spike arithmetic is the same nearest-template distance in
+both approaches, so the device compute budget does not decide between them. Template
+matching is the primary approach for this project because its accuracy can be measured
+cleanly against ground truth, which is what T8 requires. OSort is the alternative the
+design keeps open, and it is the natural path to the multi-day sessions of the T10
+aspiration, where drift would defeat a static template.
+
+
+% ======= 6. Quantitative Evaluation of Design Approaches ======= %
+\section{Quantitative Evaluation of Design Approaches}\label{sec:quant}
+
+\subsection{Software-Paced versus Hardware-Timed Sample Pacing}
+Both pacing approaches of Section~\ref{sec:approaches} were built and measured with the same
+instrument, an oscilloscope on the front end's chip-select line. Every falling edge is one
+conversion request, so the distribution of edge-to-edge intervals is the sampling regularity
+itself, measured independently of the device under test. About
+12{,}800 intervals were captured per approach at 20~kS/s nominal (50~$\mu$s period) with
+the BLE link streaming. Table~\ref{tab:pacing}
+summarizes the result. The software-paced sampler, displaced by the radio's
+interrupt-priority work, placed only 0.7\% of samples within $\pm$10\% of the nominal
+period, while the hardware-timed engine placed 100.0\% of them, a 62$\times$ reduction
+in standard deviation. Averages alone would not have distinguished the two, so regularity was measured at the
+signal level rather than inferred from throughput. The hardware-timed engine is the chosen
+approach. Its two residuals are understood. The mean reads $+0.34$\% because the timer runs
+from an uncalibrated on-chip oscillator, and the one $\sim$53~$\mu$s interval per 1.64~s is
+the deliberate buffer-rewind pause. Figure~\ref{fig:pacinghist} overlays the
+two measured interval distributions on a shared axis.
+
+\begin{table}[H]
+\begin{minipage}[t]{0.53\textwidth}
+\vspace{0pt}
+\centering
+\caption{Measured inter-sample interval statistics for the two pacing approaches.}
+\label{tab:pacing}
+{\footnotesize\sffamily
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Statistic} & \textbf{Software-paced} & \textbf{Hardware-timed} \\
+\hline
+intervals measured            & 12{,}800 & 12{,}843 \\
+\hline
+mean ($\mu$s)                 & 50.00    & 49.83 \\
+\hline
+standard deviation ($\mu$s)   & 23.67    & \textbf{0.38} \\
+\hline
+minimum / maximum ($\mu$s)    & 6.75 / 325.79 & 19.04 / 53.40 \\
+\hline
+within $\pm$10\% of nominal   & 0.7\%    & \textbf{100.0\%} \\
+\hline
+\end{tabular}
+}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.44\textwidth}
+\vspace{0pt}
+\centering
+\includegraphics[width=\linewidth]{figures/regularity_hist_one.pdf}
+\captionof{figure}{Distributions of the measured intervals on a shared axis (20~kS/s nominal). Software-paced intervals beyond 120~$\mu$s are collected in the rightmost bin.}
+\label{fig:pacinghist}
+\end{minipage}
+\end{table}
+
+
+\subsection{Single versus Dual SPI Bus Topology}
+The acquisition ceiling of one SPI bus was measured directly, using the bench-validated
+settings of a 21.33~MHz clock, hardware chip-select, and 16-bit words. The bus sustains
+757{,}741 conversions per second, one word per 1.32~$\mu$s of bus time. At the
+32-channel target of T1, a single bus offers
+$757{,}741 / 32 \approx 23.7$~kS/s per channel, above the 12~kS/s Nyquist floor of T2
+but 21\% short of the 30~kS/s target. Conversely, at full 30~kS/s a single bus carries
+at most 25 channels. A dual bus doubles the ceiling to $\approx$1.52~M~words/s,
+47.4~kS/s per channel at 32 channels, meeting the T1 and T2 targets with 58\% margin. The single bus therefore meets the floors and
+the dual bus the targets. Because the choice sets the number of front ends and the board
+routing, it must be finalized before layout, with the dual bus as the default unless the
+power budget argues otherwise.
+
+\subsection{Offline Templates versus Online OSort for Classification}
+Both classification approaches of Section~\ref{sec:approaches} reduce to the same per-spike
+operation, a nearest-template distance over $K$ stored waveforms of $N$ samples, so their
+cost can be computed directly. With $N = 40$ and $K = 8$, one spike costs
+320 multiply-accumulates. At 32 channels and 40 spikes per second per channel, about
+1{,}300 spikes per second, that is 0.4 million multiply-accumulates per second against the
+nRF54's 128~MHz Cortex-M33 core~[25], under one percent of its capacity. Static templates occupy $K \times N \times 2$ bytes, 640~bytes per channel, and the FPGA OSort of
+Wu et al.\ runs in 256~bytes per channel~[20], so compute and memory do not separate the
+two approaches.
+
+Accuracy does separate the two approaches. Two static templates separated by a
+Euclidean distance $d$ under per-sample noise $\sigma$ are confused with probability
+$\Phi(-d/2\sigma)$. With the 5~$\mu$Vrms of T3 and templates that differ by only 5~$\mu$V
+per sample over 40 samples, $d \approx 32~\mu$V and the error is about 0.1\%. Template matching is
+therefore limited by electrode drift and overlapping spikes rather than by noise. Online
+sorting follows drift but is bounded by cluster stability, as the published figures show. The adaptive on-chip sorters report
+72 to 98\% depending on the dataset~[16], 85 to 94\%~[17], and 80 to 96\% with an in-vivo
+average of 79.8\%~[20]. No quantity available today separates the two approaches
+decisively, so the choice rests on T8, which requires accuracy measured against fixed
+Kilosort labels and favors the offline templates. OSort remains the path for sessions long
+enough for drift to matter, the T10 aspiration, and the decisive comparison on this
+project's own signals is scheduled in Table~\ref{tab:timeline} with the same
+confusion-matrix method for both.
+% ======= 7. Training for Required Tools and Skills ======= %
+\section{Training for Required Tools and Skills}
+Table~\ref{tab:training} lists the required training with status and dates.
+
+\begin{table}[H]
+\centering
+\caption{Training required for the project's tools and skills, with status and dates.}
+\label{tab:training}
+{\footnotesize\sffamily
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Tool / skill} & \textbf{Status} & \textbf{Date} \\
+\hline
+KiCad schematic/layout and BGA board assembly (test PCB fabricated, brought up) & complete & Jul.\ 2026 \\
+\hline
+Zephyr / nRF Connect SDK firmware, DPPI, timer, and DMA peripheral programming & complete & Aug.\ 2026 \\
+\hline
+Intan RHD2000-series SPI command protocol and register configuration & complete & Aug.\ 2026 \\
+\hline
+Reflow soldering (EE shop training) & complete & Sep.\ 2026 \\
+\hline
+Python acquisition/analysis tooling (BLE client, live plotting, statistics) & complete & Sep.\ 2026 \\
+\hline
+Oscilloscope measurement workflows incl.\ waveform export and scripted analysis & complete & Oct.\ 2026 \\
+\hline
+Ground-truth playback rig (single-board computer, I2S DAC, parts ordered) & pending & Oct.\ 2026 \\
+\hline
+Kilosort~4 installation and reference-sorting workflow & pending & Nov.\ 2026 \\
+\hline
+Power profiling with a current-waveform profiler (radio-triggered) & pending & Dec.\ 2026 \\
+\hline
+\end{tabular}
+}
+\end{table}
+
+% ======= 8. Preliminary Timeline and Budget ======= %
+\section{Preliminary Timeline and Budget}
+Table~\ref{tab:timeline} breaks the remaining work into two-week stages spanning design,
+build, measurement, analysis, and verification, with the course milestones embedded, and
+summarizes spending to date and projected purchases beside the timeline. All parts are
+off the shelf, and the total remains far below typical commercial wireless headstage
+pricing.
+
+\begin{table}[H]
+\centering
+\caption{Preliminary project timeline in two-week increments (stage labels D for design,
+B for build, M for measure, A for analyze, and V for verify) alongside the preliminary budget.
+Budget amounts are approximate.}
+\label{tab:timeline}
+{\footnotesize\sffamily
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|>{\raggedright\arraybackslash}p{148pt}|>{\raggedright\arraybackslash}p{86pt}|l|l|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Timeline}} & \multicolumn{3}{c|}{\textbf{Budget}} \\
+\hline
+\textbf{Two-week block} & \textbf{Stage} & \textbf{Milestone} & \textbf{Item} & \textbf{Status} & \textbf{Cost} \\
+\hline
+Oct.\ 6 -- Oct.\ 19   & B/M & Ground-truth rig, noise floor      & Signal-path test PCB (lab grant)& spent & \$300 \\
+\hline
+Oct.\ 20 -- Nov.\ 2   & B/M & 32-ch acquisition, bus decision    & Intan RHD2164 front end (lab grant)& spent & \$500 \\
+\hline
+Nov.\ 3 -- Nov.\ 16   & B/M & Detection + timestamps (T5, T6)    & nRF54 dev.\ kits ($\times$4) (lab grant) & spent & \$200 \\
+\hline
+Nov.\ 17 -- Nov.\ 30  & A   & Design Review, Kilosort pipeline   & Connector boards (lab grant) & spent & \$200 \\
+\hline
+Dec.\ 1 -- Dec.\ 14   & B/M & Classifier v1 + matrix (T7, T8)    & FB128 Function Generator (lab grant) & spent & \$1000 \\
+\hline
+Dec.\ 15 -- Jan.\ 11  & D   & PCB rev.\ 2 layout, fab ordered    & Playback rig (Pi, DAC, microSD) & spent & \$45 \\
+\hline
+Jan.\ 12 -- Jan.\ 25  & B   & PCB bring-up, integration          & PCB rev.\ 2 (fab $+$ assembly) & projected & \$150 \\
+\hline
+Jan.\ 26 -- Feb.\ 8   & M   & End-to-end spike IDs (CP2)         & Battery $+$ profiling board & projected & \$150 \\
+\hline
+Feb.\ 9 -- Feb.\ 22   & M   & Power + battery life (T10)         & \textbf{Total (ES100 share \$345)} & & \textbf{$\approx$\$2545} \\
+\hline
+Feb.\ 23 -- Mar.\ 8   & A/B & Iterate weakest spec, statistics   & \cellcolor[gray]{0.82} & \cellcolor[gray]{0.82} & \cellcolor[gray]{0.82} \\
+\hline
+Mar.\ 9 -- Mar.\ 22   & V   & Full-system verification           & \cellcolor[gray]{0.82} & \cellcolor[gray]{0.82} & \cellcolor[gray]{0.82} \\
+\hline
+Mar.\ 23 -- Apr.\ 5   & --  & Thesis + final presentation        & \cellcolor[gray]{0.82} & \cellcolor[gray]{0.82} & \cellcolor[gray]{0.82} \\
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+% ======= References ======= %
+% ======= 9. Status and Next Steps ======= %
+\section{Status and Next Steps}
+The acquisition half of the system is built and measured. The hardware-timed engine streams
+one channel at 20~kS/s over BLE with no lost packets, its sampling regularity is verified on
+the oscilloscope, and the single-bus conversion ceiling that fixes the channel arithmetic is
+a measured number rather than a datasheet value. Two design decisions remain open. The bus
+topology is resolved by the dual-bus default unless the power budget objects, and the
+classifier is led by offline templates with OSort held in reserve. The design review will
+add the quantitative justification of the chosen approach for each component, the broader
+societal and ethical considerations, and the first classification accuracy measured on this
+project's own signals. The timeline in Table~\ref{tab:timeline} carries those items in order,
+beginning with the ground-truth playback rig and the 32-channel acquisition build.
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{References}
+\begin{thebibliography}{25}
+
+\bibitem{ref1} E. R. Kandel, J. D. Koester, S. H. Mack, and S. A. Siegelbaum, \emph{Principles of Neural Science}, 6th ed. New York, NY, USA: McGraw-Hill, 2021.
+
+\bibitem{ref2} J. J. Jun \emph{et al.}, ``Fully integrated silicon probes for high-density recording of neural activity,'' \emph{Nature}, vol. 551, no. 7679, pp. 232--236, Nov. 2017.
+
+\bibitem{ref3} N. A. Steinmetz \emph{et al.}, ``Neuropixels 2.0: A miniaturized high-density probe for stable, long-term brain recordings,'' \emph{Science}, vol. 372, no. 6539, Art. no. eabf4588, Apr. 2021.
+
+\bibitem{ref4} IMEC and the Neuropixels Consortium, ``Neuropixels: Next-generation high-density neural probes,'' Leuven, Belgium, 2024. [Online]. Available: https://www.neuropixels.org
+
+\bibitem{ref5} N. A. Steinmetz, P. Zatka-Haas, M. Carandini, and K. D. Harris, ``Distributed coding of choice, action and engagement across the mouse brain,'' \emph{Nature}, vol. 576, no. 7786, pp. 266--273, Dec. 2019.
+
+\bibitem{ref6} E.-A. Seyfarth, ``Julius Bernstein (1839--1917): Pioneer neurobiologist and biophysicist,'' \emph{Biol. Cybern.}, vol. 94, no. 1, pp. 2--8, Jan. 2006.
+
+\bibitem{ref7} G. Buzs\'aki, C. A. Anastassiou, and C. Koch, ``The origin of extracellular fields and currents---EEG, ECoG, LFP and spikes,'' \emph{Nat. Rev. Neurosci.}, vol. 13, no. 6, pp. 407--420, Jun. 2012.
+
+\bibitem{ref8} Intan Technologies, ``RHD2000-series digital electrophysiology interface chips (RHD2216/RHD2132),'' Datasheet, Los Angeles, CA, USA, 2021.
+
+\bibitem{ref9} Intan Technologies, ``RHD2164 64-channel digital electrophysiology interface chip,'' Datasheet, Los Angeles, CA, USA, 2021.
+
+\bibitem{ref10} N. T. Tasneem, D. K. Biswas, S. Reza, A. Becker, and I. Mahbub, ``Multichannel electrophysiological recording with spike detection and sorting in a duty-cycled wireless optogenetic headstage,'' \emph{IEEE Sensors J.}, vol. 23, no. 21, pp. 26075--26086, Nov. 2023.
+
+\bibitem{ref11} Bluetooth Special Interest Group, ``Bluetooth core specification, version 6.0,'' Kirkland, WA, USA, 2024.
+
+\bibitem{ref12} J. Tosi, F. Taffoni, M. Santacatterina, R. Sannino, and D. Formica, ``Performance evaluation of Bluetooth Low Energy: A systematic review,'' \emph{Sensors}, vol. 17, no. 12, Art. no. 2898, Dec. 2017.
+
+\bibitem{ref13} H. G. Rey, C. Pedreira, and R. Quian Quiroga, ``Past, present and future of spike sorting techniques,'' \emph{Brain Res. Bull.}, vol. 119, pp. 106--117, Oct. 2015.
+
+\bibitem{ref14} M. S. Lewicki, ``A review of methods for spike sorting: The detection and classification of neural action potentials,'' \emph{Network: Comput. Neural Syst.}, vol. 9, no. 4, pp. R53--R78, Nov. 1998.
+
+\bibitem{ref15} G. Gagnon-Turcotte, Y. LeChasseur, C. Bories, Y. Messaddeq, Y. De Koninck, and B. Gosselin, ``A wireless headstage for combined optogenetics and multichannel electrophysiological recording,'' \emph{IEEE Trans. Biomed. Circuits Syst.}, vol. 11, no. 1, pp. 1--14, Feb. 2017.
+
+\bibitem{ref16} Z. Chen \emph{et al.}, ``A 128-channel level-crossing-based neural digitization and spike sorting SoC with compact spatiotemporal feature extraction,'' \emph{IEEE Trans. Biomed. Circuits Syst.}, 2026, doi: 10.1109/TBCAS.2026.3714087.
+
+\bibitem{ref17} Z. Jiang \emph{et al.}, ``A 1024-channel 583\,nW/channel spike-sorting SoC for high-density neural recording,'' \emph{IEEE Trans. Circuits Syst. I}, vol. 73, no. 8, 2026.
+
+\bibitem{ref18} R. Lukito \emph{et al.}, ``A spike sorting SoC with $\Delta$-based spike detection and end-to-end implementation of autoencoder feature extraction using analog CIM,'' \emph{IEEE J. Solid-State Circuits}, vol. 61, no. 4, 2026, doi: 10.1109/JSSC.2025.3611139.
+
+\bibitem{ref19} S. Luan \emph{et al.}, ``Compact standalone platform for neural recording with real-time spike sorting and data logging,'' \emph{J. Neural Eng.}, vol. 15, no. 4, Art. no. 046014, 2018.
+
+\bibitem{ref20} Z. Wu \emph{et al.}, ``An unsupervised real-time spike sorting system based on optimized OSort,'' \emph{J. Neural Eng.}, vol. 20, no. 6, Art. no. 066015, Nov. 2023.
+
+\bibitem{ref21} J. Navajas, D. Y. Barsakcioglu, A. Eftekhar, A. Jackson, T. G. Constandinou, and R. Quian Quiroga, ``Minimum requirements for accurate and efficient real-time on-chip spike sorting,'' \emph{J. Neurosci. Methods}, vol. 230, pp. 51--64, Jun. 2014.
+
+\bibitem{ref22} R. R. Harrison, ``The design of integrated circuits to observe brain activity,'' \emph{Proc. IEEE}, vol. 96, no. 7, pp. 1203--1216, Jul. 2008.
+
+\bibitem{ref23} M. Pachitariu, S. Sridhar, J. Pennington, and C. Stringer, ``Spike sorting with Kilosort4,'' \emph{Nat. Methods}, vol. 21, no. 5, pp. 914--921, May 2024.
+
+\bibitem{ref24} U. Rutishauser, E. M. Schuman, and A. N. Mamelak, ``Online detection and sorting of extracellularly recorded action potentials in human medial temporal lobe recordings, in vivo,'' \emph{J. Neurosci. Methods}, vol. 154, no. 1--2, pp. 204--224, Jun. 2006.
+
+\bibitem{ref25} Nordic Semiconductor, ``nRF54LM20A and nRF54LM20B wireless SoCs,'' Datasheet v1.0, Trondheim, Norway, 2026.
+
+\end{thebibliography}
+
+\end{document}
