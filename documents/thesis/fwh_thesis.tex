@@ -54,7 +54,7 @@ compatible with modern rodent neural recording systems.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.78\textwidth]{figures/figure1.png}
+\includegraphics[width=0.78\textwidth]{figures/displays/figure1.png}
 \caption{System overview. A head-mounted device classifies each detected extracellular
 spike to its neuron of origin on-device and transmits only the resulting unit identity and
 timestamp over Bluetooth Low Energy (BLE).}
@@ -116,7 +116,7 @@ pharmaceutical companies.
 
 \begin{figure}[H]
 \centering
-\includegraphics{figures/stakeholder_map_v2.pdf}
+\includegraphics{figures/displays/stakeholder_map_v2.pdf}
 \caption{Stakeholder map. Nesting encodes directness of stake. The stakeholders the
 device touches directly occupy the inner tier, and the broader stakeholders occupy the
 outer tier.}
@@ -239,7 +239,7 @@ by the functional requirement they serve and T10 as a system-level power constra
 \hline
 \multicolumn{5}{|l|}{\textbf{F1 -- Acquire}} \\
 \hline
-T1  & Channels at lab scale & channel count & $\geq 5$, 32, 384 asp. & channels in the stream \\
+T1  & Channels at lab scale & channel count & $\geq 5$, 32, 128 asp. & channels in the stream \\
 \hline
 T2  & Sample the spike band & per-channel rate & $\geq 12$~kS/s, 30~kS/s & FFT, timer, drop counts \\
 \hline
@@ -275,12 +275,17 @@ T10 & Run on a head battery & power, radio share & $\lesssim 100$~mW, $\geq 1$~h
 
 % ======= Jusification of Technical Requirements and Specifications ======= %
 \subsection{Justification of Technical Requirements and Specifications}
-\textbf{Acquisition (F1).} The channel-count values (T1) are set by what neuroscientists
-record with, not by any part. Five channels is the floor at which compression demonstrably
-does work a raw link cannot. The 32-channel target matches the tetrode microdrives common
-in freely-moving rodent studies, and the 384-channel aspiration is one full
-Neuropixels~1.0 shank~[2], the scale at which the device would give neuroscientists both
-what they want and what they did not know they could have. Extracellular spikes occupy
+\textbf{Acquisition (F1).} The floor and target channel counts (T1) are set by what
+neuroscientists record with, and the aspiration is set by the front end. Five channels is
+the floor at which compression demonstrably does work a raw link cannot. The 32-channel
+target matches the tetrode microdrives common in freely-moving rodent studies. The
+128-channel aspiration is the most this Intan-based design can digitize at the full
+30~kS/s per channel. One RHD2164 converts 64 channels, and reading all of them at that rate
+fills 87\% of an SPI bus clocked at the 21.33~MHz validated on the bench, so each converter
+needs its own bus and two converters give 128 channels. Neuropixels~1.0 reaches 384
+simultaneous channels per shank~[2] by building amplification and digitization into a
+custom integrated circuit on the probe itself, an option not open to a design built on
+off-the-shelf converters. Extracellular spikes occupy
 300~Hz--6~kHz~[7], so the Nyquist--Shannon theorem sets a per-channel floor of
 $f_s \geq 2 \times 6\text{~kHz} = 12$~kS/s, and the field-standard
 30~kS/s~[8, 9] adds oversampling margin (T2). The resulting aggregate conversion rate and
@@ -378,7 +383,7 @@ packets to the host.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{figures/sysdiag.pdf}
+\includegraphics[width=\textwidth]{figures/displays/sysdiag.pdf}
 \caption{System diagram of the proposed head stage. Signal flows left to right.
 Microvolt-scale differential analog voltage enters the front end, digitized samples reach
 the SoC over SPI at 21.33~MHz (757{,}741 words/s, this project's bench-measured single-bus
@@ -394,7 +399,7 @@ the host that scores the output.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{figures/swarch.pdf}
+\includegraphics[width=\textwidth]{figures/displays/swarch.pdf}
 \caption{Software architecture. The offline phase produces the quantized template model
 loaded by the classify stage, the firmware runs the real-time pipeline, and the host
 receives, logs, and scores the output. Arrow labels name the data crossing each interface.}
@@ -514,7 +519,7 @@ within $\pm$10\% of nominal   & 0.7\%    & \textbf{100.0\%} \\
 \begin{minipage}[t]{0.44\textwidth}
 \vspace{0pt}
 \centering
-\includegraphics[width=\linewidth]{figures/regularity_hist_one.pdf}
+\includegraphics[width=\linewidth]{figures/displays/regularity_hist_one.pdf}
 \captionof{figure}{Distributions of the measured intervals on a shared axis (20~kS/s nominal). Software-paced intervals beyond 120~$\mu$s are collected in the rightmost bin.}
 \label{fig:pacinghist}
 \end{minipage}
