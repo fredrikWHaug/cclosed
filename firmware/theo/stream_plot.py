@@ -1,4 +1,4 @@
-"""Live plot of in0 voltage vs time from the Theo BLE stream."""
+"""Live plot of in0-in3 voltage vs time from the Theo BLE stream (interleaved)."""
 import asyncio, threading, collections, os
 import numpy as np
 from bleak import BleakClient, BleakScanner
@@ -7,15 +7,18 @@ import matplotlib.animation as animation
 
 NAME = "cclosed-theo"
 CHR = "12345678-1234-5678-1234-56789abcdef1"
-RATE = 20000
+RATE = 6000                                    # per channel (24 kS/s interleaved)
 UV_PER_CODE = 0.195
-WINDOW = 1000                                  # samples shown (50 ms)
+WINDOW = 1000                                  # samples shown per channel (100 ms)
 
-buf = collections.deque(maxlen=WINDOW)
+N_CH = 4
+bufs = [collections.deque(maxlen=WINDOW) for _ in range(N_CH)]
 
 def on_notify(_, data: bytearray):
     codes = np.frombuffer(bytes(data[2:]), dtype="<u2").astype(float)
-    buf.extend((codes - 32768.0) * UV_PER_CODE)
+    uv = (codes - 32768.0) * UV_PER_CODE
+    for i, buf in enumerate(bufs):             # sample k belongs to channel k % N_CH
+        buf.extend(uv[i::N_CH])
 
 async def ble():
     dev = await BleakScanner.find_device_by_name(NAME, timeout=15)
@@ -28,15 +31,18 @@ async def ble():
 
 threading.Thread(target=lambda: asyncio.run(ble()), daemon=True).start()
 
-fig, ax = plt.subplots(figsize=(10, 4))
-(line,) = ax.plot([], [], lw=1)
-ax.set_xlabel("time (ms)"); ax.set_ylabel("voltage (uV)")
+fig, axes = plt.subplots(N_CH, 1, figsize=(10, 8), sharex=True)
+lines = [ax.plot([], [], lw=1, color=f"C{i}")[0] for i, ax in enumerate(axes)]
+for i, ax in enumerate(axes):
+    ax.set_ylabel(f"in{i} (uV)")
+axes[-1].set_xlabel("time (ms)")
 
 def update(_):
-    y = np.array(buf)
-    line.set_data(np.arange(len(y)) / RATE * 1000, y)
-    ax.relim(); ax.autoscale_view()
-    return (line,)
+    for line, buf, ax in zip(lines, bufs, axes):
+        y = np.array(buf)
+        line.set_data(np.arange(len(y)) / RATE * 1000, y)
+        ax.relim(); ax.autoscale_view()
+    return lines
 
 ani = animation.FuncAnimation(fig, update, interval=200, cache_frame_data=False)
 try:

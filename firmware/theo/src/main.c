@@ -31,7 +31,7 @@
 #include <hal/nrf_dppi.h>
 #include <hal/nrf_gpio.h>
 
-#define RATE_HZ      20000u
+#define RATE_HZ      24000u                 /* total transactions/s = 4 ch x 6 kS/s; 384 kbit/s sits inside the Mac's measured ~450 kbit/s ceiling */
 #define PKT_SAMPLES  120                 /* 2 + 240 B = 242 <= 244 ATT payload */
 #define DPPI_CH      7u                  /* clear of SDC's channels 1 and 3    */
 
@@ -39,7 +39,7 @@
  * packet-aligned threshold. Pad past the threshold = stall tolerance: the
  * drain may lag REWIND_AT by (RX_TOTAL - REWIND_AT) samples = 409 ms at
  * 20 kS/s before the emergency stop -- orders beyond any BLE stall. */
-#define REWIND_AT    32768u              /* wrap when hw write pos crosses this ( >= test ) */
+#define REWIND_AT    0xFFFFFFFFu         /* rewind DISABLED (isolation test): wrap via the overrun restart instead, which re-warms the pipeline and keeps channel alignment */
 #define RX_TOTAL     40960u              /* 80 KB */
 
 #define PIN_SCK   NRF_GPIO_PIN_MAP(2, 1)
@@ -56,7 +56,12 @@ static nrfx_spim_t spim = NRFX_SPIM_INSTANCE(NRF_SPIM00);
 static uint8_t drv_tx[2], drv_rx[2];             /* driver-path buffers (init/ROM) */
 
 static uint16_t rx_region[RX_TOTAL];             /* EasyDMA ArrayList destination  */
-static uint8_t  stream_tx[2];                    /* the one CONVERT(0) command     */
+/* TX walks its own ArrayList region cycling CONVERT(0..3), so the hardware
+ * interleaves four channels with no CPU in the timing path. The Intan returns
+ * each result two commands later, so the region is written with a +2 channel
+ * offset and, once warmed with CONVERT(0), CONVERT(1), transaction n receives
+ * channel n % 4 from the first streamed sample on. */
+static uint8_t  tx_region[2 * RX_TOTAL];
 
 /* Blocking word through the nrfx driver -- used only for chip init/checks. */
 static uint16_t xfer(uint16_t cmd)
@@ -74,6 +79,7 @@ static const uint16_t init_seq[] = {
 	WRITE(8, 17), WRITE(9, 0), WRITE(10, 16), WRITE(11, 0),
 	WRITE(12, 5), WRITE(13, 1),
 	WRITE(14, 0xFF), WRITE(15, 0xFF), WRITE(16, 0xFF), WRITE(17, 0xFF),
+	WRITE(18, 0xFF), WRITE(19, 0xFF), WRITE(20, 0xFF), WRITE(21, 0xFF),
 };
 
 static void intan_init(void)
@@ -157,17 +163,34 @@ static inline uint32_t acq_pos(void)
 
 static void acq_start(void)
 {
-	/* Warm the Intan's 2-deep result pipeline through the driver path so
-	 * rx_region[0] onward is pure ch0 data with no discard bookkeeping. */
-	xfer(CONVERT(0));
-	xfer(CONVERT(0));
+	/* Sanity check the SPI link before every start: ROM 40..44 must read
+	 * "INTAN" through the driver path, or this start would stream garbage. */
+	xfer(READ(40)); xfer(READ(41));
+	char rom[6] = { 0 };
+	rom[0] = (char)xfer(READ(42));
+	rom[1] = (char)xfer(READ(43));
+	rom[2] = (char)xfer(READ(44));
+	rom[3] = (char)xfer(READ(63));
+	rom[4] = (char)xfer(READ(63));
+	if (rom[0] != 'I' || rom[1] != 'N' || rom[2] != 'T') {
+		printk("acq_start: ROM check FAILED (\"%s\")\n", rom);
+	}
 
-	/* SPIM: fixed TX command, ArrayList RX walking the big region. */
-	stream_tx[0] = (uint8_t)(CONVERT(0) >> 8);
-	stream_tx[1] = (uint8_t)CONVERT(0);
-	nrf_spim_tx_buffer_set(NRF_SPIM00, stream_tx, 2);
+	/* Warm the Intan's 2-deep result pipeline through the driver path so
+	 * rx_region[0] is ch0 and [1] is ch1; the +2 offset in the TX region
+	 * continues the cycle from ch2. */
+	xfer(CONVERT(0));
+	xfer(CONVERT(1));
+
+	/* SPIM: TX and RX both in ArrayList mode walking their big regions. */
+	for (uint32_t i = 0; i < RX_TOTAL; i++) {
+		uint16_t cmd = CONVERT((i + 2u) & 3u);
+		tx_region[2 * i]     = (uint8_t)(cmd >> 8);
+		tx_region[2 * i + 1] = (uint8_t)cmd;
+	}
+	nrf_spim_tx_buffer_set(NRF_SPIM00, tx_region, 2);
 	nrf_spim_rx_buffer_set(NRF_SPIM00, (uint8_t *)rx_region, 2);
-	nrf_spim_tx_list_disable(NRF_SPIM00);
+	nrf_spim_tx_list_enable(NRF_SPIM00);
 	nrf_spim_rx_list_enable(NRF_SPIM00);
 	nrf_spim_event_clear(NRF_SPIM00, NRF_SPIM_EVENT_END);
 	nrf_spim_enable(NRF_SPIM00);
@@ -197,6 +220,16 @@ static void acq_stop(void)
 	nrf_dppi_channels_disable(NRF_DPPIC00, BIT(DPPI_CH));
 	k_busy_wait(100);                       /* let an in-flight word finish */
 	nrf_spim_disable(NRF_SPIM00);
+
+	/* Hand the peripheral back in the same state the nrfx driver left it
+	 * after boot: list modes off, enabled. Without this, acq_start's warm
+	 * xfer()s run against a disabled engine with ArrayList armed, and every
+	 * post-restart acquisition returns garbage (bench finding 2026-10-15:
+	 * boot segments clean, all post-restart segments dead DC). */
+	nrf_spim_tx_list_disable(NRF_SPIM00);
+	nrf_spim_rx_list_disable(NRF_SPIM00);
+	nrf_spim_event_clear(NRF_SPIM00, NRF_SPIM_EVENT_END);
+	nrf_spim_enable(NRF_SPIM00);
 }
 
 /* Rewind the DMA pointer to the region base.
@@ -243,16 +276,29 @@ static bool acq_rewind(uint32_t from)
 	nrf_timer_task_trigger(NRF_TIMER00, NRF_TIMER_TASK_STOP);
 
 	uint32_t tail_end = acq_pos();
+
+	/* If the unsent backlog exceeds the carry buffer, truncating it would
+	 * silently drop samples and rotate the channel interleave (the drop
+	 * length is random mod 4). Fail instead: the caller does a full
+	 * restart, which is visible (seq resets) and channel-clean. */
+	if (tail_end - from > 8192u) {
+		return false;
+	}
+
 	carry_len = 0;
 	carry_idx = 0;
-	for (uint32_t i = from; i < tail_end && carry_len < 8192; i++) {
+	for (uint32_t i = from; i < tail_end; i++) {
 		carry[carry_len++] = rx_region[i];
 	}
 
-	/* Reset the DMA engine from clean idle and resume the clock. */
+	/* Reset the DMA engine from clean idle and resume the clock. The two
+	 * in-flight Intan results carry channels tail_end%4 and (tail_end+1)%4,
+	 * so the next TX command must be channel (tail_end+2)%4. Region index j
+	 * holds CONVERT((j+2)%4), so start the TX list at j = tail_end%4. */
 	nrf_spim_disable(NRF_SPIM00);
-	nrf_spim_tx_buffer_set(NRF_SPIM00, stream_tx, 2);
+	nrf_spim_tx_buffer_set(NRF_SPIM00, tx_region + 2 * (tail_end & 3u), 2);
 	nrf_spim_rx_buffer_set(NRF_SPIM00, (uint8_t *)rx_region, 2);
+	nrf_spim_tx_list_enable(NRF_SPIM00);
 	nrf_spim_rx_list_enable(NRF_SPIM00);
 	nrf_spim_event_clear(NRF_SPIM00, NRF_SPIM_EVENT_END);
 	nrf_spim_enable(NRF_SPIM00);
@@ -274,12 +320,12 @@ int main(void)
 {
 	nrfx_spim_config_t cfg =
 		NRFX_SPIM_DEFAULT_CONFIG(PIN_SCK, PIN_MOSI, PIN_MISO, PIN_CSN);
-	cfg.frequency   = 21333333u;            /* 128 MHz / 6, under Intan's 24 MHz cap */
+	cfg.frequency   = 16000000u;            /* 16 MHz: DDR A-window is 31-62 ns, so rx_delay 6 (47 ns) samples dead-center (board bring-up finding); 21.33 MHz + rx_delay 5 sat near the edge and restarts could latch the B phase (ch N+32) */
 	cfg.mode        = NRF_SPIM_MODE_0;
 	cfg.bit_order   = NRF_SPIM_BIT_ORDER_MSB_FIRST;
 	cfg.use_hw_ss   = true;
 	cfg.ss_duration = 20;                   /* CSN high >= 156 ns between words */
-	cfg.rx_delay    = 5;                    /* bench-validated sampling window  */
+	cfg.rx_delay    = 6;                    /* centered in the 16 MHz A-window  */
 
 	if (nrfx_spim_init(&spim, &cfg, NULL, NULL) != 0) {
 		printk("spim init failed\n");
@@ -304,7 +350,7 @@ int main(void)
 		while (!notify_enabled) {
 			k_msleep(20);
 		}
-		printk("subscribed - hw-timed streaming ch0 at %u S/s\n", RATE_HZ);
+		printk("subscribed - hw-timed streaming ch0-ch3 interleaved, %u S/s per channel\n", RATE_HZ / 4u);
 		seq = 0;
 		rewinds = 0;
 		carry_len = carry_idx = 0;
@@ -316,7 +362,7 @@ int main(void)
 
 			/* emergency: drain stalled past the pad (should never) */
 			if (w >= RX_TOTAL - 8u) {
-				printk("RX region overrun - restarting acquisition\n");
+				printk("region full - clean restart (expected every ~1.7 s in no-rewind mode)\n");
 				acq_stop();
 				r_pos = 0;
 				carry_len = carry_idx = 0;
