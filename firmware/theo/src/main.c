@@ -1,24 +1,3 @@
-/*
- * Theo -- hardware-timed acquisition (regularity fix)
- *
- * The old sampler was a software thread pacing itself against deadlines; the
- * BLE controller preempted it and the measured spacing was sigma = 23.7 us on
- * a 50 us period (see measurements/before_sw_paced_20k/). This build removes
- * the CPU from the timing path entirely -- Dr. Oh's two prescriptions:
- *
- *  1. "Use DMA": RX runs in EasyDMA ArrayList mode -- the peripheral advances
- *     its own write pointer through a large RAM region, one 16-bit result per
- *     transaction, zero CPU per sample. Software drains lazily in batches.
- *  2. "Only the intended clock drives the sampling": TIMER00 (crystal-derived,
- *     same fast domain as SPIM00) fires SPIM00's START task directly over
- *     DPPI channel 7. Nothing running on the CPU -- threads, interrupts, the
- *     BLE stack -- can move a sampling instant, because no instruction stream
- *     is involved in triggering one. (DPPIC00 channels 1 and 3 belong to the
- *     BLE controller: SDC_DPPIC00_CHANNELS_USED_MASK = 0x0A. Channel 7 is free.)
- *
- * SPI settings are the bench-validated set: 21.33 MHz, hardware CSN
- * (CSNDUR 20 = 156 ns high between words), RXDELAY 5.
- */
 
 #include <zephyr/kernel.h>
 #include <zephyr/sys/printk.h>
@@ -35,10 +14,6 @@
 #define PKT_SAMPLES  120                 /* 2 + 240 B = 242 <= 244 ATT payload */
 #define DPPI_CH      7u                  /* clear of SDC's channels 1 and 3    */
 
-/* RX DMA region: hardware fills it linearly; we rewind the pointer at a
- * packet-aligned threshold. Pad past the threshold = stall tolerance: the
- * drain may lag REWIND_AT by (RX_TOTAL - REWIND_AT) samples = 409 ms at
- * 20 kS/s before the emergency stop -- orders beyond any BLE stall. */
 #define REWIND_AT    0xFFFFFFFFu         /* rewind DISABLED (isolation test): wrap via the overrun restart instead, which re-warms the pipeline and keeps channel alignment */
 #define RX_TOTAL     40960u              /* 80 KB */
 
@@ -56,14 +31,9 @@ static nrfx_spim_t spim = NRFX_SPIM_INSTANCE(NRF_SPIM00);
 static uint8_t drv_tx[2], drv_rx[2];             /* driver-path buffers (init/ROM) */
 
 static uint16_t rx_region[RX_TOTAL];             /* EasyDMA ArrayList destination  */
-/* TX walks its own ArrayList region cycling CONVERT(0..3), so the hardware
- * interleaves four channels with no CPU in the timing path. The Intan returns
- * each result two commands later, so the region is written with a +2 channel
- * offset and, once warmed with CONVERT(0), CONVERT(1), transaction n receives
- * channel n % 4 from the first streamed sample on. */
+
 static uint8_t  tx_region[2 * RX_TOTAL];
 
-/* Blocking word through the nrfx driver -- used only for chip init/checks. */
 static uint16_t xfer(uint16_t cmd)
 {
 	drv_tx[0] = (uint8_t)(cmd >> 8);
@@ -153,9 +123,6 @@ BT_CONN_CB_DEFINE(conn_cbs) = {
 	.le_param_updated = param_updated,
 };
 
-/* ---- hardware-timed acquisition ---- */
-
-/* Samples written so far into rx_region (from the DMA pointer itself). */
 static inline uint32_t acq_pos(void)
 {
 	return (NRF_SPIM00->DMA.RX.PTR - (uint32_t)rx_region) / 2u;
@@ -163,8 +130,6 @@ static inline uint32_t acq_pos(void)
 
 static void acq_start(void)
 {
-	/* Sanity check the SPI link before every start: ROM 40..44 must read
-	 * "INTAN" through the driver path, or this start would stream garbage. */
 	xfer(READ(40)); xfer(READ(41));
 	char rom[6] = { 0 };
 	rom[0] = (char)xfer(READ(42));
@@ -176,13 +141,9 @@ static void acq_start(void)
 		printk("acq_start: ROM check FAILED (\"%s\")\n", rom);
 	}
 
-	/* Warm the Intan's 2-deep result pipeline through the driver path so
-	 * rx_region[0] is ch0 and [1] is ch1; the +2 offset in the TX region
-	 * continues the cycle from ch2. */
 	xfer(CONVERT(0));
 	xfer(CONVERT(1));
 
-	/* SPIM: TX and RX both in ArrayList mode walking their big regions. */
 	for (uint32_t i = 0; i < RX_TOTAL; i++) {
 		uint16_t cmd = CONVERT((i + 2u) & 3u);
 		tx_region[2 * i]     = (uint8_t)(cmd >> 8);
@@ -195,7 +156,6 @@ static void acq_start(void)
 	nrf_spim_event_clear(NRF_SPIM00, NRF_SPIM_EVENT_END);
 	nrf_spim_enable(NRF_SPIM00);
 
-	/* TIMER00 -> DPPI ch 7 -> SPIM00.START: the sampling clock in silicon. */
 	uint32_t base = NRF_TIMER_BASE_FREQUENCY_GET(NRF_TIMER00);
 	uint32_t cc   = base / RATE_HZ;
 	nrf_timer_task_trigger(NRF_TIMER00, NRF_TIMER_TASK_STOP);
@@ -221,29 +181,12 @@ static void acq_stop(void)
 	k_busy_wait(100);                       /* let an in-flight word finish */
 	nrf_spim_disable(NRF_SPIM00);
 
-	/* Hand the peripheral back in the same state the nrfx driver left it
-	 * after boot: list modes off, enabled. Without this, acq_start's warm
-	 * xfer()s run against a disabled engine with ArrayList armed, and every
-	 * post-restart acquisition returns garbage (bench finding 2026-10-15:
-	 * boot segments clean, all post-restart segments dead DC). */
 	nrf_spim_tx_list_disable(NRF_SPIM00);
 	nrf_spim_rx_list_disable(NRF_SPIM00);
 	nrf_spim_event_clear(NRF_SPIM00, NRF_SPIM_EVENT_END);
 	nrf_spim_enable(NRF_SPIM00);
 }
 
-/* Rewind the DMA pointer to the region base.
- *
- * Bench finding (2026-09-24): on this DMA engine a plain PTR register write
- * between transactions does NOT take -- the engine's internal pointer wins
- * and the write is clobbered. So the rewind tries progressively stronger
- * state-clearing methods in the ~49 us quiet window after a fresh END, then
- * VERIFIES the next transaction actually landed at the region base, and
- * escalates if not. Prints which method this silicon honors.
- *
- * Any samples the hardware wrote past REWIND_AT before the rewind are saved
- * into `carry` and prepended to the outgoing stream, so no data is lost and
- * ordering is preserved. */
 static uint32_t rewinds;
 static uint16_t carry[8192];             /* = RX_TOTAL - REWIND_AT: max possible backlog */
 static uint32_t carry_len, carry_idx;
@@ -262,25 +205,13 @@ static bool rewind_wait_end(void)
 
 static bool acq_rewind(uint32_t from)
 {
-	/* Sync to a fresh END so we act right after a completed transaction. */
 	if (!rewind_wait_end()) {
 		return false;
 	}
-
-	/* PAUSE THE SAMPLING CLOCK. The previous rewind attempt reconfigured
-	 * the DMA engine while the timer kept firing STARTs -- undefined
-	 * engine state, runaway DMA, hard fault. With the timer stopped (not
-	 * cleared: the count freezes mid-period), no START can arrive while
-	 * we touch the engine. Cost: this one interval stretches by the few
-	 * microseconds the reconfig takes, once per REWIND_AT samples. */
 	nrf_timer_task_trigger(NRF_TIMER00, NRF_TIMER_TASK_STOP);
 
 	uint32_t tail_end = acq_pos();
 
-	/* If the unsent backlog exceeds the carry buffer, truncating it would
-	 * silently drop samples and rotate the channel interleave (the drop
-	 * length is random mod 4). Fail instead: the caller does a full
-	 * restart, which is visible (seq resets) and channel-clean. */
 	if (tail_end - from > 8192u) {
 		return false;
 	}
@@ -291,10 +222,6 @@ static bool acq_rewind(uint32_t from)
 		carry[carry_len++] = rx_region[i];
 	}
 
-	/* Reset the DMA engine from clean idle and resume the clock. The two
-	 * in-flight Intan results carry channels tail_end%4 and (tail_end+1)%4,
-	 * so the next TX command must be channel (tail_end+2)%4. Region index j
-	 * holds CONVERT((j+2)%4), so start the TX list at j = tail_end%4. */
 	nrf_spim_disable(NRF_SPIM00);
 	nrf_spim_tx_buffer_set(NRF_SPIM00, tx_region + 2 * (tail_end & 3u), 2);
 	nrf_spim_rx_buffer_set(NRF_SPIM00, (uint8_t *)rx_region, 2);
@@ -304,7 +231,6 @@ static bool acq_rewind(uint32_t from)
 	nrf_spim_enable(NRF_SPIM00);
 	nrf_timer_task_trigger(NRF_TIMER00, NRF_TIMER_TASK_START);
 
-	/* Verify: the next hardware-fired transaction must land at the base. */
 	if (!rewind_wait_end()) {
 		return false;
 	}
@@ -370,10 +296,6 @@ int main(void)
 				continue;
 			}
 
-			/* Wrap when the HARDWARE write position crosses the
-			 * threshold and last wrap's carry is fully drained.
-			 * Gating on w (not the drain r_pos) means it always
-			 * fires; carrying from r_pos preserves the unsent tail. */
 			if (w >= REWIND_AT && carry_idx == carry_len) {
 				if (acq_rewind(r_pos)) {
 					r_pos = 0;
@@ -402,9 +324,7 @@ int main(void)
 				} else {
 					s = rx_region[r_pos++];
 				}
-				/* DMA stores the wire bytes in RX order: first byte
-				 * (Intan MSB) lands in the LOW byte of the native
-				 * little-endian uint16_t -- swap to true value. */
+
 				s = (uint16_t)((s >> 8) | (s << 8));
 				pkt[2 + 2 * k]     = (uint8_t)s;
 				pkt[2 + 2 * k + 1] = (uint8_t)(s >> 8);
