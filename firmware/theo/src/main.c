@@ -9,12 +9,16 @@
 #include <hal/nrf_dppi.h>
 #include <hal/nrf_gpio.h>
 
-#define RATE_HZ 24000u                 
+#define N_CH 1         
+#define CH_RATE_HZ 30000u
+#define RATE_HZ (N_CH * CH_RATE_HZ)
 #define PKT_SAMPLES 120                 
+BUILD_ASSERT(PKT_SAMPLES % N_CH == 0, "every packet must start on ch0");
 #define DPPI_CH 7u                  
 
 #define REWIND_AT 0xFFFFFFFFu
-#define RX_TOTAL 40960u            
+#define RX_TOTAL 40960u
+#define RESTART_AT (RX_TOTAL - 4096u)
 
 #define PIN_SCK NRF_GPIO_PIN_MAP(2, 1)
 #define PIN_MOSI NRF_GPIO_PIN_MAP(2, 2)
@@ -138,10 +142,10 @@ static void acq_start(void)
 	}
 
 	xfer(CONVERT(0));
-	xfer(CONVERT(1));
+	xfer(CONVERT(1 % N_CH));
 
 	for (uint32_t i = 0; i < RX_TOTAL; i++) {
-		uint16_t cmd = CONVERT((i + 2u) & 3u);
+		uint16_t cmd = CONVERT((i + 2u) % N_CH);
 		tx_region[2 * i]     = (uint8_t)(cmd >> 8);
 		tx_region[2 * i + 1] = (uint8_t)cmd;
 	}
@@ -219,7 +223,7 @@ static bool acq_rewind(uint32_t from)
 	}
 
 	nrf_spim_disable(NRF_SPIM00);
-	nrf_spim_tx_buffer_set(NRF_SPIM00, tx_region + 2 * (tail_end & 3u), 2);
+	nrf_spim_tx_buffer_set(NRF_SPIM00, tx_region + 2 * (tail_end % N_CH), 2);
 	nrf_spim_rx_buffer_set(NRF_SPIM00, (uint8_t *)rx_region, 2);
 	nrf_spim_tx_list_enable(NRF_SPIM00);
 	nrf_spim_rx_list_enable(NRF_SPIM00);
@@ -271,7 +275,7 @@ int main(void)
 		while (!notify_enabled) {
 			k_msleep(20);
 		}
-		printk("subscribed - hw-timed streaming ch0-ch3 interleaved, %u S/s per channel\n", RATE_HZ / 4u);
+		printk("subscribed - hw-timed streaming %u channels interleaved, %u S/s per channel\n", N_CH, CH_RATE_HZ);
 		seq = 0;
 		rewinds = 0;
 		carry_len = carry_idx = 0;
@@ -279,11 +283,12 @@ int main(void)
 		acq_start();
 		while (notify_enabled) {
 			uint32_t w = acq_pos();
-			if (w >= RX_TOTAL - 8u) {
+			if (w >= RESTART_AT) {
 				printk("region full - clean restart (expected every ~1.7 s in no-rewind mode)\n");
 				acq_stop();
 				r_pos = 0;
 				carry_len = carry_idx = 0;
+				seq = 0;                /* seam marker: scorer counts seq drops */
 				acq_start();
 				continue;
 			}
@@ -324,10 +329,15 @@ int main(void)
 			do {
 				err = bt_gatt_notify(NULL, &stream_svc.attrs[1], pkt, sizeof(pkt));
 				if (err) {
+					if (acq_pos() >= RESTART_AT) {
+						break;          /* drop this packet rather than overrun RAM */
+					}
 					k_yield();
 				}
 			} while (err && notify_enabled);
-			seq++;
+			if (!err) {
+				seq++;
+			}
 			if ((seq % 1000) == 0) {
 				printk("[acq] pos %u  rewinds %u\n", acq_pos(), rewinds);
 			}
