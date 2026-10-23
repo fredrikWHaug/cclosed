@@ -1,5 +1,5 @@
-"""Live plot of in0-in3 voltage vs time from the Theo BLE stream (interleaved)."""
-import asyncio, threading, collections, os
+"""Live plot of the Theo stream: python stream_plot.py [--serial /dev/tty.usbmodemXXXX]"""
+import asyncio, threading, collections, os, sys
 import numpy as np
 from bleak import BleakClient, BleakScanner
 import matplotlib.pyplot as plt
@@ -7,11 +7,11 @@ import matplotlib.animation as animation
 
 NAME = "cclosed-theo"
 CHR = "12345678-1234-5678-1234-56789abcdef1"
-RATE = 6000                                    # per channel (24 kS/s interleaved)
+RATE = 30000                                   # per channel
 UV_PER_CODE = 0.195
-WINDOW = 1000                                  # samples shown per channel (100 ms)
+WINDOW = 5000                                  # samples shown per channel (167 ms)
 
-N_CH = 4
+N_CH = 1
 bufs = [collections.deque(maxlen=WINDOW) for _ in range(N_CH)]
 
 def on_notify(_, data: bytearray):
@@ -29,9 +29,22 @@ async def ble():
         while True:
             await asyncio.sleep(1)
 
-threading.Thread(target=lambda: asyncio.run(ble()), daemon=True).start()
+def serial_relay(port):
+    from serial_source import frames
+    for payload in frames(port):
+        on_notify(None, bytearray(payload))
 
-fig, axes = plt.subplots(N_CH, 1, figsize=(10, 8), sharex=True)
+if "--serial" in sys.argv:
+    from serial_source import list_ports
+    args = sys.argv[sys.argv.index("--serial") + 1:]
+    if not args:
+        raise SystemExit("give the relay DK's VCOM1 port, one of: " + ", ".join(list_ports()))
+    threading.Thread(target=serial_relay, args=(args[0],), daemon=True).start()
+else:
+    threading.Thread(target=lambda: asyncio.run(ble()), daemon=True).start()
+
+fig, axes = plt.subplots(N_CH, 1, figsize=(10, 2 + 1.5 * N_CH), sharex=True, squeeze=False)
+axes = axes[:, 0]                              # always a list, even for one channel
 lines = [ax.plot([], [], lw=1, color=f"C{i}")[0] for i, ax in enumerate(axes)]
 for i, ax in enumerate(axes):
     ax.set_ylabel(f"in{i} (uV)")

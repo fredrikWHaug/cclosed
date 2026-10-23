@@ -1,16 +1,3 @@
-/*
- * Theo central relay: BLE central -> serial bridge.
- *
- * macOS caps BLE connection intervals (15 ms granted, ~26-28 kS/s delivered),
- * so the Mac can't reliably sink 30 kS/s notifications. This app runs on a
- * second DK: it connects to 'cclosed-theo' at a 7.5 ms interval it fully
- * controls (the exact topology that sustained ~1.05 Mbps in the ble-rate
- * tests), and relays every notification out uart30 (VCOM1, 921600 baud) as
- * [0xA5 0x5A len_lo len_hi payload]. stream_plot.py --serial does the rest.
- *
- * Connection/discovery logic lifted from the proven ble-rate central.
- */
-
 #include <string.h>
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
@@ -51,12 +38,16 @@ static void uart_isr(const struct device *dev, void *user_data)
 			uart_irq_tx_disable(dev);
 			break;
 		}
-		uint8_t b = txring[tr_r % sizeof(txring)];
-		if (uart_fifo_fill(dev, &b, 1) == 1) {
-			tr_r++;
-		} else {
+		/* Hand the driver the longest contiguous run of the ring at once:
+		 * one byte per call costs a DMA setup + interrupt per byte, which
+		 * the radio preempts and caps the link near 60% of 921600 baud. */
+		uint32_t head = tr_r % sizeof(txring);
+		uint32_t run = MIN(tr_w - tr_r, sizeof(txring) - head);
+		int n = uart_fifo_fill(dev, &txring[head], run);
+		if (n <= 0) {
 			break;
 		}
+		tr_r += n;
 	}
 }
 
