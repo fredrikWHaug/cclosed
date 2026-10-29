@@ -11,12 +11,25 @@
 #include <hal/nrf_dppi.h>
 #include <hal/nrf_gpio.h>
 
+/* One channel at 30 kS/s until the windowed path is proven equal to the raw path. Every converted channel needs a wire. */
 #define N_CH 1
 #define CH_RATE_HZ 30000u
-/* 1: send every sample instead of spike windows, in theo's format (seq u16 | 120 x u16 codes), for streamplot.py.
- * Fits the radio only up to ~30k conversions/s. 0 for the real tests. */
+/* 1: send every sample (seq u16 | 120 x u16 codes) for the raw benchmark.  0: detect spikes and send only the windows. */
 #define RAW_STREAM 1
 #define RATE_HZ (N_CH * CH_RATE_HZ)
+
+/* Intan analog low-pass (datasheet table "Setting Upper Bandwidth", registers 8-11): the highest standard cutoff at or
+ * below 0.4 x the per-channel rate, at most 10 kHz, so nothing above half the sample rate folds back into the band.
+ *   cutoff   10 kHz   7.5 kHz   5 kHz   3 kHz   2.5 kHz   2 kHz   1.5 kHz
+ *   rate >=  25000    18750     12500   7500    6250      5000    (lower)  */
+#define FH_SEL   (CH_RATE_HZ >= 25000u ? 0 : CH_RATE_HZ >= 18750u ? 1 : CH_RATE_HZ >= 12500u ? 2 : \
+                  CH_RATE_HZ >= 7500u ? 3 : CH_RATE_HZ >= 6250u ? 4 : CH_RATE_HZ >= 5000u ? 5 : 6)
+#define FH_HZ    (FH_SEL == 0 ? 10000 : FH_SEL == 1 ? 7500 : FH_SEL == 2 ? 5000 : FH_SEL == 3 ? 3000 : \
+                  FH_SEL == 4 ? 2500 : FH_SEL == 5 ? 2000 : 1500)
+#define RH1_DAC1 (FH_SEL == 0 ? 17 : FH_SEL == 1 ? 22 : FH_SEL == 2 ? 33 : FH_SEL == 3 ? 3 : FH_SEL == 4 ? 13 : FH_SEL == 5 ? 27 : 1)
+#define RH1_DAC2 (FH_SEL <= 2 ? 0 : FH_SEL <= 5 ? 1 : 2)
+#define RH2_DAC1 (FH_SEL == 0 ? 16 : FH_SEL == 1 ? 23 : FH_SEL == 2 ? 37 : FH_SEL == 3 ? 13 : FH_SEL == 4 ? 25 : FH_SEL == 5 ? 44 : 23)
+#define RH2_DAC2 (FH_SEL <= 2 ? 0 : FH_SEL <= 5 ? 1 : 2)
 #define DPPI_CH 7u
 
 #define RX_TOTAL 40960u
@@ -41,7 +54,8 @@ BUILD_ASSERT(RATE_HZ <= 1050000u, "RHD2164 ADC tops out at 1.05 MS/s total");
 
 #define PRE  (CH_RATE_HZ * 2u / 3000u)          /* 0.67 ms before the trough */
 #define POST (CH_RATE_HZ * 41u / 30000u)        /* 1.37 ms after it: 61 samples at 30k, Kilosort's default */
-#define REFRACT (3u * CH_RATE_HZ / 2000u)       /* 1.5 ms dead time after a spike */
+#define REFRACT (3u * CH_RATE_HZ / 1000u)       /* 3 ms dead time after a spike: the filter's dip after the rebound is not a new spike */
+#define NOISE_BLANK (3u * CH_RATE_HZ / 1000u)   /* no noise update for 3 ms after a spike's trough: its tail is not noise */
 #define WIN  (PRE + POST)
 BUILD_ASSERT(WIN + CH_RATE_HZ / 1000 < RING, "ring must hold window + 1 ms lookahead");
 BUILD_ASSERT(WIN >= 2 && WIN <= 255, "window must fit the n_samples byte");
@@ -73,7 +87,7 @@ static uint16_t xfer(uint16_t cmd)
 static const uint16_t init_seq[] = {
 	WRITE(0, 0xDE), WRITE(1, ADC_BUF_BIAS), WRITE(2, MUX_BIAS), WRITE(3, 0x00), WRITE(4, 0x00),
 	WRITE(5, 0x00), WRITE(6, 0x00), WRITE(7, 0x00),
-	WRITE(8, 17), WRITE(9, 0), WRITE(10, 16), WRITE(11, 0),
+	WRITE(8, RH1_DAC1), WRITE(9, RH1_DAC2), WRITE(10, RH2_DAC1), WRITE(11, RH2_DAC2),
 	WRITE(12, 5), WRITE(13, 1),
 	WRITE(14, 0xFF), WRITE(15, 0xFF), WRITE(16, 0xFF), WRITE(17, 0xFF),
 	WRITE(18, 0xFF), WRITE(19, 0xFF), WRITE(20, 0xFF), WRITE(21, 0xFF),
@@ -96,7 +110,7 @@ static void intan_init(void)
 	for (int i = 0; i < 9; i++) {
 		xfer(READ(63));
 	}
-	printk("Intan configured (10 Hz - 10 kHz, amps on, calibrated)\n");
+	printk("Intan configured (10 Hz - %u Hz analog band, amps on, calibrated)\n", FH_HZ);
 }
 
 #define SVC_UUID BT_UUID_128_ENCODE(0x12345678, 0x1234, 0x5678, 0x1234, 0x56789abcdef0)
@@ -214,7 +228,7 @@ struct chan {
 	float hp_s[4], lp_s[4];          /* biquad states: x1 x2 y1 y2 */
 	float noise;                     /* running mean of |filtered|, spikes excluded */
 	uint32_t quiet_until;            /* no detection before this sample (settle, blanking, refractory) */
-	uint32_t blank_until;            /* no noise update before this sample (restart glitch) */
+	uint32_t blank_until;            /* no noise update before this sample (after a spike or a restart) */
 	uint8_t state;                   /* 0 idle, 1 searching trough, 2 waiting for POST */
 	uint32_t t_trough, search_end;
 	float v_trough;
@@ -325,7 +339,7 @@ static inline void process(uint8_t c, int16_t s)
 	ch->ring[ch->n & (RING - 1)] = s;
 	float y = biquad_run(&lp, ch->lp_s, biquad_run(&hp, ch->hp_s, (float)s));
 	uint32_t n = ch->n++;
-	if (n >= ch->blank_until && fabsf(y) < 3.0f * ch->noise) {
+	if (ch->state == 0 && n >= ch->blank_until && fabsf(y) < 3.0f * ch->noise) {
 		ch->noise += (fabsf(y) - ch->noise) * NOISE_ALPHA;
 	}
 	if (n < ch->quiet_until) {
@@ -347,6 +361,7 @@ static inline void process(uint8_t c, int16_t s)
 			emit(c, ch);
 			ch->state = 0;
 			ch->quiet_until = ch->t_trough + REFRACT;
+			ch->blank_until = ch->t_trough + NOISE_BLANK;
 		}
 		break;
 	}
@@ -446,9 +461,14 @@ int main(void)
 			}
 			if (k_uptime_get() >= next_report) {
 				next_report += 1000;
+#if RAW_STREAM
+				printk("[prestno] %u S/s drained  lag %u  ch0 noise -  raw packets sent %u/s  dropped %u/s  restarts %u\n",
+				       drained - last_drained, lag, sent - last_sent, dropped - last_dropped, restarts);
+#else
 				printk("[prestno] %u S/s drained  lag %u  ch0 noise %u uV  detected %u/s  sent %u/s  dropped %u/s  queued %u  restarts %u\n",
 				       drained - last_drained, lag, (unsigned)(chans[0].noise * SIGMA_PER_MEAN * 0.195f),
 				       detected - last_detected, sent - last_sent, dropped - last_dropped, evq_w - evq_r, restarts);
+#endif
 				last_drained = drained; last_detected = detected; last_sent = sent; last_dropped = dropped;
 				lag = 0;
 			}

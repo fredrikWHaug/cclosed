@@ -8,15 +8,15 @@ Filter applied to every name: tenure-track in the EE department, students tape o
 
 ## The three names per school
 
-| school | 1 | 2 | 3 | watch out for |
-|---|---|---|---|---|
-| Harvard (submitted) | Donhee Ham | Gage Hills | Gu-Yeon Wei | Ham is the only true analog group and sits in Applied Physics, with about 4 PhD slots |
-| MIT | Ruonan Han | Negar Reiskarimian | Hae-Seung Lee | Chandrakasan is provost, co-advising only. Lee's group is small, with no chip paper since 2023, so ask about capacity |
-| Columbia | Peter Kinget | Ken Shepard | Mingoo Seok | Krishnaswamy's lab still publishes at ISSCC but he became Sivers' chief strategy officer in September 2026 |
-| Yale | Arun Natarajan | Rajit Manohar | Shuhan Liu | Natarajan is the only analog group. Manohar is asynchronous digital VLSI, Liu is a 2026 memory-device hire |
-| Caltech | Ali Hajimiri | Azita Emami | none | Only two CMOS groups exist. An EE faculty search closes December 6, 2026, so a third may appear |
-| Stanford | Amin Arbabian | Constantine Sideris | Ada Poon | Sideris arrived from USC in 2026 and fills the sensor-interface niche Murmann left. Poon has no circuits-venue paper since 2022 |
-| Berkeley | Rikky Muller | Ali Niknejad | Jun-Chau Chien | Alon and Stojanović are now adjunct or former, both in industry. Chien is a 2023 hire with ISSCC 2025 and CICC 2025 chips |
+| school              | 1              | 2                   | 3              | watch out for                                                                                                                   |
+| ------------------- | -------------- | ------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Harvard (submitted) | Donhee Ham     | Gage Hills          | Gu-Yeon Wei    | Ham is the only true analog group and sits in Applied Physics, with about 4 PhD slots                                           |
+| MIT                 | Ruonan Han     | Negar Reiskarimian  | Hae-Seung Lee  | Chandrakasan is provost, co-advising only. Lee's group is small, with no chip paper since 2023, so ask about capacity           |
+| Columbia            | Peter Kinget   | Ken Shepard         | Mingoo Seok    | Krishnaswamy's lab still publishes at ISSCC but he became Sivers' chief strategy officer in September 2026                      |
+| Yale                | Arun Natarajan | Rajit Manohar       | Shuhan Liu     | Natarajan is the only analog group. Manohar is asynchronous digital VLSI, Liu is a 2026 memory-device hire                      |
+| Caltech             | Ali Hajimiri   | Azita Emami         | none           | Only two CMOS groups exist. An EE faculty search closes December 6, 2026, so a third may appear                                 |
+| Stanford            | Amin Arbabian  | Constantine Sideris | Ada Poon       | Sideris arrived from USC in 2026 and fills the sensor-interface niche Murmann left. Poon has no circuits-venue paper since 2022 |
+| Berkeley            | Rikky Muller   | Ali Niknejad        | Jun-Chau Chien | Alon and Stojanović are now adjunct or former, both in industry. Chien is a 2023 hire with ISSCC 2025 and CICC 2025 chips      |
 
 ## What this says about the school ranking
 

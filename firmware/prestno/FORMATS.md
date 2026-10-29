@@ -16,17 +16,17 @@ The headstage can run two kinds of firmware. They advertise under the same BLE n
 | data rate at 4 ch x 30 kS/s | 1.9 Mbit/s, does not fit the radio | about 380 events/s in SYNC, 310 kbit/s |
 | sequence counter | per packet | per event |
 
-The relay does not care. It forwards each notification as `A5 5A | length u16 | payload` at 921600 baud. `log.py` and theo's `log_stream.py` both write `wall time f64 | length u16 | payload` per notification, so a capture file is also format-blind until parsed.
+The relay forwards each notification as `A5 5A | length u16 | payload` at 921600 baud without caring about the format. Its status line does care: since 2026-10-28 it counts events and sequence gaps assuming the event format, so with raw packets the `events/s` and `ble_drops` columns are garbage (ble_drops runs into the hundreds of millions). Only `pkts/s` and `uart_drops` mean anything in raw mode, and a reset of the central clears the counter. Likewise the headstage's `noise` column in raw mode shows the detector's starting value, 258 uV, because the detector never runs. `log.py` and theo's `log_stream.py` both write `wall time f64 | length u16 | payload` per notification, so a capture file is also format-blind until parsed.
 
 ## Which script needs which format
 
-| script | expects | fails on the other format how |
+| script | expects | behaviour on the other format |
 |---|---|---|
-| `prestno/streamplot.py` (copy of `theo/stream_plot.py`) | raw | 101-byte events are an odd length, `np.frombuffer` raises |
-| `theo/stream_plot.py`, `theo/noise_meter.py`, `theo/score_capture.py`, `sorting/*.py` | raw | same, or silently wrong values |
-| `prestno/live.py`, `trace.py`, `check.py`, `compare.py` | events | a 242-byte raw packet parses as nonsense events; `check.py` stops at the first header that does not fit |
-| `spike/events.py`, `spike/check_sync.py`, `spike/spike_events.py` | events (also reads the older 10-byte-header `spike` captures from before 2026-10-28) | same |
-| `prestno/log.py`, `theo/log_stream.py` | either | never fail, they record bytes |
+| `prestno/log.py` | either | records bytes, counts raw and event packets separately |
+| `prestno/live.py` | either | switches its display on the packet length |
+| `prestno/compare.py` | one raw file and one event file | tells them apart by packet length |
+| `theo/stream_plot.py`, `theo/noise_meter.py`, `theo/score_capture.py`, `sorting/*.py` | raw | 101-byte events are an odd length, `np.frombuffer` raises, or values are silently wrong |
+| `spike/events.py`, `spike/check_sync.py`, `spike/spike_events.py` | events | a 242-byte raw packet parses as nonsense events |
 
 ## How to tell which one the headstage is running
 
@@ -36,7 +36,7 @@ The relay does not care. It forwards each notification as `A5 5A | length u16 | 
 
 ## Rules that follow
 
-1. To look at the continuous signal, build `prestno` with `RAW_STREAM 1` and use `streamplot.py --serial PORT`. Only up to about 30,000 conversions per second fit the radio this way.
-2. For every detection test, `RAW_STREAM 0`. Then `live.py`, `trace.py`, `log.py`, `check.py`, `compare.py`.
+1. To look at the continuous signal, build `prestno` with `RAW_STREAM 1`. Only up to about 30,000 conversions per second fit the radio this way.
+2. For every detection test, `RAW_STREAM 0`. `live.py` and `log.py` work in both modes; `compare.py` needs one capture of each.
 3. Never run a theo-era script on a `prestno` capture or the other way round without checking the notification length first.
 4. `spike` is the development copy of the event firmware and is frozen. `prestno` is the clean one. `theo` is frozen raw-streaming firmware and is no longer needed once `RAW_STREAM` exists.
