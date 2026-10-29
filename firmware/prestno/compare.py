@@ -2,8 +2,8 @@
 
     python compare.py RAW.bin EVENTS.bin [RATE_HZ]
 
-RAW.bin    was recorded with RAW_STREAM 1: every sample. The detector is run on it here, offline, with the device's
-           own filter and threshold rule, so it shows what the device should have found.
+RAW.bin    was recorded with RAW_STREAM 1: every sample. The firmware's detector is replayed on it here, sample for
+           sample, so this row is what the device should find on that signal.
 EVENTS.bin was recorded with RAW_STREAM 0: what the device actually found and sent.
 Prints one table and saves compare.png: the two mean waveforms with their spread, the gaps between spikes, the amplitudes.
 """
@@ -20,18 +20,32 @@ BLUE, PINK = "#2c6fad", "#c76bae"
 
 
 def offline_detect(x):
-    """the device's rule on the raw stream: 300-6000 Hz, 4 sigma below zero, trough within 1 ms, 1.5 ms dead time."""
+    """the firmware's detector replayed sample for sample on the raw stream (process() in src/main.c):
+    causal 300 Hz high-pass and low-pass, running mean of |y| clipped at 3x itself, threshold 4 x 1.3263 x that mean,
+    deepest point within 1 ms, 3 ms dead time and 3 ms without noise updates after each spike, 0.5 s settle."""
     y = detector_filter(x, rate)
-    sigma = np.median(np.abs(y)) / 0.6745
-    threshold, look, dead = -4 * sigma, int(rate / 1000), int(1.5 * rate / 1000)
-    troughs, i = [], PRE
-    while i < len(y) - POST - look:
-        if y[i] < threshold:
-            t = i + np.argmin(y[i:i + look])
-            troughs.append(t); i = t + dead
-        else:
-            i += 1
-    return np.array(troughs), sigma
+    mean_abs, state, quiet, blank = 1000 * 0.195, 0, int(0.5 * rate), 0
+    look, dead = int(rate / 1000), int(3 * rate / 1000)
+    t_tr = v_tr = search_end = 0
+    troughs = []
+    for n, v in enumerate(y):
+        if state == 0 and n >= blank and abs(v) < 3 * mean_abs:
+            mean_abs += (abs(v) - mean_abs) / 8192
+        if n < quiet:
+            continue
+        if state == 0:
+            if v < -4 * 1.3263 * mean_abs:
+                state, t_tr, v_tr, search_end = 1, n, v, n + look
+        elif state == 1:
+            if v < v_tr:
+                v_tr, t_tr = v, n
+            if n >= search_end:
+                state = 2
+        elif n + 1 >= t_tr + POST:
+            if t_tr >= PRE:
+                troughs.append(t_tr)
+            state, quiet, blank = 0, t_tr + dead, t_tr + dead
+    return np.array(troughs), 1.3263 * mean_abs
 
 
 # raw capture: stitch the stream, note packet gaps, detect offline
@@ -64,15 +78,15 @@ def row(name, win, gaps, seconds, lost, pre):
 
 
 print(f"{'':22s} {'spikes/s':>7} {'of 95.2':>7} {'on grid':>9} {'jitter us':>9} {'trough uV':>9} {'sd':>6} {'noise':>7} {'lost':>6}")
-row("raw, detected offline", raw_win, raw_gaps, raw_seconds, raw_lost, PRE)
+row("raw, device replayed", raw_win, raw_gaps, raw_seconds, raw_lost, PRE)
 row("events, from device", ev_win, ev_gaps, ev_wall, ev_lost, ev_pre)
-print(f"\nraw stream: {raw_seconds:.1f} s, {len(x)} samples, filtered noise sigma {sigma_raw:.0f} uV, threshold {4 * sigma_raw:.0f} uV")
+print(f"\nraw stream: {raw_seconds:.1f} s, {len(x)} samples, replayed noise estimate {sigma_raw:.0f} uV, threshold {4 * sigma_raw:.0f} uV")
 print(f"events: {ev_wall:.1f} s of wall time, window {ev_win.shape[1]} samples with the trough at sample {ev_pre}")
 
 # the figure
 fig, ax = plt.subplots(1, 3, figsize=(15, 4.5))
 ms = (np.arange(PRE + POST) - PRE) / rate * 1000
-for win, pre, color, label in ((raw_win, PRE, BLUE, "raw stream, detected offline"), (ev_win, ev_pre, PINK, "windows sent by the device")):
+for win, pre, color, label in ((raw_win, PRE, BLUE, "raw stream, device detector replayed"), (ev_win, ev_pre, PINK, "windows sent by the device")):
     m = (np.arange(win.shape[1]) - pre) / rate * 1000
     ax[0].fill_between(m, win.mean(0) - win.std(0), win.mean(0) + win.std(0), color=color, alpha=0.15)
     ax[0].plot(m, win.mean(0), color=color, lw=2, label=f"{label} ({len(win)})")
