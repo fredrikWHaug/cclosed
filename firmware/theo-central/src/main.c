@@ -21,7 +21,7 @@ static struct bt_gatt_discover_params disc;
 static struct bt_gatt_subscribe_params sub;
 static struct bt_gatt_exchange_params mtu_params;
 
-static volatile uint32_t win_pkts, drops, uart_drops;
+static volatile uint32_t win_pkts, win_events, drops, uart_drops;
 static uint16_t last_seq;
 static bool have_last;
 
@@ -73,15 +73,23 @@ static uint8_t on_notify(struct bt_conn *conn, struct bt_gatt_subscribe_params *
 	}
 	const uint8_t *p = data;
 
-	uint16_t seq = (uint16_t)(p[0] | (p[1] << 8));
-	if (have_last) {
-		uint16_t gap = (uint16_t)(seq - last_seq - 1);
-		if (gap != 0 && gap < 0x8000u) {
-			drops += gap;
+	/* a notification holds one or more spike events back to back:
+	 * seq u16 | ch u8 | n u8 | pre u8 | trough u32 | n x 12-bit packed  (9 + (3n+1)/2 bytes each) */
+	uint16_t o = 0;
+	while (o + 9 <= len) {
+		uint16_t seq = (uint16_t)(p[o] | (p[o + 1] << 8));
+		uint16_t n = p[o + 3];
+		if (have_last) {
+			uint16_t gap = (uint16_t)(seq - last_seq - 1);
+			if (gap != 0 && gap < 0x8000u) {
+				drops += gap;
+			}
 		}
+		last_seq = seq;
+		have_last = true;
+		win_events++;
+		o += 9 + (3 * n + 1) / 2;
 	}
-	last_seq = seq;
-	have_last = true;
 	win_pkts++;
 
 	uint8_t hdr[4] = { 0xA5, 0x5A, (uint8_t)len, (uint8_t)(len >> 8) };
@@ -219,11 +227,11 @@ int main(void)
 
 	while (1) {
 		k_msleep(1000);
-		uint32_t p = win_pkts;
-		win_pkts = 0;
+		uint32_t p = win_pkts, e = win_events;
+		win_pkts = 0; win_events = 0;
 		if (cur_conn && p) {
-			printk("[relay] %4u pkts/s  %6u samples/s  ble_drops %u  uart_drops %u\n",
-			       p, p * 120u, drops, uart_drops);
+			printk("[relay] %4u pkts/s  %4u events/s  ble_drops %u  uart_drops %u\n",
+			       p, e, drops, uart_drops);
 		}
 	}
 	return 0;
