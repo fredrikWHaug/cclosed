@@ -1,0 +1,7 @@
+&spi00 {
+	status = "okay";
+};
+
+&mx25r64 {
+	status = "disabled";
+};
