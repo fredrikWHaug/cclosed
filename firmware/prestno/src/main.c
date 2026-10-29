@@ -15,7 +15,7 @@
 #define N_CH 1
 #define CH_RATE_HZ 30000u
 /* 1: send every sample (seq u16 | 120 x u16 codes) for the raw benchmark.  0: detect spikes and send only the windows. */
-#define RAW_STREAM 1
+#define RAW_STREAM 0
 #define RATE_HZ (N_CH * CH_RATE_HZ)
 
 /* Intan analog low-pass (datasheet table "Setting Upper Bandwidth", registers 8-11): the highest standard cutoff at or
@@ -258,7 +258,7 @@ static inline float biquad_run(const struct biquad *q, float s[4], float x)
 	return y;
 }
 
-static void detector_init(void)
+static __unused void detector_init(void)
 {
 	hp = butter2(HP_HZ, true);
 	lp = butter2(LP_HZ, false);
@@ -281,27 +281,6 @@ static uint8_t evq[EV_QUEUE][EV_BYTES];
 static uint32_t evq_w, evq_r;
 static uint32_t evq_first_drained;    /* aggregate sample count when the oldest queued event was queued */
 static uint32_t detected, sent, dropped, restarts, drained, lag;
-#if RAW_STREAM
-#define RAW_SAMPLES 120
-static uint8_t raw_pkt[2 + 2 * RAW_SAMPLES];
-static uint32_t raw_n;
-static uint16_t raw_seq;
-
-static void raw_push(uint16_t code)
-{
-	raw_pkt[2 + 2 * raw_n] = (uint8_t)code;
-	raw_pkt[3 + 2 * raw_n] = (uint8_t)(code >> 8);
-	if (++raw_n == RAW_SAMPLES) {
-		raw_pkt[0] = (uint8_t)raw_seq; raw_pkt[1] = (uint8_t)(raw_seq >> 8); raw_seq++;
-		if (bt_gatt_notify(NULL, &stream_svc.attrs[1], raw_pkt, sizeof(raw_pkt)) == 0) {
-			sent++;
-		} else {
-			dropped++;
-		}
-		raw_n = 0;
-	}
-}
-#endif
 static uint16_t seq;
 
 static void emit(uint8_t c, struct chan *ch)
@@ -367,7 +346,7 @@ static inline void process(uint8_t c, int16_t s)
 	}
 }
 
-static void blank_after_restart(void)
+static __unused void blank_after_restart(void)
 {
 	for (int c = 0; c < N_CH; c++) {
 		chans[c].blank_until = chans[c].n + RESTART_BLANK_MS * (CH_RATE_HZ / 1000u);
@@ -402,6 +381,59 @@ int main(void)
 	       CONFIG_BT_DEVICE_NAME, N_CH, CH_RATE_HZ, PRE, POST);
 	printk("event %u B (%u samples x 12 bit), %u events per notification\n", EV_BYTES, WIN, EV_PER_NOTIFY);
 
+#if RAW_STREAM
+	/* raw mode is theo's loop, copied unchanged: wait for 120 samples, pack them, retry the notification until it goes */
+	static uint8_t pkt[2 + 2 * 120];
+	uint16_t raw_seq = 0;
+	while (1) {
+		while (!notify_enabled) {
+			k_msleep(20);
+		}
+		printk("subscribed - raw stream, %u channels at %u S/s each\n", N_CH, CH_RATE_HZ);
+		uint32_t r_pos = 0;
+		acq_start();
+		while (notify_enabled) {
+			uint32_t w = acq_pos();
+			if (w >= RESTART_AT) {
+				acq_stop();
+				r_pos = 0;
+				restarts++;
+				acq_start();
+				continue;
+			}
+			if (w - r_pos < 120) {
+				k_yield();
+				continue;
+			}
+			pkt[0] = (uint8_t)raw_seq;
+			pkt[1] = (uint8_t)(raw_seq >> 8);
+			for (uint32_t k = 0; k < 120; k++) {
+				uint16_t s = rx_region[r_pos++];
+				s = (uint16_t)((s >> 8) | (s << 8));
+				pkt[2 + 2 * k]     = (uint8_t)s;
+				pkt[2 + 2 * k + 1] = (uint8_t)(s >> 8);
+			}
+			int err;
+			do {
+				err = bt_gatt_notify(NULL, &stream_svc.attrs[1], pkt, sizeof(pkt));
+				if (err) {
+					if (acq_pos() >= RESTART_AT) {
+						break;          /* drop this packet rather than overrun RAM */
+					}
+					k_yield();
+				}
+			} while (err && notify_enabled);
+			if (!err) {
+				raw_seq++;
+			}
+			if ((raw_seq % 1000) == 0) {
+				printk("[prestno raw] %u packets sent  restarts %u\n", raw_seq, restarts);
+			}
+		}
+		acq_stop();
+		printk("unsubscribed\n");
+	}
+#else
 	while (1) {
 		while (!notify_enabled) {
 			k_msleep(20);
@@ -419,7 +451,10 @@ int main(void)
 			uint32_t w = acq_pos();
 			bool wrap = w >= RESTART_AT;
 			if (wrap) {
-				acq_stop();              /* region nearly full: stop, drain the rest, start over */
+				acq_stop();              /* region nearly full: stop (the last conversion finishes), drain the rest, start over */
+			} else if (w > 0) {
+				w -= 1;                  /* the DMA pointer moves when a conversion starts, so the newest slot may not be
+				                          * written yet; reading it returned the previous pass's value 15% of the time */
 			}
 			bool busy = false;
 			if (w > r_pos) {
@@ -431,11 +466,7 @@ int main(void)
 				for (; r_pos < w; r_pos++) {
 					uint16_t raw = rx_region[r_pos];
 					raw = (uint16_t)((raw >> 8) | (raw << 8));
-#if RAW_STREAM
-					raw_push(raw);
-#else
 					process(r_pos % N_CH, (int16_t)(raw - 32768));
-#endif
 				}
 			}
 			if (wrap) {
@@ -461,14 +492,9 @@ int main(void)
 			}
 			if (k_uptime_get() >= next_report) {
 				next_report += 1000;
-#if RAW_STREAM
-				printk("[prestno] %u S/s drained  lag %u  ch0 noise -  raw packets sent %u/s  dropped %u/s  restarts %u\n",
-				       drained - last_drained, lag, sent - last_sent, dropped - last_dropped, restarts);
-#else
 				printk("[prestno] %u S/s drained  lag %u  ch0 noise %u uV  detected %u/s  sent %u/s  dropped %u/s  queued %u  restarts %u\n",
 				       drained - last_drained, lag, (unsigned)(chans[0].noise * SIGMA_PER_MEAN * 0.195f),
 				       detected - last_detected, sent - last_sent, dropped - last_dropped, evq_w - evq_r, restarts);
-#endif
 				last_drained = drained; last_detected = detected; last_sent = sent; last_dropped = dropped;
 				lag = 0;
 			}
@@ -476,5 +502,6 @@ int main(void)
 		acq_stop();
 		printk("unsubscribed\n");
 	}
+#endif
 	return 0;
 }
