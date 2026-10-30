@@ -1,62 +1,60 @@
 # prestno
 
-One question, one channel at 30 kS/s: does the headstage's windowed spike path reproduce the raw signal?
-
-The headstage detects spikes on the nRF54LM20 and sends only the 2 ms window around each one. To trust that, we record the same bench twice, once as the raw stream and once as windows, and compare them against the FB128's SYNC ground truth of one identical spike every 10.50 ms.
+Goal: as many reliable channels of windowed spikes over the BLE link as the current bench allows. The two knobs are
+the sample rate and the channel count; the yardstick is the FB128 in SYNC mode, one identical spike every 10.533 ms
+on every channel.
 
 ## Files
 
 | file | job |
 |---|---|
-| `src/main.c` | the firmware. `RAW_STREAM 1` sends every sample, `RAW_STREAM 0` sends spike windows. `N_CH 1`, `CH_RATE_HZ 30000`. |
-| `log.py OUT.bin SECONDS` | records whatever the relay forwards |
-| `live.py` | live view of the raw trace, raw firmware only; check the bench with it before the raw capture |
-| `score.py EVENTS.bin [RATE_HZ]` | any channel count: per channel, % of SYNC spikes caught, false detections/s, jitter, trough, noise |
-| `compare.py RAW.bin EVENTS.bin` | one channel: the device's windows against its own detector replayed on the raw stream |
-| `verdict.py RAW.bin [RATE_HZ]` | the frozen yardstick: zero-phase analysis of a raw capture, never sees the device's algorithm |
-| `BENCH.md` | the wiring and power record every capture is labelled with |
-| `formats.py` | the two packet formats and the device's filter, shared by the scripts |
-| `FORMATS.md` | why the two formats exist and which tool needs which |
-| `../theo-central` | the relay on the second DK, unchanged |
+| `src/main.c` | firmware. `N_CH`, `CH_RATE_HZ`, and `RAW_STREAM` (1 = every sample, 0 = spike windows only) |
+| `log.py OUT.bin SECONDS` | record whatever the relay forwards |
+| `live.py` / `filtered_live.py` | look at the raw stream, plain or through the device's filter, before recording |
+| `verdict.py RAW.bin [RATE]` | judge a raw capture offline, no device detector involved; prints numbers with 95% CI, saves the plot |
+| `score.py EVENTS.bin [RATE]` | judge the device's windows against the SYNC truth, per channel, with 95% CI |
+| `sweep.py` | every capture in `data/` into one table (`sweep.md`) and two figures |
+| `metrics.py`, `formats.py` | the measurements and the packet formats, shared |
+| `tests/` | `python -m pytest tests` checks the formats against the firmware's byte layout and the metrics against synthetic truth |
+| `BENCH.md` | wiring and power record; every capture belongs to a bench revision |
+| `table.py` | a slide-ready table image of chosen results |
 
-`source .venv/bin/activate` once per terminal.
+`source .venv/bin/activate` once per terminal. Hand off the FB128 for every capture.
 
-## Bench
+## File names carry the setup
 
-FB128 in SYNC 100 Hz, one output on in0, FB128 ground and Intan REF on the DK ground, hand off. Before the raw capture, run `live.py` and look: 4 to 5 identical spikes in 50 ms, 10.5 ms apart. Anything else means the FB128 is not in SYNC.
+`data/raw_1ch_10000_a.bin`: raw stream, 1 channel, 10000 S/s, run a. `data/ev_4ch_30000_b.bin`: events, 4 channels,
+30000 S/s, run b. `sweep.py` reads the setup from the name, so stick to it.
 
-## Procedure
+## Experiment 1: sample rate, one channel
 
-1. `RAW_STREAM 1`, build, flash headstage, reset central, wait for `subscribed`. `python live.py`, confirm, Ctrl+C. `python log.py raw_1ch_30k.bin 20`.
-2. `RAW_STREAM 0`, build, flash, reset central, wait for `subscribed`. `python log.py events_1ch_30k.bin 20`. Copy three `[prestno]` lines; in SYNC the noise column should read the same as the floor you see in NORMAL, about 85 uV.
-3. `python compare.py raw_1ch_30k.bin events_1ch_30k.bin`.
+For each rate in 30000, 20000, 15000, 10000, 6000:
 
-## Reading the result
+1. `CH_RATE_HZ` to the rate, `N_CH 1`, `RAW_STREAM 1`. Build, flash, reset the central, wait for `subscribed`.
+   `python log.py data/raw_1ch_<rate>_a.bin 20`, then the same as `_b`.
+2. `RAW_STREAM 0`, build, flash, reset the central. Copy three `[prestno]` lines.
+   `python log.py data/ev_1ch_<rate>_a.bin 20`, then `_b`.
 
-The table has two rows, the raw stream with the detector run offline and the windows the device sent. The windowed path is proven when the rows agree: about 95 spikes/s each, on grid above 85%, jitter under 100 µs, the same trough amplitude and spread, the same noise, and zero lost. The figure shows the two mean waveforms with their spread on top of each other, the gap histograms, and the amplitude histograms. Any disagreement between the rows is the thing to chase next.
+Then `python sweep.py`. The figure `sweep_rate.png` shows, against rate: spikes caught (raw judged offline and device),
+false detections, and spike-to-noise both in the offline band and through the device's own filter. The best rate is
+the one where the device catches the most with the fewest false detections.
 
-Afterwards the same three steps at `CH_RATE_HZ 6000u`, with `6000` as the third argument to `compare.py` and the first to `live.py`, show what the lower rate does to the waveform.
+## Experiment 2: channel count, at the best rate
 
-## The benchmark table
+`N_CH` 1, 2, 4, 8 with `RAW_STREAM 0`, two runs each: `data/ev_<N>ch_<rate>_a.bin`, `_b`. Three `[prestno]` lines per
+run; `dropped/s` there is the radio's limit. `sweep.py` adds `sweep_channels.png`.
 
-Bench revision A, FB128 in SYNC, hand off, firmware frozen. One cell = one 20 s event capture, scored with `score.py`.
-Every cell is recorded twice back to back; the two must agree within 5 points of "caught", else a third run and a note.
-Each session opens and closes with the control: 1 channel, 30 kS/s, `RAW_STREAM 1`, 20 s, `verdict.py`. If the two
-controls differ by more than 5 points, the session's cells are flagged.
+## Reading the numbers
 
-| channels | 30 kS/s: caught / false per s / dropped per s | 6 kS/s: caught / false per s / dropped per s |
-|---|---|---|
-| 1 | | |
-| 2 | | |
-| 4 | | |
-| 8 | radio-limited in SYNC (615 kbit/s), read dropped first | |
+- **caught**: share of the SYNC spikes a channel fires that were detected and sent, with a 95% confidence interval
+  across the seconds of the capture. Two runs of one setup should overlap.
+- **false /s**: detections that do not sit on the SYNC grid. About 8% of false detections pass as real by chance.
+- **spike-to-noise**: trough depth over the noise between spikes. The device catches nearly everything above about 6.5
+  at its 4 sigma threshold, and falls off quickly below 5.
+- **dropped /s** (status line): events the radio could not send. Zero until the link is full.
 
-Run sheet per cell:
+## Predictions, written before Experiment 1
 
-1. `N_CH`, `CH_RATE_HZ`, `RAW_STREAM 0` in `src/main.c`. Build, flash, reset the central, wait for `subscribed`.
-2. Copy three `[prestno]` lines (noise, detected, dropped).
-3. `python log.py <cell>_<run>.bin 20`, e.g. `ev_4ch_30k_a.bin`.
-4. `python score.py <file> [6000]`. Write caught, false/s and dropped/s into the table.
-
-Prediction before recording, from the one-channel measurements: at 30 kS/s about 73% caught and 4 false/s per channel;
-at 6 kS/s about 65% and 1 false/s. Channel count should not change these unless the noise rises with it.
+From the captures made so far on bench revision A: at 30 kS/s the device catches about 77%, at 6 kS/s about 65%.
+If 10 kS/s is best, as the live view suggested, it is because the analog band drops to 3 kHz there and removes noise
+faster than it removes spike. The sweep will show whether the spike-to-noise ratio peaks between 6 and 15 kS/s.
