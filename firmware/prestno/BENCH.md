@@ -51,3 +51,7 @@ USB cable to the same Mac.
 ## Notes
 
 Anything unusual during a session (re-plugged a cable, moved the boards, changed rooms).
+
+- Experiment 1, pass 1: the Mac was on its charger from about 15:45 until after the 10 kS/s raw captures. The 60 Hz
+  hum rose from 15 to 130 uV while the 300 to 2400 Hz noise stayed at 45 to 50 uV in every 2 s block, so the captures
+  were kept. Charger unplugged for the rest; `sweep.py` now reports the hum per raw capture.

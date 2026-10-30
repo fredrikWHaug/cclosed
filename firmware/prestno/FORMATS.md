@@ -24,6 +24,8 @@ The relay forwards each notification as `A5 5A | length u16 | payload` at 921600
 |---|---|---|
 | `prestno/log.py` | either | records bytes, counts raw and event packets separately |
 | `prestno/live.py` | either | switches its display on the packet length |
+| `prestno/verdict.py`, `prestno/sweep.py` raw files | raw | report no raw packets |
+| `prestno/score.py`, `prestno/sweep.py` ev files | events | report no events |
 | `prestno/compare.py` | one raw file and one event file | tells them apart by packet length |
 | `theo/stream_plot.py`, `theo/noise_meter.py`, `theo/score_capture.py`, `sorting/*.py` | raw | 101-byte events are an odd length, `np.frombuffer` raises, or values are silently wrong |
 | `spike/events.py`, `spike/check_sync.py`, `spike/spike_events.py` | events | a 242-byte raw packet parses as nonsense events |

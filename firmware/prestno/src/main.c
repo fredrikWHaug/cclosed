@@ -12,8 +12,8 @@
 #include <hal/nrf_gpio.h>
 
 /* One channel at 30 kS/s until the windowed path is proven equal to the raw path. Every converted channel needs a wire. */
-#define N_CH 1
-#define CH_RATE_HZ 6000u
+#define N_CH 14
+#define CH_RATE_HZ 20000u
 /* 1: send every sample (seq u16 | 120 x u16 codes) for the raw benchmark.  0: detect spikes and send only the windows. */
 #define RAW_STREAM 0
 #define RATE_HZ (N_CH * CH_RATE_HZ)

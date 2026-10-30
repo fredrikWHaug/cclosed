@@ -100,5 +100,6 @@ ax[1].set(xlabel="ms between consecutive spikes", ylabel="count", title="gaps, t
 abins = np.arange(-1200, 0, 20)
 ax[2].hist(raw_win.min(1), abins, color=BLUE, alpha=0.6, label="raw"); ax[2].hist(ev_win.min(1), abins, color=PINK, alpha=0.6, label="events")
 ax[2].set(xlabel="trough amplitude (uV)", ylabel="count", title="spike amplitudes"); ax[2].legend(frameon=False)
-fig.tight_layout(); fig.savefig("compare.png", dpi=150); print("saved compare.png")
+out = ev_path.rsplit(".", 1)[0] + "_compare.png"
+fig.tight_layout(); fig.savefig(out, dpi=150); print("saved", out)
 plt.show()
