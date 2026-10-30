@@ -13,7 +13,7 @@
 
 /* One channel at 30 kS/s until the windowed path is proven equal to the raw path. Every converted channel needs a wire. */
 #define N_CH 1
-#define CH_RATE_HZ 30000u
+#define CH_RATE_HZ 6000u
 /* 1: send every sample (seq u16 | 120 x u16 codes) for the raw benchmark.  0: detect spikes and send only the windows. */
 #define RAW_STREAM 0
 #define RATE_HZ (N_CH * CH_RATE_HZ)
@@ -43,7 +43,8 @@ BUILD_ASSERT(RATE_HZ <= 1050000u, "RHD2164 ADC tops out at 1.05 MS/s total");
                       RATE_HZ <= 350000u ? 18 : RATE_HZ <= 440000u ? 16 : RATE_HZ <= 525000u ? 7 : 4)
 
 #define HP_HZ 300.0f
-#define LP_HZ (CH_RATE_HZ >= 15000u ? 6000.0f : 0.4f * (float)CH_RATE_HZ)
+#define LP_HZ 6000.0f
+#define USE_DIGITAL_LP (FH_HZ > 6000)   /* at low rates the Intan's analog band (FH_HZ) already limits the band */
 #define THRESH_SIGMA 4.0f
 #define SIGMA_PER_MEAN 1.3263f           /* sigma / mean|y| for Gaussian y clipped at 3x the estimate (1.2533 unclipped) */
 #define SETTLE_MS 500u                   /* no detections while the noise estimate warms up */
@@ -57,7 +58,8 @@ BUILD_ASSERT(RATE_HZ <= 1050000u, "RHD2164 ADC tops out at 1.05 MS/s total");
 #define REFRACT (3u * CH_RATE_HZ / 1000u)       /* 3 ms dead time after a spike: the filter's dip after the rebound is not a new spike */
 #define NOISE_BLANK (3u * CH_RATE_HZ / 1000u)   /* no noise update for 3 ms after a spike's trough: its tail is not noise */
 #define WIN  (PRE + POST)
-BUILD_ASSERT(WIN + CH_RATE_HZ / 1000 < RING, "ring must hold window + 1 ms lookahead");
+#define TROUGH_LAG (CH_RATE_HZ / 1000u)         /* the causal filters delay the trough by up to ~1 ms */
+BUILD_ASSERT(WIN + 2 * CH_RATE_HZ / 1000 < RING, "ring must hold window + lookahead + filter lag");
 BUILD_ASSERT(WIN >= 2 && WIN <= 255, "window must fit the n_samples byte");
 
 #define PIN_SCK NRF_GPIO_PIN_MAP(2, 1)
@@ -296,8 +298,17 @@ static void emit(uint8_t c, struct chan *ch)
 	uint8_t *p = evq[evq_w % EV_QUEUE];
 	p[0] = (uint8_t)seq; p[1] = (uint8_t)(seq >> 8); seq++;
 	p[2] = c; p[3] = (uint8_t)WIN; p[4] = (uint8_t)PRE;
-	memcpy(&p[5], &ch->t_trough, 4);
-	uint32_t first = ch->t_trough - PRE;
+	/* the filtered trough lags the real one; take the raw minimum in the 1 ms before it */
+	uint32_t t = ch->t_trough;
+	int16_t vmin = ch->ring[t & (RING - 1)];
+	for (uint32_t k = 1; k <= TROUGH_LAG; k++) {
+		int16_t v = ch->ring[(ch->t_trough - k) & (RING - 1)];
+		if (v < vmin) {
+			vmin = v; t = ch->t_trough - k;
+		}
+	}
+	memcpy(&p[5], &t, 4);
+	uint32_t first = t - PRE;
 	uint8_t *q = &p[EV_HDR];
 	for (uint32_t k = 0; k < WIN; k += 2) {
 		/* 12-bit two's complement: drop the 4 LSBs (3 uV), keep the full +-6.4 mV range */
@@ -316,7 +327,10 @@ static inline void process(uint8_t c, int16_t s)
 {
 	struct chan *ch = &chans[c];
 	ch->ring[ch->n & (RING - 1)] = s;
-	float y = biquad_run(&lp, ch->lp_s, biquad_run(&hp, ch->hp_s, (float)s));
+	float y = biquad_run(&hp, ch->hp_s, (float)s);
+	if (USE_DIGITAL_LP) {
+		y = biquad_run(&lp, ch->lp_s, y);
+	}
 	uint32_t n = ch->n++;
 	if (ch->state == 0 && n >= ch->blank_until && fabsf(y) < 3.0f * ch->noise) {
 		ch->noise += (fabsf(y) - ch->noise) * NOISE_ALPHA;
