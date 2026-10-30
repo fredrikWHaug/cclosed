@@ -11,7 +11,7 @@ The headstage can run two kinds of firmware. They advertise under the same BLE n
 | one notification | `seq u16` then 120 samples as `u16` little-endian, offset-binary codes (0.195 µV per code, 32768 = 0 V); 242 bytes | one or two events back to back, 101 bytes each at 30 kS/s |
 | one event | | `seq u16`, `channel u8`, `n_samples u8`, `pre u8`, `trough_index u32`, then `n_samples` 12-bit two's-complement values packed two per 3 bytes, 3.12 µV per step |
 | channel order | sample k belongs to channel k mod N_CH | each event carries its channel |
-| time base | packet counter only | `trough_index` is the channel's own sample counter, so spike times are exact |
+| time base | packet counter only | `trough_index` is the channel's own sample counter at the raw trough (the raw minimum in the 1 ms before the filtered trough), so spike times are exact and windows line up at any rate |
 | data rate at 1 ch x 30 kS/s | 484 kbit/s, 250 notifications/s | about 95 events/s in SYNC, 77 kbit/s |
 | data rate at 4 ch x 30 kS/s | 1.9 Mbit/s, does not fit the radio | about 380 events/s in SYNC, 310 kbit/s |
 | sequence counter | per packet | per event |

@@ -42,8 +42,10 @@ def offline_detect(x):
             if n >= search_end:
                 state = 2
         elif n + 1 >= t_tr + POST:
-            if t_tr >= PRE:
-                troughs.append(t_tr)
+            lo = max(0, t_tr - look)                       # like emit(): the raw minimum in the 1 ms before the filtered trough
+            t_raw = lo + int(np.argmin(x[lo:t_tr + 1]))
+            if t_raw >= PRE:
+                troughs.append(t_raw)
             state, quiet, blank = 0, t_tr + dead, t_tr + dead
     return np.array(troughs), 1.3263 * mean_abs
 
@@ -71,7 +73,7 @@ wall = [t for t, p in read_log(ev_path) if not is_raw(p)]; ev_wall = wall[-1] - 
 def row(name, win, gaps, seconds, lost, pre):
     on_grid = np.mean(np.abs(gaps - SYNC_MS) < 0.5) * 100
     jitter = np.std(gaps[np.abs(gaps - SYNC_MS) < 0.5]) * 1000
-    trough = win[:, pre]
+    trough = win.min(1)                                   # the window minimum, wherever it falls
     noise = np.median(win[:, :max(3, pre // 2)].std(1))
     print(f"{name:22s} {len(win) / seconds:7.1f} {len(win) / seconds / SYNC_RATE * 100:6.0f}% {on_grid:8.0f}% {jitter:8.0f}"
           f" {trough.mean():8.0f} {trough.std():6.0f} {noise:7.0f} {lost:6d}")
@@ -96,7 +98,7 @@ ax[1].hist(raw_gaps, bins, color=BLUE, alpha=0.6, label="raw"); ax[1].hist(ev_ga
 ax[1].axvline(SYNC_MS, color="0.3", ls="--", lw=1)
 ax[1].set(xlabel="ms between consecutive spikes", ylabel="count", title="gaps, truth 10.5 ms"); ax[1].legend(frameon=False)
 abins = np.arange(-1200, 0, 20)
-ax[2].hist(raw_win[:, PRE], abins, color=BLUE, alpha=0.6, label="raw"); ax[2].hist(ev_win[:, ev_pre], abins, color=PINK, alpha=0.6, label="events")
+ax[2].hist(raw_win.min(1), abins, color=BLUE, alpha=0.6, label="raw"); ax[2].hist(ev_win.min(1), abins, color=PINK, alpha=0.6, label="events")
 ax[2].set(xlabel="trough amplitude (uV)", ylabel="count", title="spike amplitudes"); ax[2].legend(frameon=False)
 fig.tight_layout(); fig.savefig("compare.png", dpi=150); print("saved compare.png")
 plt.show()
