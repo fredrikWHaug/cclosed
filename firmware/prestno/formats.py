@@ -107,7 +107,17 @@ def biquad(x, coef):
     return out
 
 
+def analog_band_hz(rate):
+    """the Intan upper cutoff the firmware selects for this rate (FH_HZ in src/main.c)."""
+    for floor, fh in ((25000, 10000), (18750, 7500), (12500, 5000), (7500, 3000), (6250, 2500), (5000, 2000)):
+        if rate >= floor:
+            return fh
+    return 1500
+
+
 def detector_filter(x, rate):
-    """300 Hz high-pass then 6 kHz low-pass (0.4 x rate below 15 kS/s), causal, as on the device."""
-    lp_hz = 6000 if rate >= 15000 else 0.4 * rate
-    return biquad(biquad(np.asarray(x, dtype=float), butter2(300, rate, True)), butter2(lp_hz, rate, False))
+    """the device's chain, causal: 300 Hz high-pass, then a 6 kHz low-pass only when the analog band is wider than 6 kHz."""
+    y = biquad(np.asarray(x, dtype=float), butter2(300, rate, True))
+    if analog_band_hz(rate) > 6000:
+        y = biquad(y, butter2(6000, rate, False))
+    return y
