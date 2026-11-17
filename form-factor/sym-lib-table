@@ -1,0 +1,5 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "form-factor")(type "KiCad")(uri "${KIPRJMOD}/lib/form-factor.kicad_sym")(options "")(descr ""))
+  (lib (name "RHD2164")(type "KiCad")(uri "${KIPRJMOD}/lib/RHD2164.kicad_sym")(options "")(descr ""))
+)

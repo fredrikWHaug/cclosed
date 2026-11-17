@@ -1,0 +1,5 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "RHD2164")(type "KiCad")(uri "${KIPRJMOD}/lib/RHD2164.pretty")(options "")(descr ""))
+  (lib (name "form-factor")(type "KiCad")(uri "${KIPRJMOD}/lib/form-factor.pretty")(options "")(descr ""))
+)

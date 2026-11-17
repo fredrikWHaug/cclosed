@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Form Factor PCB</title>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+  <style>
+    :root {
+      --bg: #f2f1ec;
+      --ink: #1d1f1e;
+      --muted: #5c625f;
+      --accent: #0b7a5a;
+      --glass: rgba(250, 250, 247, 0.78);
+      --line: rgba(0, 0, 0, 0.08);
+      /* trace colours follow the bench scope's channels: CS green, SCLK pink, MOSI cyan, MISO yellow */
+      --cs: #1f9d55;
+      --sclk: #c2185b;
+      --mosi: #0288d1;
+      --miso: #b58105;
+    }
+    html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif; }
+    model-viewer { width: 100%; height: 100%; }
+
+    /* marker on the board */
+    .hotspot {
+      position: relative; width: 22px; height: 22px; padding: 0; border: none; border-radius: 50%;
+      background: var(--accent); box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9), 0 2px 8px rgba(0, 0, 0, 0.35);
+      cursor: pointer; transition: transform 0.15s, opacity 0.2s;
+    }
+    .hotspot::after {                      /* slow pulse so it reads as clickable */
+      content: ""; position: absolute; inset: -3px; border-radius: 50%;
+      border: 2px solid var(--accent); animation: pulse 2s ease-out infinite;
+    }
+    .hotspot:hover { transform: scale(1.15); }
+    .hotspot:not([data-visible]) { opacity: 0.3; }
+    .hotspot .tag {
+      position: absolute; left: 30px; top: 50%; transform: translateY(-50%);
+      padding: 3px 8px; border-radius: 6px; background: var(--glass); backdrop-filter: blur(8px);
+      font-size: 12px; font-weight: 600; line-height: 1.2; letter-spacing: 0.04em; color: var(--ink); white-space: nowrap;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    }
+    @keyframes pulse { from { transform: scale(1); opacity: 0.8; } to { transform: scale(2.2); opacity: 0; } }
+
+    /* glass panel */
+    .panel {
+      position: fixed; top: 24px; right: 24px; width: min(560px, calc(100vw - 32px));
+      max-height: calc(100vh - 48px); overflow: auto; box-sizing: border-box; padding: 22px 24px;
+      background: var(--glass); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2);
+      border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+      opacity: 0; transform: translateY(8px) scale(0.98); pointer-events: none; transition: opacity 0.25s, transform 0.25s;
+    }
+    .panel.open { opacity: 1; transform: none; pointer-events: auto; }
+    .panel h2 { margin: 0 0 4px; font-size: 20px; }
+    .panel .sub { margin: 0 0 16px; color: var(--muted); font-size: 13px; }
+    .panel p { font-size: 14px; line-height: 1.55; margin: 12px 0; }
+    .close { position: absolute; top: 14px; right: 14px; width: 30px; height: 30px; border: none; border-radius: 50%;
+      background: rgba(0, 0, 0, 0.06); font-size: 18px; line-height: 30px; cursor: pointer; color: var(--ink); }
+    .close:hover { background: rgba(0, 0, 0, 0.12); }
+
+    .scope { width: 100%; height: auto; display: block; background: rgba(255, 255, 255, 0.6);
+      border: 1px solid var(--line); border-radius: 10px; }
+    .scope text { font: 600 11px -apple-system, sans-serif; }
+    .scope .trace { fill: none; stroke-width: 2; stroke-linejoin: round; }
+    .scope .sweep { animation: sweep 3.2s linear infinite; }
+    @keyframes sweep { from { transform: translateX(0); } to { transform: translateX(440px); } }
+
+    .facts { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 14px 0 4px; font-size: 13px; }
+    .facts dt { color: var(--muted); }
+    .facts dd { margin: 0; font-variant-numeric: tabular-nums; }
+    .note { font-size: 12px; color: var(--muted); }
+
+    @media (max-width: 640px) {
+      .panel { top: auto; bottom: 16px; right: 16px; max-height: 70vh; }
+    }
+  </style>
+</head>
+<body>
+  <model-viewer camera-controls auto-rotate shadow-intensity="1" exposure="1.2" tone-mapping="aces"></model-viewer>
+
+  <aside class="panel" id="spi-panel" aria-hidden="true">
+    <button class="close" aria-label="Close">×</button>
+    <h2>SPI link</h2>
+    <p class="sub">nRF54LM20B (master) ↔ Intan RHD2164 (slave)</p>
+
+    <svg class="scope" id="spi-scope" viewBox="0 0 520 210" role="img"
+         aria-label="Timing diagram of one SPI frame: CS low, 16 clock pulses, MOSI command bits, MISO result bits"></svg>
+
+    <p>Every sample is one 16-bit frame. The nRF pulls <b style="color:var(--cs)">CS</b> low and clocks
+      16 pulses on <b style="color:var(--sclk)">SCLK</b> at 16 MHz. It shifts a <code>CONVERT(channel)</code>
+      command out on <b style="color:var(--mosi)">MOSI</b>, while the Intan shifts back on
+      <b style="color:var(--miso)">MISO</b> the result of the command sent two frames earlier.
+      CS rising ends the frame, and its falling edge starts the next conversion.</p>
+
+    <dl class="facts">
+      <dt>Clock</dt><dd>16 MHz, 62.5 ns per bit</dd>
+      <dt>Frame</dt><dd>16 bits, about 1 µs with CS setup and hold</dd>
+      <dt>Timing</dt><dd>hardware timer → DPPI → SPIM, 0.38 µs jitter</dd>
+      <dt>Signalling</dt><dd>CMOS, LVDS_en tied to ground</dd>
+      <dt>Pins</dt><dd>SCLK P2.01 · MOSI P2.02 · MISO P2.04 · CS P2.05</dd>
+      <dt>On this board</dt><dd>33 Ω series resistors R1 to R4, short traces</dd>
+    </dl>
+    <p class="note">Placeholder figure. The scope captures of the real frame will go here.</p>
+  </aside>
+
+  <script>
+    const viewer = document.querySelector("model-viewer");
+    viewer.src = "form-factor.glb?t=" + Date.now();   // fresh URL each load, so a re-exported model is never served from cache
+
+    // KiCad leaves most part materials without a finish, which glTF reads as fully metallic + fully rough (dull grey).
+    // Turn those into plastic so their colours show; real metals (pads, pins) keep their own settings.
+    viewer.addEventListener("load", () => {
+      for (const m of viewer.model.materials) {
+        const pbr = m.pbrMetallicRoughness;
+        if (pbr.metallicFactor === 1 && pbr.roughnessFactor === 1) {
+          pbr.setMetallicFactor(0);
+          pbr.setRoughnessFactor(0.45);
+        }
+        // The solder mask comes out ~83% opaque over the light board core, which washes it to mint; make it solid
+        const [r, g, b, a] = pbr.baseColorFactor;
+        if (a < 1 && g > r && g > b) {
+          pbr.setBaseColorFactor([r, g, b, 1]);
+          m.setAlphaMode("OPAQUE");
+        }
+      }
+    });
+
+    // Marker halfway between the nRF (U1) and the Intan (U2); positions come from parts.json written by export_pcb.sh
+    const panel = document.getElementById("spi-panel");
+    fetch("parts.json?t=" + Date.now()).then(r => r.json()).then(parts => {
+      const [a, b] = [parts.U1, parts.U2];
+      const pos = a.map((v, i) => (v + b[i]) / 2);
+      const spot = document.createElement("button");
+      spot.className = "hotspot";
+      spot.slot = "hotspot-spi";
+      spot.dataset.position = `${pos[0]}m ${pos[1] + 0.0008}m ${pos[2]}m`;
+      spot.dataset.normal = "0m 1m 0m";
+      spot.setAttribute("aria-label", "SPI link between the nRF and the Intan");
+      spot.innerHTML = '<span class="tag">SPI</span>';
+      spot.addEventListener("click", () => setPanel(!panel.classList.contains("open")));
+      viewer.appendChild(spot);
+    });
+
+    function setPanel(open) {
+      panel.classList.toggle("open", open);
+      panel.setAttribute("aria-hidden", String(!open));
+      viewer.autoRotate = !open;           // hold the board still while reading
+    }
+    panel.querySelector(".close").addEventListener("click", () => setPanel(false));
+    document.addEventListener("keydown", e => { if (e.key === "Escape") setPanel(false); });
+
+    // Timing diagram: one frame of CONVERT(1) = 0x0100 out on MOSI, an example sample back on MISO
+    (function drawScope() {
+      const svg = document.getElementById("spi-scope");
+      const x0 = 60, x1 = 500, csLow = 70, csHigh = 490, bit = 25;   // 16 bits x 25 px between CS edges
+      const clk0 = 85;
+      const rows = [["CS", "--cs", 40], ["SCLK", "--sclk", 85], ["MOSI", "--mosi", 130], ["MISO", "--miso", 175]];
+      const amp = 22;
+      const level = (y, hi) => (hi ? y - amp / 2 : y + amp / 2);
+      const mosiBits = (0x0100).toString(2).padStart(16, "0").split("").map(Number);
+      const misoBits = (0x8a3d).toString(2).padStart(16, "0").split("").map(Number);
+      const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+      let out = "";
+
+      const path = (pts, color) => `<path class="trace" stroke="${css(color)}" d="M${pts.map(p => p.join(",")).join(" L")}"/>`;
+      rows.forEach(([name, color, y]) => {
+        out += `<text x="10" y="${y + 4}" fill="${css(color)}">${name}</text>`;
+        out += `<line x1="${x0}" x2="${x1}" y1="${y + amp / 2}" y2="${y + amp / 2}" stroke="rgba(0,0,0,0.06)"/>`;
+      });
+
+      // CS: high, low for the frame, high again
+      const cy = rows[0][2];
+      out += path([[x0, level(cy, 1)], [csLow, level(cy, 1)], [csLow, level(cy, 0)], [csHigh, level(cy, 0)],
+                   [csHigh, level(cy, 1)], [x1, level(cy, 1)]], "--cs");
+
+      // SCLK: idle low (CPOL 0), 16 pulses
+      const sy = rows[1][2];
+      const s = [[x0, level(sy, 0)]];
+      for (let i = 0; i < 16; i++) {
+        const t = clk0 + i * bit;
+        s.push([t, level(sy, 0)], [t, level(sy, 1)], [t + bit / 2, level(sy, 1)], [t + bit / 2, level(sy, 0)]);
+      }
+      s.push([x1, level(sy, 0)]);
+      out += path(s, "--sclk");
+
+      // data lines: one bit per clock period, edges on the falling clock edge
+      const dataLine = (bits, y, color) => {
+        const p = [[x0, level(y, 0)], [clk0 - bit / 2, level(y, 0)]];
+        bits.forEach((v, i) => {
+          const t = clk0 - bit / 2 + i * bit;
+          p.push([t, level(y, v)], [t + bit, level(y, v)]);
+        });
+        p.push([clk0 + 15.5 * bit, level(y, 0)], [x1, level(y, 0)]);
+        return path(p, color);
+      };
+      out += dataLine(mosiBits, rows[2][2], "--mosi");
+      out += dataLine(misoBits, rows[3][2], "--miso");
+
+      // bit labels under MOSI so the command is readable
+      mosiBits.forEach((v, i) => {
+        out += `<text x="${clk0 + i * bit + 4}" y="${rows[2][2] + amp / 2 + 14}" fill="${css("--muted")}" font-size="9">${v}</text>`;
+      });
+
+      // moving cursor sweeping across the frame
+      out += `<g class="sweep"><rect x="${x0 - 10}" y="22" width="10" height="176" fill="${css("--accent")}" opacity="0.12"/>
+              <line x1="${x0}" x2="${x0}" y1="22" y2="198" stroke="${css("--accent")}" stroke-width="1.5" opacity="0.7"/></g>`;
+      svg.innerHTML = out;
+    })();
+  </script>
+</body>
+</html>
