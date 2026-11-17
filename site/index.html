@@ -41,6 +41,7 @@
       font-size: 12px; font-weight: 600; line-height: 1.2; letter-spacing: 0.04em; color: var(--ink); white-space: nowrap;
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
     }
+    .hotspot.tag-left .tag { left: auto; right: 30px; }
     @keyframes pulse { from { transform: scale(1); opacity: 0.8; } to { transform: scale(2.2); opacity: 0; } }
 
     /* glass panel */
@@ -52,6 +53,12 @@
       opacity: 0; transform: translateY(8px) scale(0.98); pointer-events: none; transition: opacity 0.25s, transform 0.25s;
     }
     .panel.open { opacity: 1; transform: none; pointer-events: auto; }
+    .handle { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none;
+      margin: -22px -24px 0; padding: 22px 24px 0; }                 /* stretch the grab area to the panel's top edge */
+    .handle::before { content: ""; display: block; width: 36px; height: 4px; margin: -12px auto 10px;
+      border-radius: 2px; background: rgba(0, 0, 0, 0.15); }         /* grip pill: says "drag me" */
+    .panel.dragging { transition: none; }
+    .panel.dragging .handle { cursor: grabbing; }
     .panel h2 { margin: 0 0 4px; font-size: 20px; }
     .panel .sub { margin: 0 0 16px; color: var(--muted); font-size: 13px; }
     .panel p { font-size: 14px; line-height: 1.55; margin: 12px 0; }
@@ -65,6 +72,12 @@
     .scope .trace { fill: none; stroke-width: 2; stroke-linejoin: round; }
     .scope .sweep { animation: sweep 3.2s linear infinite; }
     @keyframes sweep { from { transform: translateX(0); } to { transform: translateX(440px); } }
+
+    /* CNN figure: each stage lights up in turn, then the softmax bars grow */
+    #cnn-figure .stage { animation: flow 3.2s ease-in-out infinite; opacity: 0.35; }
+    #cnn-figure .bar { transform-box: fill-box; transform-origin: left; animation: grow 3.2s ease-out infinite; }
+    @keyframes flow { 0%, 100% { opacity: 0.35; } 12%, 40% { opacity: 1; } }
+    @keyframes grow { 0%, 55% { transform: scaleX(0); } 72%, 100% { transform: scaleX(1); } }
 
     .facts { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 14px 0 4px; font-size: 13px; }
     .facts dt { color: var(--muted); }
@@ -81,8 +94,10 @@
 
   <aside class="panel" id="spi-panel" aria-hidden="true">
     <button class="close" aria-label="Close">×</button>
-    <h2>SPI link</h2>
-    <p class="sub">nRF54LM20B (master) ↔ Intan RHD2164 (slave)</p>
+    <div class="handle">
+      <h2>SPI link</h2>
+      <p class="sub">nRF54LM20B (master) ↔ Intan RHD2164 (slave)</p>
+    </div>
 
     <svg class="scope" id="spi-scope" viewBox="0 0 520 210" role="img"
          aria-label="Timing diagram of one SPI frame: CS low, 16 clock pulses, MOSI command bits, MISO result bits"></svg>
@@ -102,6 +117,32 @@
       <dt>On this board</dt><dd>33 Ω series resistors R1 to R4, short traces</dd>
     </dl>
     <p class="note">Placeholder figure. The scope captures of the real frame will go here.</p>
+  </aside>
+
+  <aside class="panel" id="cnn-panel" aria-hidden="true">
+    <button class="close" aria-label="Close">×</button>
+    <div class="handle">
+      <h2>Classification</h2>
+      <p class="sub">On-chip spike classification with a 1-D CNN on the nRF54LM20B</p>
+    </div>
+
+    <svg class="scope" id="cnn-figure" viewBox="0 0 520 230" role="img"
+         aria-label="A detected spike window passes through two convolution layers and a dense layer to a softmax that picks Unit A"></svg>
+
+    <p>Each detected spike is cut out as a short window and passed through a small convolutional network.
+      Its convolution layers learn the waveform features that tell neurons apart, such as trough depth, width and
+      repolarisation. A dense layer and softmax then assign the spike to a unit. The headstage then sends <i>which unit
+      fired and when</i> instead of the waveform, so far more channels fit over the same radio link.</p>
+
+    <dl class="facts">
+      <dt>Input</dt><dd>61-sample window, 2 ms at 30 kS/s, from the on-chip 4σ detector</dd>
+      <dt>Model</dt><dd>2 × Conv1D → pooling → dense → softmax</dd>
+      <dt>Hardware</dt><dd>Axon NPU in the nRF54LM20B</dd>
+      <dt>Output</dt><dd>unit ID + sample timestamp</dd>
+      <dt>Per spike on air</dt><dd>about 8 bytes instead of a 101-byte window, roughly 12× less</dd>
+      <dt>Today</dt><dd>offline nearest-template classifier, 98–100% agreement with the sorter on FB128 data</dd>
+    </dl>
+    <p class="note">Idealized module. Layer sizes are illustrative; the CNN is not yet trained or running on the chip.</p>
   </aside>
 
   <script>
@@ -126,29 +167,120 @@
       }
     });
 
-    // Marker halfway between the nRF (U1) and the Intan (U2); positions come from parts.json written by export_pcb.sh
-    const panel = document.getElementById("spi-panel");
+    // Markers on the board, each opening the panel with id `${id}-panel`.
+    // Positions come from parts.json (written by export_pcb.sh), in metres: [x, up, y] in KiCad's frame.
+    const mid = (a, b) => a.map((v, i) => (v + b[i]) / 2);
+    const spots = [
+      { id: "spi", label: "SPI", aria: "SPI link between the nRF and the Intan", at: p => mid(p.U1, p.U2) },
+      { id: "cnn", label: "Classification", aria: "On-chip spike classification", side: "left",
+        at: p => [p.U1[0] - 0.0025, p.U1[1], p.U1[2]] },      // 2.5 mm left of the nRF
+    ];
     fetch("parts.json?t=" + Date.now()).then(r => r.json()).then(parts => {
-      const [a, b] = [parts.U1, parts.U2];
-      const pos = a.map((v, i) => (v + b[i]) / 2);
-      const spot = document.createElement("button");
-      spot.className = "hotspot";
-      spot.slot = "hotspot-spi";
-      spot.dataset.position = `${pos[0]}m ${pos[1] + 0.0008}m ${pos[2]}m`;
-      spot.dataset.normal = "0m 1m 0m";
-      spot.setAttribute("aria-label", "SPI link between the nRF and the Intan");
-      spot.innerHTML = '<span class="tag">SPI</span>';
-      spot.addEventListener("click", () => setPanel(!panel.classList.contains("open")));
-      viewer.appendChild(spot);
+      for (const s of spots) {
+        const pos = s.at(parts);
+        const spot = document.createElement("button");
+        spot.className = "hotspot" + (s.side === "left" ? " tag-left" : "");
+        spot.slot = "hotspot-" + s.id;
+        spot.dataset.position = `${pos[0]}m ${pos[1] + 0.0008}m ${pos[2]}m`;
+        spot.dataset.normal = "0m 1m 0m";
+        spot.setAttribute("aria-label", s.aria);
+        spot.innerHTML = `<span class="tag">${s.label}</span>`;
+        spot.addEventListener("click", () => openPanel(openId === s.id ? null : s.id));
+        viewer.appendChild(spot);
+      }
     });
 
-    function setPanel(open) {
-      panel.classList.toggle("open", open);
-      panel.setAttribute("aria-hidden", String(!open));
-      viewer.autoRotate = !open;           // hold the board still while reading
+    // One panel open at a time; the board holds still while one is open
+    const panels = [...document.querySelectorAll(".panel")];
+    let openId = null;
+    function openPanel(id) {
+      openId = id;
+      for (const p of panels) {
+        const on = p.id === id + "-panel";
+        p.classList.toggle("open", on);
+        p.setAttribute("aria-hidden", String(!on));
+      }
+      viewer.autoRotate = !id;
     }
-    panel.querySelector(".close").addEventListener("click", () => setPanel(false));
-    document.addEventListener("keydown", e => { if (e.key === "Escape") setPanel(false); });
+    panels.forEach(p => p.querySelector(".close").addEventListener("click", () => openPanel(null)));
+    document.addEventListener("keydown", e => { if (e.key === "Escape") openPanel(null); });
+
+    // Drag a panel by its header; it stays where you leave it, kept inside the window
+    for (const panel of panels) {
+      const handle = panel.querySelector(".handle");
+      handle.addEventListener("pointerdown", e => {
+        const box = panel.getBoundingClientRect();
+        const dx = e.clientX - box.left, dy = e.clientY - box.top;
+        handle.setPointerCapture(e.pointerId);
+        panel.classList.add("dragging");
+        const move = ev => {
+          const x = Math.min(Math.max(ev.clientX - dx, 0), innerWidth - box.width);
+          const y = Math.min(Math.max(ev.clientY - dy, 0), innerHeight - 48);
+          Object.assign(panel.style, { left: x + "px", top: y + "px", right: "auto", bottom: "auto" });
+        };
+        const up = () => {
+          panel.classList.remove("dragging");
+          handle.removeEventListener("pointermove", move);
+          handle.removeEventListener("pointerup", up);
+          handle.removeEventListener("pointercancel", up);
+        };
+        handle.addEventListener("pointermove", move);
+        handle.addEventListener("pointerup", up);
+        handle.addEventListener("pointercancel", up);
+      });
+    }
+
+    // CNN figure: spike window → Conv1D → Conv1D + pool → dense → softmax; a highlight flows left to right
+    (function drawCNN() {
+      const svg = document.getElementById("cnn-figure");
+      const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+      const ink = css("--muted"), acc = css("--accent"), fm = css("--mosi");
+      const cy = 110;
+      let out = `<defs><marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+                 <path d="M0,0 L8,4 L0,8 z" fill="${ink}"/></marker></defs>`;
+      const label = (x, t1, t2) => `<text x="${x}" y="200" text-anchor="middle" fill="${ink}">${t1}</text>
+                                    <text x="${x}" y="214" text-anchor="middle" fill="${ink}" font-size="10" font-weight="400">${t2}</text>`;
+      const arrow = (xa, xb) => `<line x1="${xa}" x2="${xb}" y1="${cy}" y2="${cy}" stroke="${ink}" stroke-width="1.2" marker-end="url(#arr)"/>`;
+
+      // stage 0: the spike window (synthetic trough + repolarisation hump, 61 samples)
+      const pts = [];
+      for (let i = 0; i < 61; i++) {
+        const v = -Math.exp(-(((i - 20) / 2.4) ** 2)) + 0.35 * Math.exp(-(((i - 29) / 4.5) ** 2));
+        pts.push(`${18 + i * 1.6},${cy - 10 - v * 55}`);
+      }
+      out += `<g class="stage" style="animation-delay:0s">
+                <rect x="12" y="${cy - 60}" width="110" height="120" rx="8" fill="white" stroke="rgba(0,0,0,.1)"/>
+                <polyline points="${pts.join(" ")}" fill="none" stroke="${css("--miso")}" stroke-width="2"/></g>`;
+      out += label(67, "Spike window", "61 samples · 2 ms") + arrow(126, 146);
+
+      // stage 1: Conv1D, 8 filters (stacked feature maps)
+      let g = "";
+      for (let k = 7; k >= 0; k--) g += `<rect x="${152 + k * 3}" y="${cy - 42 - k * 3}" width="30" height="84" rx="3" fill="${fm}" opacity="${0.25 + k * 0.07}" stroke="white"/>`;
+      out += `<g class="stage" style="animation-delay:.45s">${g}</g>` + label(178, "Conv1D", "8 × k5") + arrow(210, 230);
+
+      // stage 2: Conv1D 16 filters + pooling (shorter maps)
+      g = "";
+      for (let k = 11; k >= 0; k--) g += `<rect x="${236 + k * 2.5}" y="${cy - 28 - k * 2.5}" width="20" height="56" rx="3" fill="${fm}" opacity="${0.2 + k * 0.06}" stroke="white"/>`;
+      out += `<g class="stage" style="animation-delay:.9s">${g}</g>` + label(262, "Conv1D + pool", "16 × k3") + arrow(292, 312);
+
+      // stage 3: dense layer
+      g = "";
+      for (let k = 0; k < 8; k++) g += `<circle cx="326" cy="${cy - 52 + k * 15}" r="5.5" fill="${fm}" opacity="0.8"/>`;
+      out += `<g class="stage" style="animation-delay:1.35s">${g}</g>` + label(326, "Dense", "32") + arrow(340, 362);
+
+      // stage 4: softmax over units; bars grow once the highlight arrives, the winner in the accent colour
+      const classes = [["Unit A", 0.86], ["Unit B", 0.08], ["Unit C", 0.04], ["Noise", 0.02]];
+      g = "";
+      classes.forEach(([name, p], k) => {
+        const y = cy - 46 + k * 26;
+        g += `<text x="368" y="${y + 13}" fill="${ink}" font-size="10">${name}</text>
+              <rect x="412" y="${y + 3}" width="78" height="13" rx="3" fill="rgba(0,0,0,.06)"/>
+              <rect class="bar" x="412" y="${y + 3}" width="${Math.max(78 * p, 2)}" height="13" rx="3" fill="${k ? fm : acc}" opacity="${k ? 0.5 : 1}"/>`;
+      });
+      g += `<text x="494" y="${cy - 33}" fill="${acc}" font-size="10">86%</text>`;
+      out += `<g class="stage" style="animation-delay:1.8s">${g}</g>` + label(435, "Softmax", "→ unit ID");
+      svg.innerHTML = out;
+    })();
 
     // Timing diagram: one frame of CONVERT(1) = 0x0100 out on MOSI, an example sample back on MISO
     (function drawScope() {
