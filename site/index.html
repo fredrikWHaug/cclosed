@@ -42,6 +42,9 @@
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
     }
     .hotspot.tag-left .tag { left: auto; right: 30px; }
+    .leaders { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+    .leaders line { stroke: var(--accent); stroke-width: 1.5; stroke-opacity: 0.55; }
+    .leaders circle { fill: var(--accent); fill-opacity: 0.7; }
     @keyframes pulse { from { transform: scale(1); opacity: 0.8; } to { transform: scale(2.2); opacity: 0; } }
 
     /* glass panel */
@@ -183,6 +186,7 @@
       { id: "cnn", label: "Classification", aria: "On-chip spike classification", side: "left",
         at: p => [p.U1[0] - 0.0025, p.U1[1], p.U1[2]] },      // 2.5 mm left of the nRF
     ];
+    const spotEls = {};                            // marker element per spot id, for the leader lines
     fetch("parts.json?t=" + Date.now()).then(r => r.json()).then(parts => {
       for (const s of spots) {
         const pos = s.at(parts);
@@ -198,6 +202,7 @@
           setOpen(p, !p.classList.contains("open"));
         });
         viewer.appendChild(spot);
+        spotEls[s.id] = spot;
       }
     });
 
@@ -225,6 +230,38 @@
       const open = panels.filter(p => p.classList.contains("open"));
       if (open.length) setOpen(open.reduce((a, b) => (+a.style.zIndex > +b.style.zIndex ? a : b)), false);
     });
+
+    // Leader lines, like KiCad's ratsnest: a thin line from each open panel to its marker on the board.
+    // Redrawn every frame because the camera, the panels and the markers can all move.
+    const NS = "http://www.w3.org/2000/svg";
+    const leaders = document.createElementNS(NS, "svg");
+    leaders.classList.add("leaders");
+    document.body.appendChild(leaders);
+    const lines = panels.map(() => {
+      const g = document.createElementNS(NS, "g");
+      g.innerHTML = '<line/><circle r="3.5"/>';
+      leaders.appendChild(g);
+      return g;
+    });
+    (function drawLeaders() {
+      panels.forEach((p, i) => {
+        const g = lines[i], spot = spotEls[p.id.replace(/-panel$/, "")];
+        const s = spot && spot.getBoundingClientRect();
+        const r = p.getBoundingClientRect();
+        const cx = s && s.left + s.width / 2, cy = s && s.top + s.height / 2;
+        const inside = s && cx > r.left && cx < r.right && cy > r.top && cy < r.bottom;
+        if (!p.classList.contains("open") || !s || !s.width || inside) { g.style.display = "none"; return; }
+        // end on the panel edge nearest the marker
+        const ex = Math.min(Math.max(cx, r.left), r.right), ey = Math.min(Math.max(cy, r.top), r.bottom);
+        const [line, dot] = g.children;
+        line.setAttribute("x1", cx); line.setAttribute("y1", cy);
+        line.setAttribute("x2", ex); line.setAttribute("y2", ey);
+        dot.setAttribute("cx", ex); dot.setAttribute("cy", ey);
+        g.style.display = "";
+        g.style.opacity = spot.hasAttribute("data-visible") ? 1 : 0.35;   // fainter when the marker is behind the board
+      });
+      requestAnimationFrame(drawLeaders);
+    })();
 
     // Wrap each panel's content in a scrolling body and add a resize grip in the bottom-right corner
     for (const panel of panels) {
