@@ -47,7 +47,7 @@
     /* glass panel */
     .panel {
       position: fixed; top: 24px; right: 24px; width: min(560px, calc(100vw - 32px));
-      max-height: calc(100vh - 48px); overflow: auto; box-sizing: border-box; padding: 22px 24px;
+      max-height: calc(100vh - 48px); overflow: hidden; box-sizing: border-box; display: flex; flex-direction: column;
       background: var(--glass); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2);
       border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
       opacity: 0; transform: translateY(8px) scale(0.98); pointer-events: none; transition: opacity 0.25s, transform 0.25s;
@@ -57,6 +57,14 @@
       margin: -22px -24px 0; padding: 22px 24px 0; }                 /* stretch the grab area to the panel's top edge */
     .handle::before { content: ""; display: block; width: 36px; height: 4px; margin: -12px auto 10px;
       border-radius: 2px; background: rgba(0, 0, 0, 0.15); }         /* grip pill: says "drag me" */
+    /* content scrolls inside the panel, so the corner grip stays put */
+    .panel .body { flex: 1; min-height: 0; overflow: auto; padding: 22px 24px; }
+    .grip {
+      position: absolute; right: 0; bottom: 0; width: 20px; height: 20px; cursor: nwse-resize; touch-action: none;
+      background: linear-gradient(135deg, transparent 52%, rgba(0, 0, 0, 0.25) 52% 59%, transparent 59% 71%,
+                  rgba(0, 0, 0, 0.25) 71% 78%, transparent 78%);   /* two short lines cutting the bottom-right corner */
+      border-bottom-right-radius: 16px;
+    }
     .panel.dragging { transition: none; }
     .panel.dragging .handle { cursor: grabbing; }
     .panel h2 { margin: 0 0 4px; font-size: 20px; }
@@ -217,6 +225,41 @@
       const open = panels.filter(p => p.classList.contains("open"));
       if (open.length) setOpen(open.reduce((a, b) => (+a.style.zIndex > +b.style.zIndex ? a : b)), false);
     });
+
+    // Wrap each panel's content in a scrolling body and add a resize grip in the bottom-right corner
+    for (const panel of panels) {
+      const body = document.createElement("div");
+      body.className = "body";
+      [...panel.children].filter(c => !c.classList.contains("close")).forEach(c => body.appendChild(c));
+      panel.appendChild(body);
+      const grip = document.createElement("div");
+      grip.className = "grip";
+      grip.setAttribute("aria-hidden", "true");
+      panel.appendChild(grip);
+
+      // Dragging the grip moves the right edge and the bottom edge; the left and top edges stay put
+      grip.addEventListener("pointerdown", e => {
+        e.stopPropagation();
+        const box = panel.getBoundingClientRect();
+        grip.setPointerCapture(e.pointerId);
+        panel.classList.add("dragging");
+        const move = ev => {
+          const w = Math.min(Math.max(ev.clientX - box.left, 320), innerWidth - box.left - 8);
+          const h = Math.min(Math.max(ev.clientY - box.top, 180), innerHeight - box.top - 8);
+          Object.assign(panel.style, { left: box.left + "px", top: box.top + "px", right: "auto", bottom: "auto",
+                                       width: w + "px", height: h + "px", maxHeight: "none" });
+        };
+        const up = () => {
+          panel.classList.remove("dragging");
+          grip.removeEventListener("pointermove", move);
+          grip.removeEventListener("pointerup", up);
+          grip.removeEventListener("pointercancel", up);
+        };
+        grip.addEventListener("pointermove", move);
+        grip.addEventListener("pointerup", up);
+        grip.addEventListener("pointercancel", up);
+      });
+    }
 
     // Drag a panel by its header; it stays where you leave it, kept inside the window
     for (const panel of panels) {
