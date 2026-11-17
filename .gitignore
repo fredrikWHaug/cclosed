@@ -18,3 +18,8 @@ __pycache__/
 *.svg
 *.png
 *.docx
+# KiCad local/generated files
+*-backups/
+*.lck
+fp-info-cache
+*.kicad_prl
