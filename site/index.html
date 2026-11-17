@@ -185,25 +185,38 @@
         spot.dataset.normal = "0m 1m 0m";
         spot.setAttribute("aria-label", s.aria);
         spot.innerHTML = `<span class="tag">${s.label}</span>`;
-        spot.addEventListener("click", () => openPanel(openId === s.id ? null : s.id));
+        spot.addEventListener("click", () => {
+          const p = document.getElementById(s.id + "-panel");
+          setOpen(p, !p.classList.contains("open"));
+        });
         viewer.appendChild(spot);
       }
     });
 
-    // One panel open at a time; the board holds still while one is open
+    // Panels open independently, any number at once; the board holds still while any is open
     const panels = [...document.querySelectorAll(".panel")];
-    let openId = null;
-    function openPanel(id) {
-      openId = id;
-      for (const p of panels) {
-        const on = p.id === id + "-panel";
-        p.classList.toggle("open", on);
-        p.setAttribute("aria-hidden", String(!on));
+    let zTop = 10;                                 // z-index of the front-most panel (not `top`: that name is window.top)
+    const front = p => { p.style.zIndex = ++zTop; };
+    function setOpen(p, on) {
+      if (on && !p.style.left && innerWidth > 640) {
+        // not dragged yet: cascade below the panels already open so they don't sit exactly on top of each other
+        const n = panels.filter(q => q !== p && q.classList.contains("open")).length;
+        Object.assign(p.style, { top: 24 + n * 36 + "px", right: 24 + n * 36 + "px" });
       }
-      viewer.autoRotate = !id;
+      p.classList.toggle("open", on);
+      p.setAttribute("aria-hidden", String(!on));
+      if (on) front(p);
+      viewer.autoRotate = !panels.some(q => q.classList.contains("open"));
     }
-    panels.forEach(p => p.querySelector(".close").addEventListener("click", () => openPanel(null)));
-    document.addEventListener("keydown", e => { if (e.key === "Escape") openPanel(null); });
+    panels.forEach(p => {
+      p.querySelector(".close").addEventListener("click", () => setOpen(p, false));
+      p.addEventListener("pointerdown", () => front(p));     // clicking a panel brings it to the front
+    });
+    document.addEventListener("keydown", e => {            // Esc closes the front-most open panel
+      if (e.key !== "Escape") return;
+      const open = panels.filter(p => p.classList.contains("open"));
+      if (open.length) setOpen(open.reduce((a, b) => (+a.style.zIndex > +b.style.zIndex ? a : b)), false);
+    });
 
     // Drag a panel by its header; it stays where you leave it, kept inside the window
     for (const panel of panels) {
