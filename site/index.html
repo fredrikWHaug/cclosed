@@ -90,6 +90,26 @@
     @keyframes flow { 0%, 100% { opacity: 0.35; } 12%, 40% { opacity: 1; } }
     @keyframes grow { 0%, 55% { transform: scaleX(0); } 72%, 100% { transform: scaleX(1); } }
 
+    /* component figures */
+    #fig-intan .ch { animation: chpulse 2.4s infinite; opacity: 0.35; }
+    @keyframes chpulse { 0%, 100% { opacity: 0.35; } 6%, 16% { opacity: 1; } }
+    #fig-ffc .pin { animation: pinflash 2.56s infinite; }
+    @keyframes pinflash { 0%, 6%, 100% { opacity: 1; } 3% { opacity: 0.2; } }
+    #fig-ldo .bursts { animation: scroll40 0.8s linear infinite; }
+    @keyframes scroll40 { to { transform: translateX(-40px); } }
+    #fig-rf .wave { animation: radiate 1.5s ease-out infinite; opacity: 0; }
+    @keyframes radiate { 0% { opacity: 0; } 30% { opacity: 0.9; } 100% { opacity: 0; } }
+    #fig-clk .fast { animation: scroll20 0.25s linear infinite; }
+    #fig-clk .slow { animation: scroll180 4s linear infinite; }
+    @keyframes scroll20 { to { transform: translateX(-20px); } }
+    @keyframes scroll180 { to { transform: translateX(-180px); } }
+    #fig-swd .clk { animation: dash 0.3s linear infinite; }
+    #fig-swd .io { animation: dash 0.9s linear infinite; }
+    #fig-swd .swo { animation: dash 1.2s linear infinite reverse; }
+    @keyframes dash { to { stroke-dashoffset: -12; } }
+    #fig-swd .led { animation: blink 1.2s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0.15; } }
+
     .facts { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 14px 0 4px; font-size: 13px; }
     .facts dt { color: var(--muted); }
     .facts dd { margin: 0; font-variant-numeric: tabular-nums; }
@@ -156,6 +176,179 @@
     <p class="note">Idealized module. Layer sizes are illustrative; the CNN is not yet trained or running on the chip.</p>
   </aside>
 
+  <aside class="panel" id="intan-panel" aria-hidden="true">
+    <button class="close" aria-label="Close">×</button>
+    <div class="handle">
+      <h2>Intan RHD2164</h2>
+      <p class="sub">64-channel amplifier and 16-bit ADC (U2)</p>
+    </div>
+    <svg class="scope" id="fig-intan" viewBox="0 0 520 200" role="img"
+         aria-label="64 electrode inputs, each with its own amplifier, feed a multiplexer, one 16-bit ADC and the SPI port"></svg>
+    <p>Each electrode gets its own low-noise amplifier and band-pass filter. A multiplexer then feeds the channels
+      one at a time into a single 16-bit ADC. Every SPI frame converts one channel, so the chip's total conversion rate
+      is channels × sample rate.</p>
+    <p>On the jumper-wire bench, noise grew with that total rate: 86 µV at 1 channel and 232 µV at 10 channels, both at
+      20 kS/s, against a datasheet input noise of 2.4 µV. Short traces and a clean supply on this board are meant to
+      close that gap.</p>
+    <dl class="facts">
+      <dt>Channels</dt><dd>64 (in0 to in63)</dd>
+      <dt>Resolution</dt><dd>16 bits, 0.195 µV per step</dd>
+      <dt>Max rate</dt><dd>1.05 MS/s per 32-channel half</dd>
+      <dt>Band</dt><dd>set by registers; 10 Hz to 7.5 kHz at 20 kS/s today</dd>
+      <dt>Supply</dt><dd>own regulator U3; 2 × 100 nF (C20, C21), 10 nF on ADC_ref (C22)</dd>
+      <dt>Firmware</dt><dd>reads in0 to in31 today; in32 to in63 arrive on the other MISO clock edge</dd>
+    </dl>
+    <p class="note">Noise figures are from the jumper-wire bench rig, not this board.</p>
+  </aside>
+
+  <aside class="panel" id="ffc-panel" aria-hidden="true">
+    <button class="close" aria-label="Close">×</button>
+    <div class="handle">
+      <h2>Probe connector</h2>
+      <p class="sub">Hirose FH26-71S-0.3SHW, 71-way flat flex (J2)</p>
+    </div>
+    <svg class="scope" id="fig-ffc" viewBox="0 0 520 150" role="img"
+         aria-label="Pin map of the 71-way connector: ground and reference at both ends, electrodes E0 to E63 in between"></svg>
+    <p>The SU-8 probe's flat flex cable plugs in here. Each of its 64 electrode traces lands on one Intan input,
+      E0 on in0 through E63 on in63. Reference and ground sit at both ends of the cable, so the probe's reference
+      electrode and the shield reach the board through short, symmetric paths.</p>
+    <dl class="facts">
+      <dt>Contacts</dt><dd>71 at 0.3 mm pitch, plus shield tabs to ground</dd>
+      <dt>Pin map</dt><dd>1 GND · 2 REF · 3–66 E0–E63 · 67 REF · 68–71 GND</dd>
+      <dt>Reference</dt><dd>to the Intan's ref_elec; 0 Ω link R5 to ground, not fitted</dd>
+      <dt>Why 64</dt><dd>one RHD2164 has 64 inputs; today's mouse probes use an 80-channel cable</dd>
+    </dl>
+    <p class="note">The pin order must match the probe's flex layout. Check it against the probe drawing before ordering.</p>
+  </aside>
+
+  <aside class="panel" id="batt-panel" aria-hidden="true">
+    <button class="close" aria-label="Close">×</button>
+    <div class="handle">
+      <h2>Battery</h2>
+      <p class="sub">Grepow GRP3014025 LiPo on a JST SH 2-pin connector (J1)</p>
+    </div>
+    <svg class="scope" id="fig-batt" viewBox="0 0 520 200" role="img"
+         aria-label="LiPo discharge curve from 4.2 V to 3.0 V with the board's cut-off near 3.4 V"></svg>
+    <p>A single LiPo cell powers everything through two regulators. The cell runs from 4.2 V full to about 3.0 V empty.
+      The Intan needs at least 3.2 V and the regulators drop about 0.1 V, so the board stops near 3.4 V and the last
+      part of the charge goes unused.</p>
+    <p>A 1 MΩ / 1 MΩ divider lets the nRF read the battery at half scale on P1.31/AIN1, costing about 2 µA.</p>
+    <dl class="facts">
+      <dt>Cell</dt><dd>GRP3014025, D-shaped, 3.7 V nominal</dd>
+      <dt>Usable range</dt><dd>4.2 V down to the board's cut-off near 3.4 V</dd>
+      <dt>Connector</dt><dd>JST SH, 1.0 mm pitch, 2 pins</dd>
+      <dt>Sensing</dt><dd>R6 / R7 divider into P1.31/AIN1</dd>
+      <dt>Charging</dt><dd>off-board; no charger or power switch yet</dd>
+    </dl>
+    <p class="note">Illustrative discharge curve. Capacity and runtime to come from the Grepow datasheet and measured current.</p>
+  </aside>
+
+  <aside class="panel" id="ldo-panel" aria-hidden="true">
+    <button class="close" aria-label="Close">×</button>
+    <div class="handle">
+      <h2>Power</h2>
+      <p class="sub">Two LP5907MFX-3.3 low-noise regulators (U3, U4)</p>
+    </div>
+    <svg class="scope" id="fig-ldo" viewBox="0 0 520 200" role="img"
+         aria-label="The battery feeds two regulators: the nRF rail carries radio current bursts, the Intan rail stays flat"></svg>
+    <p>The Intan and the nRF each get their own regulator. The radio draws current in bursts at every connection event.
+      On a shared rail those bursts would ripple straight into the Intan's supply, right next to the electrode inputs.
+      Separate very-low-noise LDOs keep the analog rail quiet.</p>
+    <dl class="facts">
+      <dt>Part</dt><dd>TI LP5907, fixed 3.3 V, up to 250 mA</dd>
+      <dt>Output noise</dt><dd>6.5 µV rms typical (datasheet)</dd>
+      <dt>Rails</dt><dd>+3V3_A → Intan (U3) · +3V3_D → nRF and SWD (U4)</dd>
+      <dt>Capacitors</dt><dd>1 µF in and out on each (C30 to C33), plus decoupling at each chip</dd>
+      <dt>Enable</dt><dd>tied to the battery, always on</dd>
+    </dl>
+    <p class="note">Layout still decides the result: keep +3V3_A short and away from the radio and the DC/DC inductor.</p>
+  </aside>
+
+  <aside class="panel" id="rf-panel" aria-hidden="true">
+    <button class="close" aria-label="Close">×</button>
+    <div class="handle">
+      <h2>Antenna</h2>
+      <p class="sub">Johanson 2450AT18A100 chip antenna, 2.4 GHz Bluetooth LE (AE1)</p>
+    </div>
+    <svg class="scope" id="fig-rf" viewBox="0 0 520 170" role="img"
+         aria-label="Matching ladder from the nRF antenna pin through three inductors and shunt capacitors to the chip antenna"></svg>
+    <p>The nRF's radio pin drives the chip antenna through a five-part LC ladder that matches the chip to the antenna.
+      The headstage streams to a second nRF over Bluetooth LE 2M PHY. That link carries about 1.05 Mbit/s, while a Mac
+      as the receiver tops out near 470 kbit/s, which is why the relay exists.</p>
+    <dl class="facts">
+      <dt>Match</dt><dd>L2 3.6 nH · C3 1.2 pF · L3 4.7 nH · C12 1.5 pF · L4 3.3 nH · C13 not fitted</dd>
+      <dt>Link</dt><dd>BLE 2M PHY, 7.5 ms interval, 244-byte notifications</dd>
+      <dt>Throughput</dt><dd>about 1.05 Mbit/s to the nRF relay, 450 to 470 kbit/s to a Mac</dd>
+      <dt>Raw stream</dt><dd>484 kbit/s for 1 channel at 30 kS/s</dd>
+    </dl>
+    <p class="note">The values come from Nordic's reference board, which uses a different antenna. They need retuning
+      with a network analyzer on the real board.</p>
+  </aside>
+
+  <aside class="panel" id="clk-panel" aria-hidden="true">
+    <button class="close" aria-label="Close">×</button>
+    <div class="handle">
+      <h2>Clocks</h2>
+      <p class="sub">32 MHz (X1) and 32.768 kHz (X2) crystals</p>
+    </div>
+    <svg class="scope" id="fig-clk" viewBox="0 0 520 170" role="img"
+         aria-label="A fast 32 MHz clock and a slow 32.768 kHz clock"></svg>
+    <p>The 32 MHz crystal is the radio's frequency reference. Bluetooth needs its accuracy to stay on channel, so it is
+      required. The 32.768 kHz crystal keeps time while the chip sleeps between radio events. Without it, the nRF falls
+      back to a less accurate internal oscillator, which costs power. The nRF54 has internal load capacitors for both,
+      so no external capacitors are needed.</p>
+    <dl class="facts">
+      <dt>X1</dt><dd>32 MHz, 2.0 × 1.6 mm, on XC1 / XC2</dd>
+      <dt>X2</dt><dd>32.768 kHz, 2.0 × 1.2 mm, on P1.20/XL1 and P1.21/XL2</dd>
+      <dt>Load caps</dt><dd>inside the nRF, set in firmware</dd>
+      <dt>Layout</dt><dd>right next to the chip, short traces, ground underneath</dd>
+    </dl>
+    <p class="note">Waveforms not to scale; the real ratio is about 977 : 1. KiCad has no 3D model for X2, so it doesn't
+      appear in this render.</p>
+  </aside>
+
+  <aside class="panel" id="dcdc-panel" aria-hidden="true">
+    <button class="close" aria-label="Close">×</button>
+    <div class="handle">
+      <h2>nRF power stage</h2>
+      <p class="sub">On-chip DC/DC converter and internal regulator outputs</p>
+    </div>
+    <svg class="scope" id="fig-dcdc" viewBox="0 0 520 170" role="img"
+         aria-label="Supply flows from VDD through the on-chip DC/DC, L1, and the DECD, DECA and DECRF decoupling nodes"></svg>
+    <p>Inside the nRF, a switching DC/DC converter steps the 3.3 V supply down for the chip's core, which cuts the current
+      the radio and CPU draw from the battery. It needs the external 4.7 µH inductor L1 on the DCC pin. The chip also
+      brings out decoupling pins for its digital (DECD), analog (DECA) and radio (DECRF) supplies, each filtered the way
+      Nordic's reference design shows.</p>
+    <dl class="facts">
+      <dt>L1</dt><dd>4.7 µH, DCC → DECD</dd>
+      <dt>DECD</dt><dd>C6 4.7 µF</dd>
+      <dt>DECA</dt><dd>FB1 ferrite from DECD, C14 2.2 µF, C7 not fitted</dd>
+      <dt>DECRF</dt><dd>L5 1.0 nH in parallel with C8 1.0 pF</dd>
+      <dt>Source</dt><dd>Nordic nRF54LM20 reference layout v0.6, configuration 1</dd>
+    </dl>
+    <p class="note">The DC/DC loop (DCC → L1 → DECD → C6 → ground) switches fast; keep it tight and away from the Intan.</p>
+  </aside>
+
+  <aside class="panel" id="swd-panel" aria-hidden="true">
+    <button class="close" aria-label="Close">×</button>
+    <div class="handle">
+      <h2>Programming</h2>
+      <p class="sub">Tag-Connect TC2030-NL pads (J3) and status LED (D1)</p>
+    </div>
+    <svg class="scope" id="fig-swd" viewBox="0 0 520 170" role="img"
+         aria-label="A debugger talks to the nRF over SWDIO, SWCLK, nRESET and SWO; a status LED blinks"></svg>
+    <p>There's no connector to solder. A Tag-Connect cable with spring pins presses onto six pads, held by hand or with a
+      retaining clip, while you flash. The nRF54LM20 DK can program external boards from its Debug out header, so the
+      same build and flash flow you use now carries over. A green LED on P1.00 gives a heartbeat without a serial port.</p>
+    <dl class="facts">
+      <dt>Signals</dt><dd>VCC, SWDIO, SWCLK, nRESET, GND, SWO (P2.07)</dd>
+      <dt>Footprint</dt><dd>TC2030-NL: pads only, no holes</dd>
+      <dt>Debugger</dt><dd>DK Debug out (P13, 10-pin cable up to 10 cm) or any SWD probe</dd>
+      <dt>Status LED</dt><dd>D1 green with R8 1 kΩ on P1.00</dd>
+    </dl>
+    <p class="note">The DK expects the board to be powered on its own (battery) while programming.</p>
+  </aside>
+
   <script>
     const viewer = document.querySelector("model-viewer");
     viewer.src = "form-factor.glb?t=" + Date.now();   // fresh URL each load, so a re-exported model is never served from cache
@@ -185,6 +378,14 @@
       { id: "spi", label: "SPI", aria: "SPI link between the nRF and the Intan", at: p => mid(p.U1, p.U2) },
       { id: "cnn", label: "Classification", aria: "On-chip spike classification", side: "left",
         at: p => [p.U1[0] - 0.0025, p.U1[1], p.U1[2]] },      // 2.5 mm left of the nRF
+      { id: "intan", label: "Intan RHD2164", aria: "Intan amplifier and ADC", at: p => p.U2 },
+      { id: "ffc", label: "Probe connector", aria: "Probe FFC connector", side: "left", at: p => p.J2 },
+      { id: "batt", label: "Battery", aria: "Battery connector", at: p => p.J1 },
+      { id: "ldo", label: "Power", aria: "Low-noise regulators", side: "left", at: p => mid(p.U3, p.U4) },
+      { id: "rf", label: "Antenna", aria: "Antenna and RF matching network", at: p => p.AE1 },
+      { id: "clk", label: "Clocks", aria: "Crystals", side: "left", at: p => mid(p.X1, p.X2) },
+      { id: "dcdc", label: "nRF power stage", aria: "nRF DC/DC converter and regulator outputs", at: p => p.L1 },
+      { id: "swd", label: "Programming", aria: "SWD programming pads and status LED", at: p => p.J3 },
     ];
     const spotEls = {};                            // marker element per spot id, for the leader lines
     fetch("parts.json?t=" + Date.now()).then(r => r.json()).then(parts => {
@@ -431,6 +632,180 @@
       out += `<g class="sweep"><rect x="${x0 - 10}" y="22" width="10" height="176" fill="${css("--accent")}" opacity="0.12"/>
               <line x1="${x0}" x2="${x0}" y1="22" y2="198" stroke="${css("--accent")}" stroke-width="1.5" opacity="0.7"/></g>`;
       svg.innerHTML = out;
+    })();
+
+    // ---- figures for the component panels ----
+    const cv = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+    const INK = cv("--muted"), ACC = cv("--accent"), BLUE = cv("--mosi"), AMBER = cv("--miso"), GREY = "#8a8f8c";
+    const fig = (id, html) => { document.getElementById(id).innerHTML = html; };
+    const txt = (x, y, s, o = "", fill = INK) => `<text x="${x}" y="${y}" fill="${fill}" ${o}>${s}</text>`;
+    const coil = (x, y, n = 4, r = 5) => {         // inductor: n half-circle bumps, 2r wide each
+      let d = `M${x},${y}`;
+      for (let i = 0; i < n; i++) d += ` a${r},${r} 0 0 1 ${2 * r},0`;
+      return `<path d="${d}" fill="none" stroke="${INK}" stroke-width="1.6"/>`;
+    };
+    const gnd = (x, y) => `<path d="M${x - 8},${y} h16 M${x - 5},${y + 4} h10 M${x - 2},${y + 8} h4" stroke="${INK}" stroke-width="1.4"/>`;
+    const shuntCap = (x, y0, y1, dashed) => {
+      const d = dashed ? 'stroke-dasharray="3 3"' : "";
+      return `<path d="M${x},${y0} V${y1 - 3} M${x - 9},${y1 - 3} h18 M${x - 9},${y1 + 3} h18 M${x},${y1 + 3} V${y1 + 22}"
+               stroke="${INK}" stroke-width="1.6" fill="none" ${d}/>` + gnd(x, y1 + 22);
+    };
+
+    // Intan: inputs → amplifiers → mux → ADC → SPI; each channel lights up in turn as the mux visits it
+    (function () {
+      const rows = ["in0", "in1", "in2", "…", "in62", "in63"];
+      let s = "";
+      rows.forEach((n, i) => {
+        const y = 30 + i * 28;
+        if (n === "…") { s += txt(14, y + 4, "⋮", 'font-size="14"'); return; }
+        s += `<g class="ch" style="animation-delay:${i * 0.4}s">${txt(10, y + 4, n)}
+              <line x1="42" x2="70" y1="${y}" y2="${y}" stroke="${BLUE}" stroke-width="1.6"/>
+              <polygon points="70,${y - 8} 70,${y + 8} 92,${y}" fill="${BLUE}" opacity="0.85"/>
+              <line x1="92" x2="150" y1="${y}" y2="${y}" stroke="${BLUE}" stroke-width="1.6"/></g>`;
+      });
+      s += `<polygon points="150,18 192,42 192,158 150,182" fill="white" stroke="${INK}" stroke-width="1.4"/>`
+        + txt(171, 104, "MUX", 'text-anchor="middle" font-size="10"')
+        + `<line x1="192" x2="232" y1="100" y2="100" stroke="${INK}" stroke-width="1.6"/>
+           <rect x="232" y="72" width="86" height="56" rx="8" fill="white" stroke="${INK}"/>`
+        + txt(275, 97, "16-bit ADC", 'text-anchor="middle"') + txt(275, 113, "0.195 µV/step", 'text-anchor="middle" font-size="9" font-weight="400"')
+        + `<line x1="318" x2="360" y1="100" y2="100" stroke="${INK}" stroke-width="1.6"/>
+           <rect x="360" y="76" width="140" height="48" rx="8" fill="${ACC}" opacity="0.12"/>`
+        + txt(430, 97, "SPI → nRF", 'text-anchor="middle"') + txt(430, 113, "one channel per frame", 'text-anchor="middle" font-size="9" font-weight="400"')
+        + txt(96, 196, "64 amplifiers + filters", 'text-anchor="middle" font-size="10"');
+      fig("fig-intan", s);
+    })();
+
+    // FFC: 71 contacts, ground and reference at both ends; a highlight walks E0 → E63
+    (function () {
+      let s = "";
+      for (let n = 1; n <= 71; n++) {
+        const x = 20 + (n - 1) * 6.8;
+        const kind = [1, 68, 69, 70, 71].includes(n) ? "gnd" : [2, 67].includes(n) ? "ref" : "e";
+        const fill = kind === "gnd" ? GREY : kind === "ref" ? "#e07b39" : BLUE;
+        s += `<rect ${kind === "e" ? `class="pin" style="animation-delay:${(n - 3) * 0.04}s"` : ""}
+                x="${x}" y="40" width="5" height="40" rx="1" fill="${fill}"/>`;
+      }
+      s += txt(22, 32, "1", 'font-size="10"') + txt(493, 32, "71", 'text-anchor="middle" font-size="10"')
+        + `<path d="M34,88 v6 h438 v-6" fill="none" stroke="${BLUE}" stroke-width="1.2"/>`
+        + txt(253, 108, "E0 … E63  →  Intan in0 … in63", 'text-anchor="middle"')
+        + txt(20, 132, "■ GND", 'font-size="10"', GREY)
+        + `<text x="80" y="132" font-size="10" fill="#e07b39">■ REF → ref_elec</text>`
+        + `<text x="190" y="132" font-size="10" fill="${BLUE}">■ electrodes</text>`;
+      fig("fig-ffc", s);
+    })();
+
+    // Battery: an illustrative LiPo discharge curve with the board's cut-off; a dot rides the curve
+    (function () {
+      const X = c => 50 + c * 4.4, Y = v => 170 - (v - 3.0) * 115;
+      const pts = [[0, 4.2], [5, 4.08], [15, 3.98], [30, 3.88], [50, 3.8], [70, 3.72], [85, 3.62], [92, 3.5], [96, 3.35], [99, 3.1], [100, 3.0]];
+      const d = "M" + pts.map(([c, v]) => `${X(c)},${Y(v)}`).join(" L");
+      let s = `<rect x="${X(0)}" y="${Y(3.4)}" width="${X(100) - X(0)}" height="${Y(3.0) - Y(3.4)}" fill="#c0392b" opacity="0.08"/>
+               <line x1="${X(0)}" x2="${X(100)}" y1="${Y(3.4)}" y2="${Y(3.4)}" stroke="#c0392b" stroke-dasharray="5 4" stroke-width="1.2"/>
+               <path d="M${X(0)},20 V170 H${X(100)}" fill="none" stroke="${INK}" stroke-width="1"/>
+               <path id="batt-curve" d="${d}" fill="none" stroke="${ACC}" stroke-width="2.4"/>
+               <circle r="5" fill="${ACC}"><animateMotion dur="5s" repeatCount="indefinite"><mpath href="#batt-curve"/></animateMotion></circle>`;
+      s += txt(44, Y(4.2) + 4, "4.2 V", 'text-anchor="end" font-size="10"') + txt(44, Y(3.0) + 4, "3.0 V", 'text-anchor="end" font-size="10"')
+        + `<text x="${X(3)}" y="${Y(3.4) - 6}" font-size="10" fill="#c0392b">board cut-off ≈ 3.4 V</text>`
+        + txt(X(100), 188, "charge used →", 'text-anchor="end" font-size="10"');
+      fig("fig-batt", s);
+    })();
+
+    // Power: battery → two regulators; the nRF rail carries radio bursts, the Intan rail stays flat
+    (function () {
+      let burst = "M260,150";
+      for (let x = 260; x < 560; x += 40) burst += ` L${x + 14},150 L${x + 16},132 L${x + 19},162 L${x + 22},146 L${x + 25},150 L${x + 40},150`;
+      const s = `<defs><clipPath id="ldo-clip"><rect x="270" y="120" width="130" height="50"/></clipPath></defs>
+        <rect x="10" y="78" width="90" height="44" rx="8" fill="white" stroke="${INK}"/>` + txt(55, 97, "LiPo", 'text-anchor="middle"')
+        + txt(55, 112, "3.0–4.2 V", 'text-anchor="middle" font-size="9" font-weight="400"')
+        + `<path d="M100,100 H130 V50 H160 M130,100 V150 H160" fill="none" stroke="${INK}" stroke-width="1.6"/>
+           <rect x="160" y="30" width="80" height="40" rx="8" fill="white" stroke="${INK}"/>
+           <rect x="160" y="130" width="80" height="40" rx="8" fill="white" stroke="${INK}"/>`
+        + txt(200, 49, "U3 LP5907", 'text-anchor="middle" font-size="10"') + txt(200, 62, "+3V3_A", 'text-anchor="middle" font-size="9"', ACC)
+        + txt(200, 149, "U4 LP5907", 'text-anchor="middle" font-size="10"') + txt(200, 162, "+3V3_D", 'text-anchor="middle" font-size="9"', BLUE)
+        + `<path d="M240,50 H270 M400,50 H420 M240,150 H270 M400,150 H420" stroke="${INK}" stroke-width="1.6"/>
+           <line x1="270" x2="400" y1="50" y2="50" stroke="${ACC}" stroke-width="2"/>
+           <g clip-path="url(#ldo-clip)"><path class="bursts" d="${burst}" fill="none" stroke="${BLUE}" stroke-width="2"/></g>
+           <rect x="420" y="30" width="90" height="40" rx="8" fill="${ACC}" opacity="0.14"/>
+           <rect x="420" y="130" width="90" height="40" rx="8" fill="${BLUE}" opacity="0.14"/>`
+        + txt(465, 55, "Intan", 'text-anchor="middle"') + txt(465, 155, "nRF + radio", 'text-anchor="middle"')
+        + txt(335, 40, "quiet", 'text-anchor="middle" font-size="9" font-weight="400"')
+        + txt(335, 118, "radio bursts stay here", 'text-anchor="middle" font-size="9" font-weight="400"');
+      fig("fig-ldo", s);
+    })();
+
+    // Antenna: ANT pin → L2 → C3 → L3 → C12 → L4 → (C13) → chip antenna, with radiating arcs
+    (function () {
+      const y = 80;
+      let s = `<rect x="10" y="${y - 18}" width="62" height="36" rx="8" fill="white" stroke="${INK}"/>` + txt(41, y + 4, "ANT", 'text-anchor="middle"')
+        + `<path d="M72,${y} H92 M132,${y} H172 M212,${y} H252 M292,${y} H372" stroke="${INK}" stroke-width="1.6"/>`
+        + coil(92, y) + coil(172, y) + coil(252, y)
+        + shuntCap(152, y, y + 40) + shuntCap(232, y, y + 40) + shuntCap(322, y, y + 40, true)
+        + [[112, "L2 3.6 nH"], [192, "L3 4.7 nH"], [272, "L4 3.3 nH"]].map(([x, t]) => txt(x, y - 14, t, 'text-anchor="middle" font-size="9" font-weight="400"')).join("")
+        + [[152, "C3 1.2 pF"], [232, "C12 1.5 pF"], [322, "C13 DNP"]].map(([x, t]) => txt(x + 13, y + 41, t, 'font-size="9" font-weight="400"')).join("")
+        + `<path d="M372,${y} V${y - 30} M362,${y - 42} L372,${y - 30} L382,${y - 42}" fill="none" stroke="${INK}" stroke-width="1.8"/>`;
+      for (let i = 0; i < 3; i++) {
+        const r = 18 + i * 16;
+        s += `<path class="wave" style="animation-delay:${i * 0.5}s" d="M${372 + r * 0.7},${y - 36 - r * 0.7} A${r},${r} 0 0 1 ${372 + r * 0.7},${y - 36 + r * 0.7}"
+                fill="none" stroke="${ACC}" stroke-width="2"/>`;
+      }
+      s += txt(372, y + 22, "AE1", 'text-anchor="middle" font-size="10"') + txt(470, 160, "2.4 GHz BLE", 'text-anchor="middle"');
+      fig("fig-rf", s);
+    })();
+
+    // Clocks: a fast and a slow sine scrolling past (not to scale)
+    (function () {
+      const sine = (y, period, amp, x0, x1) => {
+        let d = `M${x0},${y}`;
+        for (let x = x0; x <= x1; x += 2) d += ` L${x},${(y - amp * Math.sin(((x - x0) / period) * 2 * Math.PI)).toFixed(1)}`;
+        return d;
+      };
+      const s = `<defs><clipPath id="clk-clip"><rect x="140" y="0" width="360" height="170"/></clipPath></defs>
+        <g clip-path="url(#clk-clip)">
+          <path class="fast" d="${sine(55, 20, 18, 140, 540)}" fill="none" stroke="${BLUE}" stroke-width="1.8"/>
+          <path class="slow" d="${sine(125, 180, 22, 140, 720)}" fill="none" stroke="${AMBER}" stroke-width="2"/>
+        </g>`
+        + txt(10, 51, "X1 · 32 MHz") + txt(10, 66, "radio reference", 'font-size="9" font-weight="400"')
+        + txt(10, 121, "X2 · 32.768 kHz") + txt(10, 136, "sleep timer", 'font-size="9" font-weight="400"');
+      fig("fig-clk", s);
+    })();
+
+    // nRF power stage: VDD → on-chip DC/DC → DCC → L1 → DECD → FB1 → DECA → L5 ∥ C8 → DECRF; current dots flow along
+    (function () {
+      const y = 60;
+      const node = (x, name) => `<circle cx="${x}" cy="${y}" r="4" fill="${ACC}"/>` + txt(x, y - 12, name, 'text-anchor="middle" font-size="10"');
+      let s = `<rect x="44" y="${y - 22}" width="78" height="44" rx="8" fill="${BLUE}" opacity="0.12"/>`
+        + txt(83, y - 2, "DC/DC", 'text-anchor="middle"') + txt(83, y + 12, "inside the nRF", 'text-anchor="middle" font-size="8" font-weight="400"')
+        + `<path id="dcdc-path" d="M14,${y} H44 M122,${y} H170 M210,${y} H260 M290,${y} H330 M380,${y} H420" stroke="${INK}" stroke-width="1.6" fill="none"/>`
+        + txt(14, y - 12, "VDD", 'font-size="10"')
+        + coil(170, y) + `<rect x="260" y="${y - 8}" width="30" height="16" rx="3" fill="${GREY}" opacity="0.5"/>`
+        + `<rect x="330" y="${y - 10}" width="50" height="20" rx="4" fill="white" stroke="${INK}"/>` + txt(355, y + 4, "L5 ∥ C8", 'text-anchor="middle" font-size="9" font-weight="400"')
+        + node(146, "DCC") + node(235, "DECD") + node(305, "DECA") + node(420, "DECRF")
+        + shuntCap(235, y, y + 40) + shuntCap(305, y, y + 40)
+        + txt(190, y + 22, "L1 4.7 µH", 'text-anchor="middle" font-size="9" font-weight="400"')
+        + txt(275, y + 22, "FB1", 'text-anchor="middle" font-size="9" font-weight="400"')
+        + txt(248, y + 42, "C6 4.7 µF", 'font-size="9" font-weight="400"') + txt(318, y + 42, "C14 2.2 µF", 'font-size="9" font-weight="400"')
+        + txt(440, y + 4, "→ radio", 'font-size="10"');
+      for (let i = 0; i < 4; i++) {
+        s += `<circle r="3" fill="${AMBER}"><animateMotion dur="2.4s" begin="${i * 0.6}s" repeatCount="indefinite"
+                path="M14,${y} H420"/></circle>`;
+      }
+      fig("fig-dcdc", s);
+    })();
+
+    // Programming: debugger ↔ nRF over SWD, clock and data marching; the status LED blinks
+    (function () {
+      const lines = [["SWDIO", 50, "io"], ["SWCLK", 80, "clk"], ["nRESET", 110, ""], ["SWO", 140, "swo"]];
+      let s = `<rect x="10" y="30" width="120" height="124" rx="10" fill="white" stroke="${INK}"/>`
+        + txt(70, 86, "Debugger", 'text-anchor="middle"') + txt(70, 101, "DK Debug out", 'text-anchor="middle" font-size="9" font-weight="400"')
+        + `<rect x="380" y="30" width="130" height="124" rx="10" fill="white" stroke="${INK}"/>`
+        + txt(445, 86, "nRF54LM20B", 'text-anchor="middle"')
+        + `<circle class="led" cx="445" cy="120" r="7" fill="#22c55e"/>` + txt(445, 145, "D1 · P1.00", 'text-anchor="middle" font-size="9" font-weight="400"');
+      lines.forEach(([n, y, cls]) => {
+        s += `<line class="${cls}" x1="130" x2="380" y1="${y}" y2="${y}" stroke="${cls ? ACC : INK}" stroke-width="2"
+                ${cls ? 'stroke-dasharray="6 6"' : ""}/>` + txt(255, y - 5, n, 'text-anchor="middle" font-size="9"');
+      });
+      s += txt(255, 18, "Tag-Connect TC2030 · VCC and GND alongside", 'text-anchor="middle" font-size="9" font-weight="400"');
+      fig("fig-swd", s);
     })();
   </script>
 </body>
