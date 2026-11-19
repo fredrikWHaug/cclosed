@@ -336,16 +336,16 @@
     <button class="close" aria-label="Close">×</button>
     <div class="handle">
       <h2>Programming</h2>
-      <p class="sub">Tag-Connect TC2030-NL pads (J3) and status LED (D1)</p>
+      <p class="sub">10-pin 1.27 mm SWD header (J3) and status LED (D1)</p>
     </div>
     <svg class="scope" id="fig-swd" viewBox="0 0 520 170" role="img"
          aria-label="A debugger talks to the nRF over SWDIO, SWCLK, nRESET and SWO; a status LED blinks"></svg>
-    <p>There's no connector to solder. A Tag-Connect cable with spring pins presses onto six pads, held by hand or with a
-      retaining clip, while you flash. The nRF54LM20 DK can program external boards from its Debug out header, so the
-      same build and flash flow you use now carries over. A green LED on P1.00 gives a heartbeat without a serial port.</p>
+    <p>J3 is the standard 10-pin ARM Cortex debug header. The nRF54LM20 DK programs external boards from its Debug out
+      header over the same kind of 10-pin ribbon cable, so it plugs straight in and the build and flash flow you use now
+      carries over. A green LED on P1.00 gives a heartbeat without a serial port.</p>
     <dl class="facts">
-      <dt>Signals</dt><dd>VCC, SWDIO, SWCLK, nRESET, GND, SWO (P2.07)</dd>
-      <dt>Footprint</dt><dd>TC2030-NL: pads only, no holes</dd>
+      <dt>Pinout</dt><dd>1 VCC · 2 SWDIO · 4 SWCLK · 6 SWO (P2.07) · 10 nRESET · 3, 5, 9 GND · 7, 8 unused</dd>
+      <dt>Connector</dt><dd>2 × 5, 1.27 mm pitch, surface-mount</dd>
       <dt>Debugger</dt><dd>DK Debug out (P13, 10-pin cable up to 10 cm) or any SWD probe</dd>
       <dt>Status LED</dt><dd>D1 green with R8 1 kΩ on P1.00</dd>
     </dl>
@@ -826,7 +826,7 @@
         s += `<line class="${cls}" x1="130" x2="380" y1="${y}" y2="${y}" stroke="${cls ? ACC : INK}" stroke-width="2"
                 ${cls ? 'stroke-dasharray="6 6"' : ""}/>` + txt(255, y - 5, n, 'text-anchor="middle" font-size="9"');
       });
-      s += txt(255, 18, "Tag-Connect TC2030 · VCC and GND alongside", 'text-anchor="middle" font-size="9" font-weight="400"');
+      s += txt(255, 18, "10-pin Cortex debug cable · VCC and GND alongside", 'text-anchor="middle" font-size="9" font-weight="400"');
       fig("fig-swd", s);
     })();
   </script>
