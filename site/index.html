@@ -11,6 +11,7 @@
       --ink: #1d1f1e;
       --muted: #5c625f;
       --accent: #0b7a5a;
+      --marker: #10b981;   /* brighter than the accent so markers pop off the dark board */
       --glass: rgba(250, 250, 247, 0.78);
       --line: rgba(0, 0, 0, 0.08);
       /* trace colours follow the bench scope's channels: CS green, SCLK pink, MOSI cyan, MISO yellow */
@@ -26,20 +27,22 @@
     /* marker on the board */
     .hotspot {
       position: relative; width: 22px; height: 22px; padding: 0; border: none; border-radius: 50%;
-      background: var(--accent); box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9), 0 2px 8px rgba(0, 0, 0, 0.35);
+      background: var(--marker); box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9), 0 2px 8px rgba(0, 0, 0, 0.35);
       cursor: pointer; transition: transform 0.15s, opacity 0.2s;
     }
     .hotspot::after {                      /* slow pulse so it reads as clickable */
       content: ""; position: absolute; inset: -3px; border-radius: 50%;
-      border: 2px solid var(--accent); animation: pulse 2s ease-out infinite;
+      border: 2px solid var(--marker); animation: pulse 2s ease-out infinite;
     }
     .hotspot:hover { transform: scale(1.15); }
-    .hotspot:not([data-visible]) { opacity: 0.3; }
     .hotspot .tag {
       position: absolute; left: 30px; top: 50%; transform: translateY(-50%);
-      padding: 3px 8px; border-radius: 6px; background: var(--glass); backdrop-filter: blur(8px);
-      font-size: 12px; font-weight: 600; line-height: 1.2; letter-spacing: 0.04em; color: var(--ink); white-space: nowrap;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+      padding: 3px 8px; border-radius: 6px; white-space: nowrap;
+      /* dark glass with white text: the contrast lives inside the label, so it reads on the board, parts or page alike */
+      background: rgba(14, 18, 16, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      font-size: 12px; font-weight: 600; line-height: 1.2; letter-spacing: 0.04em; color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
     }
     .hotspot.tag-left .tag { left: auto; right: 30px; }
     .leaders { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
@@ -121,7 +124,7 @@
   </style>
 </head>
 <body>
-  <model-viewer camera-controls auto-rotate shadow-intensity="1" exposure="1.2" tone-mapping="aces"></model-viewer>
+  <model-viewer camera-controls interaction-prompt-threshold="15000" auto-rotate shadow-intensity="1" exposure="1.2" tone-mapping="aces"></model-viewer>
 
   <aside class="panel" id="spi-panel" aria-hidden="true">
     <button class="close" aria-label="Close">×</button>
@@ -353,6 +356,14 @@
     const viewer = document.querySelector("model-viewer");
     viewer.src = "form-factor.glb?t=" + Date.now();   // fresh URL each load, so a re-exported model is never served from cache
 
+    // Solder mask look: a deep, saturated green with a glossy finish (lower roughness = sharper highlights).
+    const MASK_COLOR = "#0a4a26";        // sRGB; darker = smaller numbers
+    const MASK_ROUGHNESS = 0.3;          // 0 = mirror, 1 = matte
+    const toLinear = hex => [1, 3, 5].map(i => {   // glTF colours are linear, CSS hex is sRGB
+      const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+      return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    });
+
     // KiCad leaves most part materials without a finish, which glTF reads as fully metallic + fully rough (dull grey).
     // Turn those into plastic so their colours show; real metals (pads, pins) keep their own settings.
     viewer.addEventListener("load", () => {
@@ -365,7 +376,8 @@
         // The solder mask comes out ~83% opaque over the light board core, which washes it to mint; make it solid
         const [r, g, b, a] = pbr.baseColorFactor;
         if (a < 1 && g > r && g > b) {
-          pbr.setBaseColorFactor([r, g, b, 1]);
+          pbr.setBaseColorFactor([...toLinear(MASK_COLOR), 1]);
+          pbr.setRoughnessFactor(MASK_ROUGHNESS);
           m.setAlphaMode("OPAQUE");
         }
       }
@@ -459,7 +471,6 @@
         line.setAttribute("x2", ex); line.setAttribute("y2", ey);
         dot.setAttribute("cx", ex); dot.setAttribute("cy", ey);
         g.style.display = "";
-        g.style.opacity = spot.hasAttribute("data-visible") ? 1 : 0.35;   // fainter when the marker is behind the board
       });
       requestAnimationFrame(drawLeaders);
     })();
