@@ -7,10 +7,10 @@ from sklearn.cluster import HDBSCAN
 from sklearn.decomposition import PCA
 
 # 1. Settings.
-recording_file = Path(__file__).parent / "data" / "normal_30k_5min.bin"
+recording_file = Path(__file__).parent / "data" / "fredrik_questioning.bin"
 figure_folder = Path(__file__).parent / "out"
 sampling_rate = 30000  # must equal CH_RATE_HZ in the firmware
-band_hz = (300, 6000)  # top edge must stay below sampling_rate / 2
+band_hz = (300, 4000)  # top edge must stay below sampling_rate / 2
 threshold_in_noise_units = 4
 ms_before_trough, ms_after_trough = 1.0, 1.5
 min_cluster_size, min_samples = 20, 3

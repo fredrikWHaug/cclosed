@@ -31,8 +31,7 @@ for path in sorted(glob.glob("data/*.bin")):
     recs = read_log(path)
     if mode == "raw":
         x = np.concatenate([raw_samples(p)[1] for _, p in recs if is_raw(p)])
-        if n_ch > 1:
-            x = x[: len(x) // n_ch * n_ch].reshape(-1, n_ch)[:, 0]          # channel 0 of an interleaved stream
+        # with N_CH > 1 the firmware streams one channel (RAW_CH) of the multi-channel acquisition, so x is already one channel
         rows.append((mode, n_ch, rate, run, 0, raw_metrics(x, rate)))
     else:
         ev = [e for _, p in recs if not is_raw(p) for e in events(p)]

@@ -8,7 +8,7 @@ on every channel.
 
 | file | job |
 |---|---|
-| `src/main.c` | firmware. `N_CH`, `CH_RATE_HZ`, and `RAW_STREAM` (1 = every sample, 0 = spike windows only) |
+| `src/main.c` | firmware. `N_CH`, `CH_RATE_HZ`, `RAW_STREAM` (1 = every sample, 0 = spike windows only), and `RAW_CH`: with several channels converted, raw mode streams just that one channel |
 | `log.py OUT.bin SECONDS` | record whatever the relay forwards |
 | `live.py` / `filtered_live.py` | look at the raw stream, plain or through the device's filter, before recording |
 | `verdict.py RAW.bin [RATE]` | judge a raw capture offline, no device detector involved; prints numbers with 95% CI, saves the plot |
@@ -58,3 +58,12 @@ run; `dropped/s` there is the radio's limit. `sweep.py` adds `sweep_channels.png
 From the captures made so far on bench revision A: at 30 kS/s the device catches about 77%, at 6 kS/s about 65%.
 If 10 kS/s is best, as the live view suggested, it is because the analog band drops to 3 kHz there and removes noise
 faster than it removes spike. The sweep will show whether the spike-to-noise ratio peaks between 6 and 15 kS/s.
+
+## Experiment 3: is the multi-channel noise in the acquisition or in the detector?
+
+Convert 8 channels at 20 kS/s exactly as in Experiment 2, but stream the raw samples of one channel instead of
+detecting: `N_CH 8`, `CH_RATE_HZ 20000u`, `RAW_STREAM 1`, `RAW_CH 0`. Record `data/raw_8ch_20000_a.bin` and `_b`,
+60 s each, and run `verdict.py` on them. The scorer never sees the device's detector, so:
+near 85 uV and 95 spikes/s on grid means the acquisition is clean and the detector's multi-channel path is wrong;
+near 300 uV means the noise is real at the Intan's input with 8 channels converting. Repeat with `N_CH 2` and `4`
+to see where it starts.
