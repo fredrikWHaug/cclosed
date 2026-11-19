@@ -1,17 +1,19 @@
 """Live plot of the Theo stream: python stream_plot.py [--serial /dev/tty.usbmodemXXXX]"""
 import asyncio, threading, collections, os, sys
 import numpy as np
+from scipy.signal import butter, sosfiltfilt
 from bleak import BleakClient, BleakScanner
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-NAME = "cclosed-theo"
+NAME = "debug"
 CHR = "12345678-1234-5678-1234-56789abcdef1"
-RATE = 30000                                   # per channel
+RATE = 12000                                 # per channel
 UV_PER_CODE = 0.195
 WINDOW = 5000                                  # samples shown per channel (167 ms)
 
-N_CH = 1
+N_CH = 10
+HP = butter(2, 300, "highpass", fs=RATE, output="sos")   # removes LFP below 300 Hz
 bufs = [collections.deque(maxlen=WINDOW) for _ in range(N_CH)]
 
 def on_notify(_, data: bytearray):
@@ -50,11 +52,23 @@ for i, ax in enumerate(axes):
     ax.set_ylabel(f"in{i} (uV)")
 axes[-1].set_xlabel("time (ms)")
 
+paused = False
+def on_key(e):
+    global paused
+    if e.key == " ":
+        paused = not paused
+fig.canvas.mpl_connect("key_press_event", on_key)   # space bar pauses/resumes
+
 def update(_):
+    if paused:
+        return lines
     for line, buf, ax in zip(lines, bufs, axes):
         y = np.array(buf)
+        if len(y) > 100:
+            y = sosfiltfilt(HP, y)
         line.set_data(np.arange(len(y)) / RATE * 1000, y)
-        ax.relim(); ax.autoscale_view()
+        ax.set_ylim(-500, 500)
+        ax.set_xlim(0, WINDOW / RATE * 50)
     return lines
 
 ani = animation.FuncAnimation(fig, update, interval=200, cache_frame_data=False)

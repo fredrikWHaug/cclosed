@@ -12,10 +12,14 @@
 #include <hal/nrf_gpio.h>
 
 /* One channel at 30 kS/s until the windowed path is proven equal to the raw path. Every converted channel needs a wire. */
-#define N_CH 14
+#define N_CH 8
 #define CH_RATE_HZ 20000u
 /* 1: send every sample (seq u16 | 120 x u16 codes) for the raw benchmark.  0: detect spikes and send only the windows. */
-#define RAW_STREAM 0
+#define RAW_STREAM 1
+#define RAW_CH 0                         /* raw mode with N_CH > 1: stream this one channel's samples (the rest are converted but not sent) */
+#define MUX_HOLD 1                       /* 1: keep the N_CH frame rate but convert in0 in every frame (the multiplexer never switches) */
+#define BIAS_FORCE 0                     /* 1: Intan ADC buffer bias 32 and MUX bias 40 (the datasheet's <=120 kS/s values) at any frame rate */
+#define SS_DURATION 20                  /* chip-select setup and hold around each frame, in 62.5 ns steps; 20 = 1.25 us */
 #define RATE_HZ (N_CH * CH_RATE_HZ)
 
 /* Intan analog low-pass (datasheet table "Setting Upper Bandwidth", registers 8-11): the highest standard cutoff at or
@@ -87,7 +91,7 @@ static uint16_t xfer(uint16_t cmd)
 }
 
 static const uint16_t init_seq[] = {
-	WRITE(0, 0xDE), WRITE(1, ADC_BUF_BIAS), WRITE(2, MUX_BIAS), WRITE(3, 0x00), WRITE(4, 0x00),
+	WRITE(0, 0xDE), WRITE(1, BIAS_FORCE ? 32 : ADC_BUF_BIAS), WRITE(2, BIAS_FORCE ? 40 : MUX_BIAS), WRITE(3, 0x00), WRITE(4, 0x00),
 	WRITE(5, 0x00), WRITE(6, 0x00), WRITE(7, 0x00),
 	WRITE(8, RH1_DAC1), WRITE(9, RH1_DAC2), WRITE(10, RH2_DAC1), WRITE(11, RH2_DAC2),
 	WRITE(12, 5), WRITE(13, 1),
@@ -178,12 +182,12 @@ static void acq_start(void)
 	}
 
 	xfer(CONVERT(0));
-	xfer(CONVERT(1 % N_CH));
+	xfer(CONVERT(MUX_HOLD ? 0u : 1u % N_CH));
 
 	static bool tx_filled;
 	if (!tx_filled) {                /* same command list every start */
 		for (uint32_t i = 0; i < RX_TOTAL; i++) {
-			uint16_t cmd = CONVERT((i + 2u) % N_CH);
+			uint16_t cmd = CONVERT(MUX_HOLD ? 0u : (i + 2u) % N_CH);
 			tx_region[2 * i]     = (uint8_t)(cmd >> 8);
 			tx_region[2 * i + 1] = (uint8_t)cmd;
 		}
@@ -377,7 +381,7 @@ int main(void)
 	cfg.mode = NRF_SPIM_MODE_0;
 	cfg.bit_order = NRF_SPIM_BIT_ORDER_MSB_FIRST;
 	cfg.use_hw_ss = true;
-	cfg.ss_duration = 20;
+	cfg.ss_duration = SS_DURATION;
 	cfg.rx_delay = 6;
 	if (nrfx_spim_init(&spim, &cfg, NULL, NULL) != 0) {
 		printk("spim init failed\n");
@@ -415,14 +419,15 @@ int main(void)
 				acq_start();
 				continue;
 			}
-			if (w - r_pos < 120) {
+			if (w - r_pos < 120 * N_CH) {
 				k_yield();
 				continue;
 			}
 			pkt[0] = (uint8_t)raw_seq;
 			pkt[1] = (uint8_t)(raw_seq >> 8);
 			for (uint32_t k = 0; k < 120; k++) {
-				uint16_t s = rx_region[r_pos++];
+				uint16_t s = rx_region[r_pos + RAW_CH];     /* sample r_pos + c belongs to channel c */
+				r_pos += N_CH;
 				s = (uint16_t)((s >> 8) | (s << 8));
 				pkt[2 + 2 * k]     = (uint8_t)s;
 				pkt[2 + 2 * k + 1] = (uint8_t)(s >> 8);
