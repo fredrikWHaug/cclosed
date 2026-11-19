@@ -9,8 +9,8 @@
 #include <hal/nrf_dppi.h>
 #include <hal/nrf_gpio.h>
 
-#define N_CH 6         
-#define CH_RATE_HZ 12000u
+#define N_CH 4         
+#define CH_RATE_HZ 20000u
 #define RATE_HZ (N_CH * CH_RATE_HZ)
 #define PKT_SAMPLES 120                 
 BUILD_ASSERT(PKT_SAMPLES % N_CH == 0, "every packet must start on ch0");

@@ -8,11 +8,11 @@ import matplotlib.animation as animation
 
 NAME = "debug"
 CHR = "12345678-1234-5678-1234-56789abcdef1"
-RATE = 12000                                 # per channel
+RATE = 20000                                 # per channel
 UV_PER_CODE = 0.195
 WINDOW = 5000                                  # samples shown per channel (167 ms)
 
-N_CH = 10
+N_CH = 4
 HP = butter(2, 300, "highpass", fs=RATE, output="sos")   # removes LFP below 300 Hz
 bufs = [collections.deque(maxlen=WINDOW) for _ in range(N_CH)]
 
@@ -67,8 +67,8 @@ def update(_):
         if len(y) > 100:
             y = sosfiltfilt(HP, y)
         line.set_data(np.arange(len(y)) / RATE * 1000, y)
-        ax.set_ylim(-500, 500)
-        ax.set_xlim(0, WINDOW / RATE * 50)
+        ax.set_ylim(-1000, 750)
+        ax.set_xlim(0, WINDOW / RATE * 200)
     return lines
 
 ani = animation.FuncAnimation(fig, update, interval=200, cache_frame_data=False)
