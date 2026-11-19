@@ -7,7 +7,7 @@
   <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
   <style>
     :root {
-      --bg: #f2f1ec;
+      --bg: #e2e1db;
       --ink: #1d1f1e;
       --muted: #5c625f;
       --accent: #0b7a5a;
@@ -355,6 +355,17 @@
   <script>
     const viewer = document.querySelector("model-viewer");
     viewer.src = "form-factor.glb?t=" + Date.now();   // fresh URL each load, so a re-exported model is never served from cache
+
+    // Drag hint: model-viewer shows it after 15 s idle (interaction-prompt-threshold) but then loops it until you touch
+    // the board. Let it play once (~5 s), then reset so it waits another 15 s idle before showing again.
+    const PROMPT_IDLE_MS = 15000, PROMPT_PLAY_MS = 5000;
+    let promptTimer;
+    const restartPromptCycle = () => {
+      clearTimeout(promptTimer);
+      promptTimer = setTimeout(() => { viewer.resetInteractionPrompt(); restartPromptCycle(); }, PROMPT_IDLE_MS + PROMPT_PLAY_MS);
+    };
+    viewer.addEventListener("load", restartPromptCycle);
+    viewer.addEventListener("camera-change", e => { if (e.detail.source === "user-interaction") restartPromptCycle(); });
 
     // Solder mask look: a deep, saturated green with a glossy finish (lower roughness = sharper highlights).
     const MASK_COLOR = "#0a4a26";        // sRGB; darker = smaller numbers
