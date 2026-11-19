@@ -87,6 +87,11 @@
     .scope .sweep { animation: sweep 3.2s linear infinite; }
     @keyframes sweep { from { transform: translateX(0); } to { transform: translateX(440px); } }
 
+    /* SPI scheduling figure: a playhead runs across one period, so both rows are read at the same instant */
+    .panel h3.section { margin: 20px 0 8px; font-size: 15px; }
+    #spi-sched .sched-sweep { animation: schedsweep 4s linear infinite; }
+    @keyframes schedsweep { to { transform: translateX(385px); } }
+
     /* CNN figure: each stage lights up in turn, then the softmax bars grow */
     #cnn-figure .stage { animation: flow 3.2s ease-in-out infinite; opacity: 0.35; }
     #cnn-figure .bar { transform-box: fill-box; transform-origin: left; animation: grow 3.2s ease-out infinite; }
@@ -130,7 +135,7 @@
     <button class="close" aria-label="Close">×</button>
     <div class="handle">
       <h2>SPI link</h2>
-      <p class="sub">nRF54LM20B (master) ↔ Intan RHD2164 (slave)</p>
+      <p class="sub">nRF54LM20B (controller) ↔ Intan RHD2164 (peripheral)</p>
     </div>
 
     <svg class="scope" id="spi-scope" viewBox="0 0 520 210" role="img"
@@ -142,15 +147,27 @@
       <b style="color:var(--miso)">MISO</b> the result of the command sent two frames earlier.
       CS rising ends the frame, and its falling edge starts the next conversion.</p>
 
+    <h3 class="section">Burst scheduling</h3>
+    <svg class="scope" id="spi-sched" viewBox="0 0 520 160" role="img"
+         aria-label="CS over one 50 microsecond sample period: four frames spread evenly, versus four frames back to back followed by an idle gap"></svg>
+    <p>Each channel is sampled once per sample period, every 50 µs at 20 kS/s. The frames for the different channels can
+      be arranged in two ways. With even spacing, one frame starts every 12.5 µs, so the SPI lines switch throughout the
+      period. With burst scheduling, all frames run back to back at the start of the period, 2 µs apart, and the bus
+      stays idle for the remaining 43 µs. The firmware uses burst scheduling.</p>
+    <p>On the jumper-wire bench at 4 channels × 20 kS/s, spikes are lost in noise with even spacing and clearly resolved
+      on every channel with burst scheduling.</p>
+
     <dl class="facts">
       <dt>Clock</dt><dd>16 MHz, 62.5 ns per bit</dd>
       <dt>Frame</dt><dd>16 bits, about 1 µs with CS setup and hold</dd>
       <dt>Timing</dt><dd>hardware timer → DPPI → SPIM, 0.38 µs jitter</dd>
+      <dt>Scheduling</dt><dd>burst: all channels back to back, 2 µs apart, once per sample period</dd>
       <dt>Signalling</dt><dd>CMOS, LVDS_en tied to ground</dd>
       <dt>Pins</dt><dd>SCLK P2.01 · MOSI P2.02 · MISO P2.04 · CS P2.05</dd>
       <dt>On this board</dt><dd>33 Ω series resistors R1 to R4, short traces</dd>
     </dl>
-    <p class="note">Placeholder figure. The scope captures of the real frame will go here.</p>
+    <p class="note">The frame figure is a placeholder for the scope captures. The scheduling comparison is qualitative,
+      from stream plots; a quantitative noise measurement of both schemes has not been made.</p>
   </aside>
 
   <aside class="panel" id="cnn-panel" aria-hidden="true">
@@ -174,9 +191,9 @@
       <dt>Hardware</dt><dd>Axon NPU in the nRF54LM20B</dd>
       <dt>Output</dt><dd>unit ID + sample timestamp</dd>
       <dt>Per spike on air</dt><dd>about 8 bytes instead of a 101-byte window, roughly 12× less</dd>
-      <dt>Today</dt><dd>offline nearest-template classifier, 98–100% agreement with the sorter on FB128 data</dd>
+      <dt>Baseline</dt><dd>offline nearest-template classifier, 98–100% agreement with the sorter on FB128 data</dd>
     </dl>
-    <p class="note">Idealized module. Layer sizes are illustrative; the CNN is not yet trained or running on the chip.</p>
+    <p class="note">Idealized module. Layer sizes are illustrative; the CNN has not been trained or deployed on the chip.</p>
   </aside>
 
   <aside class="panel" id="intan-panel" aria-hidden="true">
@@ -197,9 +214,9 @@
       <dt>Channels</dt><dd>64 (in0 to in63)</dd>
       <dt>Resolution</dt><dd>16 bits, 0.195 µV per step</dd>
       <dt>Max rate</dt><dd>1.05 MS/s per 32-channel half</dd>
-      <dt>Band</dt><dd>set by registers; 10 Hz to 7.5 kHz at 20 kS/s today</dd>
+      <dt>Band</dt><dd>set by registers; 10 Hz to 7.5 kHz in the 20 kS/s configuration</dd>
       <dt>Supply</dt><dd>own regulator U3; 2 × 100 nF (C20, C21), 10 nF on ADC_ref (C22)</dd>
-      <dt>Firmware</dt><dd>reads in0 to in31 today; in32 to in63 arrive on the other MISO clock edge</dd>
+      <dt>Firmware</dt><dd>reads in0 to in31; in32 to in63 arrive on the other MISO clock edge and are not read</dd>
     </dl>
     <p class="note">Noise figures are from the jumper-wire bench rig, not this board.</p>
   </aside>
@@ -219,7 +236,7 @@
       <dt>Contacts</dt><dd>71 at 0.3 mm pitch, plus shield tabs to ground</dd>
       <dt>Pin map</dt><dd>1 GND · 2 REF · 3–66 E0–E63 · 67 REF · 68–71 GND</dd>
       <dt>Reference</dt><dd>to the Intan's ref_elec; 0 Ω link R5 to ground, not fitted</dd>
-      <dt>Why 64</dt><dd>one RHD2164 has 64 inputs; today's mouse probes use an 80-channel cable</dd>
+      <dt>Why 64</dt><dd>one RHD2164 has 64 inputs; the lab's mouse probes use an 80-channel cable</dd>
     </dl>
     <p class="note">The pin order must match the probe's flex layout. Check it against the probe drawing before ordering.</p>
   </aside>
@@ -241,7 +258,7 @@
       <dt>Usable range</dt><dd>4.2 V down to the board's cut-off near 3.4 V</dd>
       <dt>Connector</dt><dd>JST SH, 1.0 mm pitch, 2 pins</dd>
       <dt>Sensing</dt><dd>R6 / R7 divider into P1.31/AIN1</dd>
-      <dt>Charging</dt><dd>off-board; no charger or power switch yet</dd>
+      <dt>Charging</dt><dd>off-board; the board has no charger or power switch</dd>
     </dl>
     <p class="note">Illustrative discharge curve. Capacity and runtime to come from the Grepow datasheet and measured current.</p>
   </aside>
@@ -341,8 +358,8 @@
     <svg class="scope" id="fig-swd" viewBox="0 0 520 170" role="img"
          aria-label="A debugger talks to the nRF over SWDIO, SWCLK, nRESET and SWO; a status LED blinks"></svg>
     <p>J3 is the standard 10-pin ARM Cortex debug header. The nRF54LM20 DK programs external boards from its Debug out
-      header over the same kind of 10-pin ribbon cable, so it plugs straight in and the build and flash flow you use now
-      carries over. A green LED on P1.00 gives a heartbeat without a serial port.</p>
+      header over the same kind of 10-pin ribbon cable, so it plugs straight in and the standard build-and-flash flow
+      works unchanged. A green LED on P1.00 gives a heartbeat without a serial port.</p>
     <dl class="facts">
       <dt>Pinout</dt><dd>1 VCC · 2 SWDIO · 4 SWCLK · 6 SWO (P2.07) · 10 nRESET · 3, 5, 9 GND · 7, 8 unused</dd>
       <dt>Connector</dt><dd>2 × 5, 1.27 mm pitch, surface-mount</dd>
@@ -654,6 +671,33 @@
       out += `<g class="sweep"><rect x="${x0 - 10}" y="22" width="10" height="176" fill="${css("--accent")}" opacity="0.12"/>
               <line x1="${x0}" x2="${x0}" y1="22" y2="198" stroke="${css("--accent")}" stroke-width="1.5" opacity="0.7"/></g>`;
       svg.innerHTML = out;
+    })();
+
+    // SPI scheduling: CS over one sample period, evenly spaced vs burst, in µs to scale
+    (function () {
+      const cv = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+      const ink = cv("--muted"), cs = cv("--cs"), acc = cv("--accent");
+      const chColor = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"];   // same colours as the stream plot's in0–in3
+      const T = 50, FRAME = 1.4, SPAN = 55;                            // period, CS-low time, shown span (µs)
+      const X = t => 120 + (t / SPAN) * 385;
+      const row = (y, starts) => {
+        let d = `M${X(0) - 10},${y - 10}`, dots = "";
+        for (const [i, t] of starts.entries()) {
+          d += ` H${X(t)} V${y + 10} H${X(t + FRAME)} V${y - 10}`;
+          if (t < T) dots += `<circle cx="${(X(t) + X(t + FRAME)) / 2}" cy="${y + 19}" r="3" fill="${chColor[i % 4]}"/>`;
+        }
+        return `<path d="${d} H${X(SPAN)}" fill="none" stroke="${cs}" stroke-width="2"/>` + dots;
+      };
+      const label = (y, a, b) => `<text x="10" y="${y - 1}" fill="${cv("--ink")}">${a}</text>
+                                  <text x="10" y="${y + 13}" fill="${ink}" font-size="10" font-weight="400">${b}</text>`;
+      let s = `<rect x="${X(7.4)}" y="88" width="${X(T) - X(7.4)}" height="42" rx="6" fill="${acc}" opacity="0.08"/>
+               <text x="${(X(7.4) + X(T)) / 2}" y="114" text-anchor="middle" fill="${acc}" font-size="10">bus idle ≈ 43 µs</text>`;
+      s += label(44, "Evenly spaced", "one frame / 12.5 µs") + row(44, [0, 12.5, 25, 37.5, 50]);
+      s += label(104, "Burst", "frames 2 µs apart") + row(104, [0, 2, 4, 6, 50, 52, 54]);
+      s += `<path d="M${X(0)},140 v6 H${X(T)} v-6" fill="none" stroke="${ink}" stroke-width="1"/>
+            <text x="${(X(0) + X(T)) / 2}" y="157" text-anchor="middle" fill="${ink}" font-size="10" font-weight="400">one sample period · 50 µs</text>
+            <g class="sched-sweep"><line x1="${X(0)}" x2="${X(0)}" y1="22" y2="132" stroke="${acc}" stroke-width="1.5" opacity="0.6"/></g>`;
+      document.getElementById("spi-sched").innerHTML = s;
     })();
 
     // ---- figures for the component panels ----
